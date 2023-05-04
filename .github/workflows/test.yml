@@ -1,0 +1,28 @@
+name: Build and Test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.x"
+
+      - name: Run bootstrap script
+        run: ./scripts/bootstrap.ps1 -ci
+
+      - name: Run build script
+        run: ./scripts/build.ps1 -configuration Release
+
+      - name: Run test script
+        run: ./scripts/test.ps1 -configuration Release
