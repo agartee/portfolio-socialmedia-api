@@ -5,7 +5,7 @@ param(
   [Parameter(ParameterSetName = "docker", HelpMessage = "Build docker image using Docker build image and publish local image.")]
   [switch]$docker,
   [Parameter(Mandatory = $false, HelpMessage = "Configuration name (e.g. Release, Debug)")]
-  [string]$configuration = "Release"
+  [string]$configuration = "Debug"
 )
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
@@ -26,6 +26,7 @@ if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
 if ($docker) {
   $imageName = "socialmedia-api"
   $containerName = "socialmedia-api"
+  $userSecretsId = "agartee-socialmedia"
 
   docker container rm "$containerName" --force 2>&1 | Out-Null
   . "$rootDir\scripts\build.ps1" -docker -configuration $configuration
@@ -50,7 +51,7 @@ if ($docker) {
       --env "ASPNETCORE_URLS=https://+:443;http://+:80" `
       --env "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/$($pfxFile)" `
       --env "ASPNETCORE_Kestrel__Certificates__Default__Password=$($pfxPassword)" `
-      --volume "$($secretsDir):/root/.microsoft/usersecrets/socialmedia:ro" `
+      --volume "$($secretsDir):/root/.microsoft/usersecrets/$($userSecretsId):ro" `
       --volume "$($pfxDir):/https:ro" `
       --detach `
       $imageName
