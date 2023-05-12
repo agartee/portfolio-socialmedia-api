@@ -15,7 +15,9 @@ if (Test-Path $coverageDir) {
 $exclusions = @{
   "SocialMedia.WebAPI"                = @(
     "Program",
-    "SocialMedia.WebAPI.Formatters.*")
+    "SocialMedia.WebAPI.Formatters.*",
+    "SocialMedia.WebAPI.Extensions.ServiceCollectionExtensions"
+  )
 
   "SocialMedia.Persistence.SqlServer" = @(
     "SocialMedia.Persistence.SqlServer.Migrations.*")
