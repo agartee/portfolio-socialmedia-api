@@ -6,6 +6,7 @@ using SocialMedia.Domain.Commands;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
 using SocialMedia.Persistence.SqlServer;
+using SocialMedia.WebAPI.Extensions;
 using SocialMedia.WebAPI.Formatters;
 using System.Reflection;
 
@@ -70,6 +71,8 @@ builder.Services.AddTransient<ICliRequestBuilder>(services =>
 builder.Services.AddSingleton(new HelpTextConfiguration(cliRequestTypes));
 builder.Services.AddDbContext<SocialMediaDbContext>(options =>
     options.UseSqlServer(builder.Configuration["connectionStrings:database"]));
+
+builder.Services.AddAuth0ManagementServices(builder.Configuration);
 
 var app = builder.Build();
 

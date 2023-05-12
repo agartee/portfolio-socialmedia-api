@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SocialMedia.Domain\SocialMedia.Domain.csproj" />
+    <ProjectReference Include="..\SocialMedia.Persistence.Auth0ManagementAPI\SocialMedia.Persistence.Auth0ManagementAPI.csproj" />
+    <ProjectReference Include="..\SocialMedia.Persistence.Auth0\SocialMedia.Persistence.Auth0.csproj" />
     <ProjectReference Include="..\SocialMedia.Persistence.SqlServer\SocialMedia.Persistence.SqlServer.csproj" />
   </ItemGroup>
 
