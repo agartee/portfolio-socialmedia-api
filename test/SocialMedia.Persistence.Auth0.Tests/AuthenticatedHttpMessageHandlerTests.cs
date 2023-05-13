@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using Moq.Protected;
+using SocialMedia.Persistence.Auth0.Configuration;
 using SocialMedia.Persistence.Auth0.Exceptions;
 using SocialMedia.Persistence.Auth0.Models;
 using SocialMedia.Persistence.Auth0.Tests.Extensions;
@@ -12,16 +13,16 @@ namespace SocialMedia.Persistence.Auth0.Tests
 {
     public class AuthenticatedHttpMessageHandlerTests
     {
-        [Fact]
-        public async Task SendAsync_WhenNoTokenIsCached_RequestsAuthTokenAndAttachesAuthHeader()
+        private readonly Auth0ManagementAPIConfiguration authConfig = new Auth0ManagementAPIConfiguration
         {
-            var authConfig = new Auth0ManagementAPIConfiguration
-            {
-                Audience = "audience",
-                ClientId = "client",
-                ClientSecret = "secret",
-            };
+            Audience = "audience",
+            ClientId = "client",
+            ClientSecret = "secret",
+        };
 
+        [Fact]
+        public async Task SendAsync_WhenTokenIsNotCached_RequestsAuthTokenAndAttachesAuthHeader()
+        {
             var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
                 baseUrl: "https://test.com/",
                 new AuthResponse
@@ -32,7 +33,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
                     ExpiresIn = 86400
                 });
 
-            var wrappedHandler = new HttpStatusOkHandler();
+            var wrappedHandler = new SomeOtherHttpRequestHandler();
             var handler = new AuthenticatedHttpMessageHandler(authHttpClient, authConfig)
             {
                 InnerHandler = wrappedHandler
@@ -40,60 +41,57 @@ namespace SocialMedia.Persistence.Auth0.Tests
             var httpClient = new HttpClient(handler);
 
             // don't care about response for this test
-            await httpClient.GetAsync("http://test.com", CancellationToken.None);
+            await httpClient.GetAsync("http://anything.com", CancellationToken.None);
 
-            VerifyAuthRequestMessage(new AuthRequest
+            wrappedHandler.LastRequest!.Headers.Authorization.Should().Be(
+                new AuthenticationHeaderValue("test", "ABC123"));
+
+            var expectedAuthRequest = new AuthRequest
             {
                 Audience = authConfig.Audience,
                 ClientId = authConfig.ClientId,
                 ClientSecret = authConfig.ClientSecret,
                 GrantType = GrantTypes.CLIENT_CREDENTIALS
-            });
+            };
 
-            wrappedHandler.LastRequest.Headers.Authorization.Should().Be(
-                new AuthenticationHeaderValue("test", "ABC123"));
-
-
-            void VerifyAuthRequestMessage(AuthRequest expectedRequest)
-            {
-                authHttpMessageHandler.Protected().Verify(
-                    "SendAsync",
-                    Times.Once(),
-                    ItExpr.Is<HttpRequestMessage>(m =>
-                        m.Matches(HttpMethod.Post, "https://test.com/oauth/token", expectedRequest)),
-                        ItExpr.IsAny<CancellationToken>());
-            }
+            authHttpMessageHandler.Protected().Verify(
+                "SendAsync",
+                Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(m =>
+                    m.Matches(HttpMethod.Post, "https://test.com/oauth/token", expectedAuthRequest)),
+                    ItExpr.IsAny<CancellationToken>());
         }
 
         [Fact]
-        public async Task SendAsync_WhenAuthAPIReturnValueIsNotRecognized_Throws()
+        public async Task SendAsync_WhenTokenIsNotCached_CachesNextToken()
         {
-            var authConfig = new Auth0ManagementAPIConfiguration
-            {
-                Audience = "audience",
-                ClientId = "client",
-                ClientSecret = "secret",
-            };
-
             var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
-                baseUrl: "https://test.com/", "null");
+                baseUrl: "https://test.com/",
+                new AuthResponse
+                {
+                    TokenType = "test",
+                    AccessToken = "ABC123",
+                    Scope = "test",
+                    ExpiresIn = 86400
+                });
 
-            var wrappedHandler = new HttpStatusOkHandler();
+            var wrappedHandler = new SomeOtherHttpRequestHandler();
             var handler = new AuthenticatedHttpMessageHandler(authHttpClient, authConfig)
             {
                 InnerHandler = wrappedHandler
             };
             var httpClient = new HttpClient(handler);
 
-            var action = () => httpClient.GetAsync("http://test.com", CancellationToken.None);
+            // don't care about response for this test
+            await httpClient.GetAsync("http://anything.com", CancellationToken.None);
 
-            await action.Should().ThrowAsync<CannotDeserializeResponseException>();
+            handler.CachedToken.Should().NotBeNull();
         }
 
         [Fact]
         public async Task SendAsync_WhenTokenIsCached_AttachesAuthHeaderButDoesNotRequestNewAuthToken()
         {
-            var authToken = new AuthToken
+            var existingAuthToken = new AuthToken
             {
                 TokenType = "test",
                 AccessToken = "ABC123",
@@ -102,18 +100,18 @@ namespace SocialMedia.Persistence.Auth0.Tests
             var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
                 baseUrl: "https://test.com/");
 
-            var wrappedHandler = new HttpStatusOkHandler();
-            var handler = new AuthenticatedHttpMessageHandler(
-                authHttpClient, Auth0ManagementAPIConfiguration.Empty(), defaultToken: authToken)
+            var wrappedHandler = new SomeOtherHttpRequestHandler();
+            var handler = new AuthenticatedHttpMessageHandler(authHttpClient, authConfig,
+                initToken: existingAuthToken)
             {
                 InnerHandler = wrappedHandler
             };
             var httpClient = new HttpClient(handler);
 
             // don't care about response for this test
-            await httpClient.GetAsync("http://test.com", CancellationToken.None);
+            await httpClient.GetAsync("http://anything.com", CancellationToken.None);
 
-            wrappedHandler.LastRequest.Headers.Authorization.Should().Be(
+            wrappedHandler.LastRequest!.Headers.Authorization.Should().Be(
                 new AuthenticationHeaderValue("test", "ABC123"));
 
             authHttpMessageHandler.Protected().Verify(
@@ -123,7 +121,48 @@ namespace SocialMedia.Persistence.Auth0.Tests
                 ItExpr.IsAny<CancellationToken>());
         }
 
-        private (HttpClient, Mock<HttpMessageHandler>) CreateMockHttpClient(string baseUrl, object? response = null)
+        [Fact]
+        public async Task SendAsync_WhenAuthResponseIsNotSuccess_Throws()
+        {
+            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
+                baseUrl: "https://test.com/",
+                statusCode: HttpStatusCode.BadRequest);
+
+            var wrappedHandler = new SomeOtherHttpRequestHandler();
+            var handler = new AuthenticatedHttpMessageHandler(authHttpClient, authConfig)
+            {
+                InnerHandler = wrappedHandler
+            };
+            var httpClient = new HttpClient(handler);
+
+            var action = () => httpClient.GetAsync("http://anything.com", CancellationToken.None);
+
+            await action.Should().ThrowAsync<AuthenticationFailedException>();
+        }
+
+        [Theory]
+        [InlineData("null")]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task SendAsync_WhenAuthResponseBodyIsInvalid_Throws(string authResponseBody)
+        {
+            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
+                baseUrl: "https://test.com/", authResponseBody);
+
+            var wrappedHandler = new SomeOtherHttpRequestHandler();
+            var handler = new AuthenticatedHttpMessageHandler(authHttpClient, authConfig)
+            {
+                InnerHandler = wrappedHandler
+            };
+            var httpClient = new HttpClient(handler);
+
+            var action = () => httpClient.GetAsync("http://anything.com", CancellationToken.None);
+
+            await action.Should().ThrowAsync<CannotDeserializeResponseException>();
+        }
+
+        private (HttpClient, Mock<HttpMessageHandler>) CreateMockHttpClient(string baseUrl,
+            object? response = null, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             var httpMessageHandler = new Mock<HttpMessageHandler>();
             httpMessageHandler.Protected()
@@ -133,7 +172,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
                     ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage()
                 {
-                    StatusCode = HttpStatusCode.OK,
+                    StatusCode = statusCode,
                     Content = new StringContent(response as string ?? JsonSerializer.Serialize(response)),
                 });
 
@@ -143,11 +182,12 @@ namespace SocialMedia.Persistence.Auth0.Tests
             return (httpClient, httpMessageHandler);
         }
 
-        public class HttpStatusOkHandler : DelegatingHandler
+        public class SomeOtherHttpRequestHandler : DelegatingHandler
         {
-            public HttpRequestMessage LastRequest { get; set; }
+            public HttpRequestMessage? LastRequest { get; set; }
 
-            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+                CancellationToken cancellationToken)
             {
                 LastRequest = request;
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));

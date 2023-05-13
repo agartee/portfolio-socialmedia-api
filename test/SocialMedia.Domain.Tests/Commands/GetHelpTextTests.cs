@@ -2,7 +2,6 @@ using CommandLine;
 using FluentAssertions;
 using SocialMedia.Domain.Commands;
 using SocialMedia.Domain.Models;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
@@ -84,7 +83,6 @@ namespace SocialMedia.Domain.Tests.Commands
         const string VERB_HELP_TEXT = "test: Test stuff.";
         const string OPTION_HELP_TEXT = "any old text will do.";
 
-        [ExcludeFromCodeCoverage]
         [Verb("test", HelpText = VERB_HELP_TEXT)]
         public class TestCommandWithAttributes
         {
@@ -92,7 +90,6 @@ namespace SocialMedia.Domain.Tests.Commands
             public string? Text { get; set; }
         }
 
-        [ExcludeFromCodeCoverage]
         public class TestCommandWithoutAttributes
         {
             public string? Text { get; set; }

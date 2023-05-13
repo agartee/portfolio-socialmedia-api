@@ -20,6 +20,9 @@ Configuration settings that are required by the application at runtime are gener
 | `connectionStrings:database` | Connection string to the app database. When using a Docker container to host the app, username and password must be used in place of a trusted connection. |
 | `authentication:authority` | Auth0 authority for your account |
 | `authentication:audience` | API identifier in Auth0 |
+| `userManagement:authentication:audience` | API identifier in Auth0 for the Management API |
+| `userManagement:authentication:clientId` | Your app's client ID (must be authorized for the Management API in Auth0) |
+| `userManagement:authentication:clientSecret` | Your app's client secret (must be authorized for the Management API in Auth0) |
 | `allowedOrigins` | Allowed origin addresses when running the app locally |
 
 **Example User Secrets File for `SocialMedia.WebAPI.csproj`**:
@@ -30,12 +33,19 @@ Configuration settings that are required by the application at runtime are gener
     "database": "Server=localhost;Database=SocialMedia;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"
   },
   "authentication": {
-    "authority": "[ACCOUNT].auth0.com",
+    "authority": "<ACCOUNT>.auth0.com",
     "audience": "socialmedia"
   },
+  "userManagement": {
+    "authentication": {
+      "audience": "https://<ACCOUNT>.auth0.com/api/v2/",
+      "clientId": "<AUTH0-CLIENT-ID>",
+      "clientSecret": "<AUTH0-CLIENT-SECRET>"
+    }
+  },
   "allowedOrigins": [
-    "http://localhost:5000",
-    "https://localhost:5001"
+    "http://localhost:4000",
+    "https://localhost:4001"
   ]
 }
 ```

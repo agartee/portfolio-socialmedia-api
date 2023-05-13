@@ -2,6 +2,7 @@ using FluentAssertions;
 using Moq;
 using Moq.Protected;
 using SocialMedia.Domain.Models;
+using SocialMedia.Persistence.Auth0.Configuration;
 using SocialMedia.Persistence.Auth0.Exceptions;
 using SocialMedia.Persistence.Auth0.Models;
 using SocialMedia.Persistence.Auth0.Tests.Extensions;
@@ -48,13 +49,16 @@ namespace SocialMedia.Persistence.Auth0.Tests
                 ItExpr.IsAny<CancellationToken>());
         }
 
-        [Fact]
-        public async Task GetUserProfile_WhenAPIReturnValueIsNotRecognized_Throws()
+        [Theory]
+        [InlineData("null")]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task GetUserProfile_WhenAuthResponseBodyIsInvalid_Throws(string responseBody)
         {
             var id = "id";
 
             var (httpClient, httpMessageHandler) = CreateMockHttpClient(
-                baseUrl: "https://test.com/", "null");
+                baseUrl: "https://test.com/", responseBody);
 
             var apiClient = new Auth0ManagementAPIClient(httpClient,
                 Auth0ManagementAPIConfiguration.Empty());
@@ -107,8 +111,11 @@ namespace SocialMedia.Persistence.Auth0.Tests
                 ItExpr.IsAny<CancellationToken>());
         }
 
-        [Fact]
-        public async Task UpdateUserProfile_WhenAPIReturnValueIsNotRecognized_Throws()
+        [Theory]
+        [InlineData("null")]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task UpdateUserProfile_WhenAuthResponseBodyIsInvalid_Throws(string responseBody)
         {
             var userProfile = new UserProfile
             {
@@ -120,7 +127,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
 
             var (httpClient, httpMessageHandler) = CreateMockHttpClient(
                 baseUrl: "https://test.com/",
-                "null");
+                responseBody);
 
             var apiClient = new Auth0ManagementAPIClient(httpClient,
                 Auth0ManagementAPIConfiguration.Empty());

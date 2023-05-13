@@ -1,6 +1,9 @@
+using SocialMedia.Persistence.Auth0.Configuration;
 using SocialMedia.Persistence.Auth0.Exceptions;
 using SocialMedia.Persistence.Auth0.Models;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace SocialMedia.Persistence.Auth0
 {
@@ -8,57 +11,77 @@ namespace SocialMedia.Persistence.Auth0
     {
         private readonly HttpClient httpClient;
         private readonly Auth0ManagementAPIConfiguration config;
-        private AuthToken? token;
 
         public AuthenticatedHttpMessageHandler(HttpClient httpClient,
-            Auth0ManagementAPIConfiguration config, AuthToken? defaultToken = null)
+            Auth0ManagementAPIConfiguration config, AuthToken? initToken = null)
         {
             this.httpClient = httpClient;
             this.config = config;
-            token = defaultToken;
+            CachedToken = initToken;
         }
+
+        public AuthToken? CachedToken { get; set; }
 
         protected override async Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            request.Headers.Authorization = (await GetToken(cancellationToken))
-                .ToHeaderValue();
+            request.Headers.Authorization = await CreateAuthHeader(cancellationToken);
 
             return await base.SendAsync(request, cancellationToken);
         }
 
-        private async Task<AuthToken> GetToken(CancellationToken cancellationToken)
+        private async Task<AuthenticationHeaderValue> CreateAuthHeader(CancellationToken cancellationToken)
         {
-            return token ?? await RequestNewToken(cancellationToken);
+            var token = CachedToken ?? await RequestNewToken(cancellationToken);
+
+            return new AuthenticationHeaderValue(token.TokenType, token.AccessToken);
         }
 
         private async Task<AuthToken> RequestNewToken(CancellationToken cancellationToken)
         {
-            var body = new AuthRequest
-            {
-                Audience = config.Audience,
-                ClientId = config.ClientId,
-                ClientSecret = config.ClientSecret,
-                GrantType = GrantTypes.CLIENT_CREDENTIALS
-            };
-
             var url = "oauth/token";
-            var httpResponse = await httpClient.PostAsJsonAsync(url, body,
+
+            var httpResponse = await httpClient.PostAsJsonAsync(url,
+                new AuthRequest
+                {
+                    Audience = config.Audience,
+                    ClientId = config.ClientId,
+                    ClientSecret = config.ClientSecret,
+                    GrantType = GrantTypes.CLIENT_CREDENTIALS
+                },
                 cancellationToken);
-            var response = await httpResponse.Content.ReadFromJsonAsync<AuthResponse>(
-                cancellationToken: cancellationToken);
 
-            if (response == null)
-                throw new CannotDeserializeResponseException(url, nameof(UserResponse));
+            if (!httpResponse.IsSuccessStatusCode)
+                throw new AuthenticationFailedException();
 
-            token = new AuthToken
-            {
-                TokenType = response.TokenType,
-                AccessToken = response.AccessToken
-            };
+            var token = await DeserializeResponseBody(httpResponse.Content, cancellationToken);
 
+            if (token == null)
+                throw new CannotDeserializeResponseException(url, typeof(UserResponse));
+
+            CachedToken = token;
             return token;
+        }
+
+        private async Task<AuthToken?> DeserializeResponseBody(HttpContent content, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var authResponse = await content.ReadFromJsonAsync<AuthResponse>(
+                    cancellationToken: cancellationToken);
+
+                return authResponse != null
+                    ? new AuthToken
+                    {
+                        TokenType = authResponse.TokenType,
+                        AccessToken = authResponse.AccessToken
+                    } : null;
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
         }
     }
 }

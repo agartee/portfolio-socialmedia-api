@@ -1,10 +1,11 @@
 using Microsoft.Net.Http.Headers;
 using SocialMedia.Domain.Services;
 using SocialMedia.Persistence.Auth0;
+using SocialMedia.Persistence.Auth0.Configuration;
 
-namespace SocialMedia.WebAPI.Extensions
+namespace SocialMedia.WebAPI.Configuration
 {
-    public static class ServiceCollectionExtensions
+    public static class Auth0ServicesExtensions
     {
         public static IServiceCollection AddAuth0ManagementServices(this IServiceCollection services,
             ConfigurationManager config)

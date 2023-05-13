@@ -40,7 +40,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
                 Id = userProfile.Id
             };
 
-            var result = await controller.Get(CancellationToken.None);
+            var result = await controller.Get(command, CancellationToken.None);
 
             result.Should().BeOfType<OkObjectResult>();
             result.As<OkObjectResult>().Value.Should().Be(userProfile);

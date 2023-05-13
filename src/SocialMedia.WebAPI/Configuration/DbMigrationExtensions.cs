@@ -1,10 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Persistence.SqlServer;
-using System.Diagnostics.CodeAnalysis;
 
-namespace SocialMedia.WebAPI
+namespace SocialMedia.WebAPI.Configuration
 {
-    [ExcludeFromCodeCoverage]
     public static class DbMigrationExtensions
     {
         public static IHost MigrateDatabase(this IHost host)

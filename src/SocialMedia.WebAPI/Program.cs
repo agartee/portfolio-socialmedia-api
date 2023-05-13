@@ -6,7 +6,7 @@ using SocialMedia.Domain.Commands;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
 using SocialMedia.Persistence.SqlServer;
-using SocialMedia.WebAPI.Extensions;
+using SocialMedia.WebAPI.Configuration;
 using SocialMedia.WebAPI.Formatters;
 using System.Reflection;
 

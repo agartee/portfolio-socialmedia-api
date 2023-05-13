@@ -1,8 +1,10 @@
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
+using SocialMedia.Persistence.Auth0.Configuration;
 using SocialMedia.Persistence.Auth0.Exceptions;
 using SocialMedia.Persistence.Auth0.Models;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace SocialMedia.Persistence.Auth0
 {
@@ -20,12 +22,12 @@ namespace SocialMedia.Persistence.Auth0
         public async Task<UserProfile> GetUserProfile(string userId, CancellationToken cancellationToken)
         {
             string url = $"users/{userId}";
+
             var httpResponse = await httpClient.GetAsync(url, cancellationToken);
-            var response = await httpResponse.Content.ReadFromJsonAsync<UserResponse>(
-                cancellationToken: cancellationToken);
+            var response = await DeserializeResponseBody(httpResponse.Content, cancellationToken);
 
             if (response == null)
-                throw new CannotDeserializeResponseException(url, nameof(UserResponse));
+                throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
             return new UserProfile
             {
@@ -46,12 +48,12 @@ namespace SocialMedia.Persistence.Auth0
             };
 
             var url = $"users/{userProfile.Id}";
+
             var httpResponse = await httpClient.PatchAsJsonAsync(url, payload, cancellationToken);
-            var response = await httpResponse.Content.ReadFromJsonAsync<UserResponse>(
-                cancellationToken: cancellationToken);
+            var response = await DeserializeResponseBody(httpResponse.Content, cancellationToken);
 
             if (response == null)
-                throw new CannotDeserializeResponseException(url, nameof(UserResponse));
+                throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
             return new UserProfile
             {
@@ -60,6 +62,21 @@ namespace SocialMedia.Persistence.Auth0
                 Nickname = response.Nickname,
                 Email = response.Email,
             };
+        }
+
+        private static async Task<UserResponse?> DeserializeResponseBody(HttpContent content,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                return await content.ReadFromJsonAsync<UserResponse>(
+                    cancellationToken: cancellationToken);
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+
         }
     }
 }

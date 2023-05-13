@@ -1,4 +1,4 @@
-namespace SocialMedia.Persistence.Auth0
+namespace SocialMedia.Persistence.Auth0.Configuration
 {
     public class Auth0ManagementAPIConfiguration
     {
