@@ -2,7 +2,6 @@ using FluentAssertions;
 using Moq;
 using Moq.Protected;
 using SocialMedia.Domain.Models;
-using SocialMedia.Persistence.Auth0.Configuration;
 using SocialMedia.Persistence.Auth0.Exceptions;
 using SocialMedia.Persistence.Auth0.Models;
 using SocialMedia.Persistence.Auth0.Tests.Extensions;
@@ -28,8 +27,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
             var (httpClient, httpMessageHandler) = CreateMockHttpClient(
                 baseUrl: "https://test.com/", apiResponse);
 
-            var apiClient = new Auth0ManagementAPIClient(httpClient,
-                Auth0ManagementAPIConfiguration.Empty());
+            var apiClient = new Auth0ManagementAPIClient(httpClient);
 
             var result = await apiClient.GetUserProfile(id, CancellationToken.None);
 
@@ -60,8 +58,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
             var (httpClient, httpMessageHandler) = CreateMockHttpClient(
                 baseUrl: "https://test.com/", responseBody);
 
-            var apiClient = new Auth0ManagementAPIClient(httpClient,
-                Auth0ManagementAPIConfiguration.Empty());
+            var apiClient = new Auth0ManagementAPIClient(httpClient);
 
             var action = () => apiClient.GetUserProfile(id, CancellationToken.None);
 
@@ -89,8 +86,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
                     Email = userProfile.Email
                 });
 
-            var apiClient = new Auth0ManagementAPIClient(httpClient,
-                Auth0ManagementAPIConfiguration.Empty());
+            var apiClient = new Auth0ManagementAPIClient(httpClient);
 
             var result = await apiClient.UpdateUserProfile(userProfile, CancellationToken.None);
 
@@ -129,8 +125,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
                 baseUrl: "https://test.com/",
                 responseBody);
 
-            var apiClient = new Auth0ManagementAPIClient(httpClient,
-                Auth0ManagementAPIConfiguration.Empty());
+            var apiClient = new Auth0ManagementAPIClient(httpClient);
 
             var action = () => apiClient.UpdateUserProfile(userProfile, CancellationToken.None);
 

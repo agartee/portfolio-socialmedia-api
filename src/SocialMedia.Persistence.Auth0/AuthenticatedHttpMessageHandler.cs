@@ -1,9 +1,9 @@
 using SocialMedia.Persistence.Auth0.Configuration;
 using SocialMedia.Persistence.Auth0.Exceptions;
+using SocialMedia.Persistence.Auth0.Extensions;
 using SocialMedia.Persistence.Auth0.Models;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace SocialMedia.Persistence.Auth0
 {
@@ -84,31 +84,12 @@ namespace SocialMedia.Persistence.Auth0
             if (!httpResponse.IsSuccessStatusCode)
                 throw new AuthenticationFailedException();
 
-            var token = await TryDeserialize(httpResponse.Content);
+            var token = await httpResponse.Content.TryReadFromJsonAsync<AuthToken>();
 
             if (token == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
             return token;
-        }
-
-        private async Task<AuthToken?> TryDeserialize(HttpContent content)
-        {
-            try
-            {
-                var authResponse = await content.ReadFromJsonAsync<AuthResponse>();
-
-                return authResponse != null
-                    ? new AuthToken
-                    {
-                        TokenType = authResponse.TokenType,
-                        AccessToken = authResponse.AccessToken
-                    } : null;
-            }
-            catch (JsonException)
-            {
-                return null;
-            }
         }
     }
 }

@@ -1,22 +1,19 @@
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
-using SocialMedia.Persistence.Auth0.Configuration;
 using SocialMedia.Persistence.Auth0.Exceptions;
+using SocialMedia.Persistence.Auth0.Extensions;
 using SocialMedia.Persistence.Auth0.Models;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace SocialMedia.Persistence.Auth0
 {
     public class Auth0ManagementAPIClient : IUserProfileRepository
     {
         private readonly HttpClient httpClient;
-        private readonly Auth0ManagementAPIConfiguration config;
 
-        public Auth0ManagementAPIClient(HttpClient httpClient, Auth0ManagementAPIConfiguration config)
+        public Auth0ManagementAPIClient(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            this.config = config;
         }
 
         public async Task<UserProfile> GetUserProfile(string userId, CancellationToken cancellationToken)
@@ -24,7 +21,7 @@ namespace SocialMedia.Persistence.Auth0
             string url = $"users/{userId}";
 
             var httpResponse = await httpClient.GetAsync(url, cancellationToken);
-            var userResponse = await TryDeserialize(httpResponse.Content, cancellationToken);
+            var userResponse = await httpResponse.Content.TryReadFromJsonAsync<UserResponse>(cancellationToken);
 
             if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
@@ -50,7 +47,7 @@ namespace SocialMedia.Persistence.Auth0
             var url = $"users/{userProfile.Id}";
 
             var httpResponse = await httpClient.PatchAsJsonAsync(url, payload, cancellationToken);
-            var userResponse = await TryDeserialize(httpResponse.Content, cancellationToken);
+            var userResponse = await httpResponse.Content.TryReadFromJsonAsync<UserResponse>(cancellationToken);
 
             if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
@@ -62,21 +59,6 @@ namespace SocialMedia.Persistence.Auth0
                 Nickname = userResponse.Nickname,
                 Email = userResponse.Email,
             };
-        }
-
-        private static async Task<UserResponse?> TryDeserialize(HttpContent content,
-            CancellationToken cancellationToken)
-        {
-            try
-            {
-                return await content.ReadFromJsonAsync<UserResponse>(
-                    cancellationToken: cancellationToken);
-            }
-            catch (JsonException)
-            {
-                return null;
-            }
-
         }
     }
 }
