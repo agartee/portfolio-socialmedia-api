@@ -72,7 +72,9 @@ namespace SocialMedia.Persistence.Auth0
         {
             var url = "oauth/token";
 
-            var httpResponse = await httpClient.PostAsJsonAsync(url,
+            try
+            {
+                var httpResponse = await httpClient.PostAsJsonAsync(url,
                 new AuthRequest
                 {
                     Audience = config.Audience,
@@ -81,15 +83,20 @@ namespace SocialMedia.Persistence.Auth0
                     GrantType = GrantTypes.CLIENT_CREDENTIALS
                 });
 
-            if (!httpResponse.IsSuccessStatusCode)
-                throw new AuthenticationFailedException();
+                if (!httpResponse.IsSuccessStatusCode)
+                    throw new AuthenticationFailedException();
 
-            var token = await httpResponse.Content.TryReadFromJsonAsync<AuthToken>();
+                var token = await httpResponse.Content.TryReadFromJsonAsync<AuthToken>();
 
-            if (token == null)
-                throw new CannotDeserializeResponseException(url, typeof(UserResponse));
+                if (token == null)
+                    throw new CannotDeserializeResponseException(url, typeof(AuthToken));
 
-            return token;
+                return token;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

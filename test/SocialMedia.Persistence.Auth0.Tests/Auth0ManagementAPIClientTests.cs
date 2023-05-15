@@ -14,14 +14,14 @@ namespace SocialMedia.Persistence.Auth0.Tests
         [Fact]
         public async Task GetUserProfile_QueriesAPIAndReturnsResult()
         {
-            var id = "id";
+            var id = "123";
 
-            var apiResponse = new UserResponse
+            var apiResponse = new
             {
-                Id = "id",
-                Name = "name",
-                Nickname = "nickname",
-                Email = "me@here.com"
+                user_id = id,
+                name = "name",
+                nickname = "nickname",
+                email = "me@here.com"
             };
 
             var (httpClient, httpMessageHandler) = CreateMockHttpClient(
@@ -31,13 +31,15 @@ namespace SocialMedia.Persistence.Auth0.Tests
 
             var result = await apiClient.GetUserProfile(id, CancellationToken.None);
 
-            result.Should().Be(new UserProfile
+            UserProfile expectedResult = new UserProfile
             {
-                Id = apiResponse.Id,
-                Name = apiResponse.Name,
-                Nickname = apiResponse.Nickname,
-                Email = apiResponse.Email
-            });
+                Id = apiResponse.user_id,
+                Name = apiResponse.name,
+                Nickname = apiResponse.nickname,
+                Email = apiResponse.email
+            };
+
+            result.Should().Be(expectedResult);
 
             httpMessageHandler.Protected().Verify(
                 "SendAsync",
@@ -55,7 +57,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
         {
             var id = "id";
 
-            var (httpClient, httpMessageHandler) = CreateMockHttpClient(
+            var (httpClient, _) = CreateMockHttpClient(
                 baseUrl: "https://test.com/", responseBody);
 
             var apiClient = new Auth0ManagementAPIClient(httpClient);
@@ -68,22 +70,23 @@ namespace SocialMedia.Persistence.Auth0.Tests
         [Fact]
         public async Task UpdateUserProfile_PatchesAPIAndReturnsResult()
         {
+            var id = "123";
+
             var userProfile = new UserProfile
             {
-                Id = "id",
+                Id = id,
                 Name = "name",
                 Nickname = "nickname",
                 Email = "original@here.com"
             };
 
             var (httpClient, httpMessageHandler) = CreateMockHttpClient(
-                baseUrl: "https://test.com/",
-                new UserResponse
+                baseUrl: "https://test.com/", new
                 {
-                    Id = userProfile.Id,
-                    Name = userProfile.Name,
-                    Nickname = userProfile.Nickname,
-                    Email = userProfile.Email
+                    user_id = id,
+                    name = userProfile.Name,
+                    nickname = userProfile.Nickname,
+                    email = userProfile.Email
                 });
 
             var apiClient = new Auth0ManagementAPIClient(httpClient);
@@ -103,7 +106,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
                 "SendAsync",
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(m =>
-                    m.Matches(HttpMethod.Patch, $"https://test.com/users/{userProfile.Id}", expectedRequest)),
+                    m.Matches(HttpMethod.Patch, $"https://test.com/users/{id}", expectedRequest)),
                 ItExpr.IsAny<CancellationToken>());
         }
 
@@ -121,7 +124,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
                 Email = "original@here.com"
             };
 
-            var (httpClient, httpMessageHandler) = CreateMockHttpClient(
+            var (httpClient, _) = CreateMockHttpClient(
                 baseUrl: "https://test.com/",
                 responseBody);
 

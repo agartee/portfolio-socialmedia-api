@@ -25,11 +25,10 @@ namespace SocialMedia.Persistence.Auth0.Tests
         {
             var (authHttpClient, authHttpMessageHandler) = CreateMockHttpMessageHandler(
                 baseUrl: "https://auth.com/", CreateTestResponseMessage(
-                    HttpStatusCode.OK,
-                    new AuthToken
+                    HttpStatusCode.OK, new
                     {
-                        TokenType = "test",
-                        AccessToken = "ABC123"
+                        token_type = "test",
+                        access_token = "ABC123"
                     }));
 
             var wrappedHandler = new SomeOtherHttpRequestHandler();
@@ -105,11 +104,10 @@ namespace SocialMedia.Persistence.Auth0.Tests
 
             var (authHttpClient, _) = CreateMockHttpMessageHandler(
                 baseUrl: "https://auth.com/", CreateTestResponseMessage(
-                    HttpStatusCode.OK,
-                    new AuthToken
+                    HttpStatusCode.OK, new
                     {
-                        TokenType = "test",
-                        AccessToken = "REFRESHED_TOKEN",
+                        token_type = "test",
+                        access_token = "REFRESHED_TOKEN"
                     }));
 
             var firstResponse = new HttpResponseMessage(HttpStatusCode.Unauthorized);
