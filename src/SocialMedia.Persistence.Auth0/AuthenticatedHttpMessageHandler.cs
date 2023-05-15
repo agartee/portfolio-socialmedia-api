@@ -26,16 +26,11 @@ namespace SocialMedia.Persistence.Auth0
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            request.Headers.Authorization = await CreateAuthHeader(cancellationToken);
+            var token = CachedToken ?? await RequestNewToken(cancellationToken);
+            request.Headers.Authorization = new AuthenticationHeaderValue(
+                token.TokenType, token.AccessToken);
 
             return await base.SendAsync(request, cancellationToken);
-        }
-
-        private async Task<AuthenticationHeaderValue> CreateAuthHeader(CancellationToken cancellationToken)
-        {
-            var token = CachedToken ?? await RequestNewToken(cancellationToken);
-
-            return new AuthenticationHeaderValue(token.TokenType, token.AccessToken);
         }
 
         private async Task<AuthToken> RequestNewToken(CancellationToken cancellationToken)

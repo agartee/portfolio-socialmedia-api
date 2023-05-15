@@ -23,7 +23,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
         [Fact]
         public async Task SendAsync_WhenTokenIsNotCached_RequestsAuthTokenAndAttachesAuthHeader()
         {
-            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
+            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpMessageHandler(
                 baseUrl: "https://test.com/",
                 new AuthResponse
                 {
@@ -65,7 +65,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
         [Fact]
         public async Task SendAsync_WhenTokenIsNotCached_CachesNextToken()
         {
-            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
+            var (authHttpClient, _) = CreateMockHttpMessageHandler(
                 baseUrl: "https://test.com/",
                 new AuthResponse
                 {
@@ -97,7 +97,40 @@ namespace SocialMedia.Persistence.Auth0.Tests
                 AccessToken = "ABC123",
             };
 
-            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
+            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpMessageHandler(
+                baseUrl: "https://test.com/");
+
+            var wrappedHandler = new SomeOtherHttpRequestHandler();
+            var handler = new AuthenticatedHttpMessageHandler(authHttpClient, authConfig,
+                initToken: existingAuthToken)
+            {
+                InnerHandler = wrappedHandler
+            };
+            var httpClient = new HttpClient(handler);
+
+            // don't care about response for this test
+            await httpClient.GetAsync("http://anything.com", CancellationToken.None);
+
+            wrappedHandler.LastRequest!.Headers.Authorization.Should().Be(
+                new AuthenticationHeaderValue("test", "ABC123"));
+
+            authHttpMessageHandler.Protected().Verify(
+                "SendAsync",
+                Times.Never(),
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task SendAsync_WhenTokenIsCachedAndNotAuthorizedResponseReceivedFromWrappedAPICall_UpdatesCachedTokenAndRetries()
+        {
+            var existingAuthToken = new AuthToken
+            {
+                TokenType = "test",
+                AccessToken = "ABC123",
+            };
+
+            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpMessageHandler(
                 baseUrl: "https://test.com/");
 
             var wrappedHandler = new SomeOtherHttpRequestHandler();
@@ -124,7 +157,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
         [Fact]
         public async Task SendAsync_WhenAuthResponseIsNotSuccess_Throws()
         {
-            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
+            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpMessageHandler(
                 baseUrl: "https://test.com/",
                 statusCode: HttpStatusCode.BadRequest);
 
@@ -146,7 +179,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
         [InlineData(null)]
         public async Task SendAsync_WhenAuthResponseBodyIsInvalid_Throws(string authResponseBody)
         {
-            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpClient(
+            var (authHttpClient, authHttpMessageHandler) = CreateMockHttpMessageHandler(
                 baseUrl: "https://test.com/", authResponseBody);
 
             var wrappedHandler = new SomeOtherHttpRequestHandler();
@@ -161,7 +194,15 @@ namespace SocialMedia.Persistence.Auth0.Tests
             await action.Should().ThrowAsync<CannotDeserializeResponseException>();
         }
 
-        private (HttpClient, Mock<HttpMessageHandler>) CreateMockHttpClient(string baseUrl,
+        private HttpClient CreateHttpClient(string baseUrl, Mock<HttpMessageHandler> httpMessageHandler)
+        {
+            var httpClient = new HttpClient(httpMessageHandler.Object);
+            httpClient.BaseAddress = new Uri(baseUrl);
+
+            return httpClient;
+        }
+
+        private (HttpClient, Mock<HttpMessageHandler>) CreateMockHttpMessageHandler(string baseUrl,
             object? response = null, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             var httpMessageHandler = new Mock<HttpMessageHandler>();
