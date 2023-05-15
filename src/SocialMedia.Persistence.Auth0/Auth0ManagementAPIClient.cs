@@ -24,17 +24,17 @@ namespace SocialMedia.Persistence.Auth0
             string url = $"users/{userId}";
 
             var httpResponse = await httpClient.GetAsync(url, cancellationToken);
-            var response = await DeserializeResponseBody(httpResponse.Content, cancellationToken);
+            var userResponse = await TryDeserialize(httpResponse.Content, cancellationToken);
 
-            if (response == null)
+            if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
             return new UserProfile
             {
-                Id = response.Id,
-                Name = response.Name,
-                Nickname = response.Nickname,
-                Email = response.Email,
+                Id = userResponse.Id,
+                Name = userResponse.Name,
+                Nickname = userResponse.Nickname,
+                Email = userResponse.Email,
             };
         }
 
@@ -50,21 +50,21 @@ namespace SocialMedia.Persistence.Auth0
             var url = $"users/{userProfile.Id}";
 
             var httpResponse = await httpClient.PatchAsJsonAsync(url, payload, cancellationToken);
-            var response = await DeserializeResponseBody(httpResponse.Content, cancellationToken);
+            var userResponse = await TryDeserialize(httpResponse.Content, cancellationToken);
 
-            if (response == null)
+            if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
             return new UserProfile
             {
-                Id = response.Id,
-                Name = response.Name,
-                Nickname = response.Nickname,
-                Email = response.Email,
+                Id = userResponse.Id,
+                Name = userResponse.Name,
+                Nickname = userResponse.Nickname,
+                Email = userResponse.Email,
             };
         }
 
-        private static async Task<UserResponse?> DeserializeResponseBody(HttpContent content,
+        private static async Task<UserResponse?> TryDeserialize(HttpContent content,
             CancellationToken cancellationToken)
         {
             try

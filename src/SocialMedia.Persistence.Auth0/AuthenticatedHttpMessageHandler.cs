@@ -12,28 +12,63 @@ namespace SocialMedia.Persistence.Auth0
         private readonly HttpClient httpClient;
         private readonly Auth0ManagementAPIConfiguration config;
 
+        private Task<AuthToken> tokenTask;
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+
         public AuthenticatedHttpMessageHandler(HttpClient httpClient,
             Auth0ManagementAPIConfiguration config, AuthToken? initToken = null)
         {
             this.httpClient = httpClient;
             this.config = config;
-            CachedToken = initToken;
+
+            tokenTask = initToken != null
+                ? Task.FromResult(initToken)
+                : RefreshToken();
         }
 
-        public AuthToken? CachedToken { get; set; }
-
-        protected override async Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request,
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var token = CachedToken ?? await RequestNewToken(cancellationToken);
+            var response = await SendWithToken(request, cancellationToken, GetToken);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                response = await SendWithToken(request, cancellationToken, RefreshToken);
+
+            return response;
+        }
+
+        private async Task<HttpResponseMessage> SendWithToken(HttpRequestMessage request,
+            CancellationToken cancellationToken, Func<Task<AuthToken>> getToken)
+        {
+            var token = await getToken();
+
             request.Headers.Authorization = new AuthenticationHeaderValue(
                 token.TokenType, token.AccessToken);
 
             return await base.SendAsync(request, cancellationToken);
         }
 
-        private async Task<AuthToken> RequestNewToken(CancellationToken cancellationToken)
+        private async Task<AuthToken> GetToken()
+        {
+            return await tokenTask;
+        }
+
+        private async Task<AuthToken> RefreshToken()
+        {
+            await semaphore.WaitAsync();
+
+            try
+            {
+                tokenTask = RequestToken();
+                return await tokenTask;
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        }
+
+        private async Task<AuthToken> RequestToken()
         {
             var url = "oauth/token";
 
@@ -44,27 +79,24 @@ namespace SocialMedia.Persistence.Auth0
                     ClientId = config.ClientId,
                     ClientSecret = config.ClientSecret,
                     GrantType = GrantTypes.CLIENT_CREDENTIALS
-                },
-                cancellationToken);
+                });
 
             if (!httpResponse.IsSuccessStatusCode)
                 throw new AuthenticationFailedException();
 
-            var token = await DeserializeResponseBody(httpResponse.Content, cancellationToken);
+            var token = await TryDeserialize(httpResponse.Content);
 
             if (token == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
-            CachedToken = token;
             return token;
         }
 
-        private async Task<AuthToken?> DeserializeResponseBody(HttpContent content, CancellationToken cancellationToken)
+        private async Task<AuthToken?> TryDeserialize(HttpContent content)
         {
             try
             {
-                var authResponse = await content.ReadFromJsonAsync<AuthResponse>(
-                    cancellationToken: cancellationToken);
+                var authResponse = await content.ReadFromJsonAsync<AuthResponse>();
 
                 return authResponse != null
                     ? new AuthToken
