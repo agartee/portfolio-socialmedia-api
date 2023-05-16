@@ -13,12 +13,21 @@ if (Test-Path $coverageDir) {
 }
 
 $exclusions = @{
-  "SocialMedia.WebAPI"                = @(
-    "Program",
-    "SocialMedia.WebAPI.Formatters.*")
+  "SocialMedia.Domain"                = @(
+    "SocialMedia.Domain.Models.*")
+
+  "SocialMedia.Persistence.Auth0"     = @(
+    "SocialMedia.Persistence.Auth0.Configuration.*"
+    "SocialMedia.Persistence.Auth0.Models.*")
 
   "SocialMedia.Persistence.SqlServer" = @(
     "SocialMedia.Persistence.SqlServer.Migrations.*")
+
+  "SocialMedia.WebAPI"                = @(
+    "Program",
+    "SocialMedia.WebAPI.Configuration.*",
+    "SocialMedia.WebAPI.Formatters.*"
+  )
 }
 
 foreach ($testProject in $testProjects) {
