@@ -23,7 +23,7 @@ Configuration settings that are required by the application at runtime are gener
 | `userManagement:authentication:audience` | API identifier in Auth0 for the Management API |
 | `userManagement:authentication:clientId` | Your app's client ID (must be authorized for the Management API in Auth0) |
 | `userManagement:authentication:clientSecret` | Your app's client secret (must be authorized for the Management API in Auth0) |
-| `allowedOrigins` | Allowed origin addresses when running the app locally |
+| `cors:allowedOrigins` | Allowed origin addresses when running the app locally |
 
 **Example User Secrets File for `SocialMedia.WebAPI.csproj`**:
 
