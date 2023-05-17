@@ -25,6 +25,7 @@ if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
 # **************************************************************************************
 if ($docker) {
   $imageName = "socialmedia-api"
+  $tagName = "dev"
   $containerName = "socialmedia-api"
   $userSecretsId = "agartee-socialmedia"
 
@@ -54,7 +55,7 @@ if ($docker) {
       --volume "$($secretsDir):/root/.microsoft/usersecrets/$($userSecretsId):ro" `
       --volume "$($pfxDir):/https:ro" `
       --detach `
-      $imageName
+      "$($imageName):$($tagName)"
   }
   catch [System.Exception] {
     Write-Host $_.Exception.Message -ForegroundColor Red

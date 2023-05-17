@@ -24,7 +24,7 @@ if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
 # **************************************************************************************
 if ($docker) {
   $imageName = "socialmedia-api"
-  $tagName = "latest"
+  $tagName = "dev"
 
   docker image build `
     --tag "$($imageName):$($tagName)" `
