@@ -38,7 +38,7 @@ builder.Services.AddAuthorization(options =>
 var allowedOrigins = "allowedOrigins";
 builder.Services.AddCors(options =>
 {
-    var origins = builder.Configuration.GetSection("allowedOrigins").Get<string[]>();
+    var origins = builder.Configuration.GetSection("cors:allowedOrigins").Get<string[]>();
 
     if (origins != null)
     {
