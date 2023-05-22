@@ -52,8 +52,9 @@ if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
       -ForegroundColor Green
   }
   catch [System.Exception] {
-    Write-Host $_.Exception.Message -ForegroundColor Red
-    exit
+    Write-Host "Warning: $($_.Exception.Message)" -ForegroundColor Yellow
+    Write-Host "Some scripts have an additional '-docker' switch that cannot be" `
+      "utilized until Docker is installed." -ForegroundColor Yellow
   }
 }
 
@@ -89,12 +90,12 @@ if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
 
   Write-Host ""
   Write-Host "To run the application over HTTPS (local or via Docker), ensure a" `
-    "local dev certificate is installed:" -ForegroundColor Yellow
+    "local dev certificate is installed:" -ForegroundColor Blue
   Write-Host "$ dotnet dev-certs https --check --trust" -ForegroundColor Magenta
 
   Write-Host ""
 
-  Write-Host "To create a new trusted local dev certificate:" -ForegroundColor Yellow
+  Write-Host "To create a new trusted local dev certificate:" -ForegroundColor Blue
   Write-Host "$ dotnet dev-certs https" `
     "--export-path $pfxPath" `
     "--password <PASSWORD> --trust" `
