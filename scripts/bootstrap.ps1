@@ -75,7 +75,7 @@ else {
     New-Item -ItemType Directory -Path $binDir | Out-Null
   }
 
-    (New-Object System.Net.WebClient).DownloadFile($toolSrc, $toolDest)
+  (New-Object System.Net.WebClient).DownloadFile($toolSrc, $toolDest)
   Expand-Archive $toolDest -DestinationPath $binDir
   Remove-Item $toolDest
 
