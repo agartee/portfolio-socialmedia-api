@@ -73,6 +73,7 @@ builder.Services.AddDbContext<SocialMediaDbContext>(options =>
     options.UseSqlServer(builder.Configuration["connectionStrings:database"]));
 
 builder.Services.AddAuth0ManagementServices(builder.Configuration);
+builder.Services.AddSqlServerPersistenceServices();
 
 var app = builder.Build();
 
@@ -80,5 +81,7 @@ app.UseCors(allowedOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MigrateDatabase();
 
 app.Run();
