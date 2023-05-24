@@ -13,5 +13,7 @@ namespace SocialMedia.Persistence.SqlServer.Models
         [MaxLength(100)]
         public required string UserId { get; set; }
         public required DateTime Created { get; set; }
+
+        public required PostContentData Content { get; set; }
     }
 }

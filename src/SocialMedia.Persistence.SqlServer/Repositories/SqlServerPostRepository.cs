@@ -19,17 +19,15 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
             {
                 Id = post.Id,
                 UserId = post.UserId,
-                Created = post.Created
-            };
-
-            var postTextData = new PostContentData
-            {
-                PostId = post.Id,
-                Text = post.Text
+                Created = post.Created,
+                Content = new PostContentData
+                {
+                    PostId = post.Id,
+                    Text = post.Text
+                }
             };
 
             dbContext.Posts.Add(postData);
-            dbContext.PostContents.Add(postTextData);
 
             await dbContext.SaveChangesAsync();
         }

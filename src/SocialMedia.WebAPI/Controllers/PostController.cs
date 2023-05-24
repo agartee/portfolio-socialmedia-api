@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Domain.Commands;
 using SocialMedia.WebAPI.Binders;
@@ -14,7 +15,10 @@ namespace SocialMedia.WebAPI.Controllers
             this.mediator = mediator;
         }
 
-        public async Task<IActionResult> Put([ModelBinder(typeof(IdFromClaimModelBinder))] CreatePost request, CancellationToken cancellationToken)
+        [HttpPut]
+        [Authorize]
+        [Route("/post")]
+        public async Task<IActionResult> Put([ModelBinder(typeof(UserIdFromClaimModelBinder))] CreatePost request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);
 

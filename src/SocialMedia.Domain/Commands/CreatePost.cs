@@ -11,7 +11,7 @@ namespace SocialMedia.Domain.Commands
         [Option(Required = false, HelpText = "User's ID")]
         public required string UserId { get; init; }
 
-        [Option(Required = false, HelpText = "Text for the post")]
+        [Option(Required = false, HelpText = "Text content of the post")]
         public required string Text { get; init; }
     }
 

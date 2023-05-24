@@ -27,7 +27,7 @@ namespace SocialMedia.Domain.Tests.Commands
 
             var request = new GetUserProfile
             {
-                Id = userProfile.Id
+                UserId = userProfile.Id
             };
 
             var result = await handler.Handle(request, CancellationToken.None);
@@ -35,7 +35,7 @@ namespace SocialMedia.Domain.Tests.Commands
             result.Should().Be(userProfile);
 
             repository.Verify(m => m.GetUserProfile(
-                It.Is<string>(s => s == request.Id),
+                It.Is<string>(s => s == request.UserId),
                 It.IsAny<CancellationToken>()));
         }
     }

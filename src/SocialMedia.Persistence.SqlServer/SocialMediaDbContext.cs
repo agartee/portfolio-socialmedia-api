@@ -15,6 +15,10 @@ namespace SocialMedia.Persistence.SqlServer
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.HasDefaultSchema("SocialMedia");
+
+            modelBuilder.Entity<PostData>()
+                .HasOne(p => p.Content)
+                .WithOne(c => c.Post);
         }
     }
 }
