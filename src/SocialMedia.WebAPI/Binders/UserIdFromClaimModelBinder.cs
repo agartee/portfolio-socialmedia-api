@@ -4,17 +4,17 @@ using System.Text.Json;
 
 namespace SocialMedia.WebAPI.Binders
 {
-    public class IdFromClaimModelBinder : IModelBinder
+    public class UserIdFromClaimModelBinder : IModelBinder
     {
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var id = GetIdFromClaim(bindingContext.HttpContext);
+            var userId = GetUserIdFromClaim(bindingContext.HttpContext);
             var body = await GetRequestBody(bindingContext.HttpContext.Request);
             var dict = string.IsNullOrEmpty(body)
                 ? new Dictionary<string, object>()
                 : DeserializeToDictionary(body);
 
-            dict["id"] = id;
+            dict["userId"] = userId;
 
             var model = JsonSerializer.Deserialize(
                 JsonSerializer.Serialize(dict),
@@ -24,7 +24,7 @@ namespace SocialMedia.WebAPI.Binders
             bindingContext.Result = ModelBindingResult.Success(model);
         }
 
-        private static string GetIdFromClaim(HttpContext httpContext)
+        private static string GetUserIdFromClaim(HttpContext httpContext)
         {
             var idClaim = httpContext.User.Claims
                 .First(c => c.Type == ClaimTypes.NameIdentifier);

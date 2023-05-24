@@ -37,7 +37,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
 
             var command = new GetUserProfile
             {
-                Id = userProfile.Id
+                UserId = userProfile.Id
             };
 
             var result = await controller.Get(command, CancellationToken.None);
@@ -75,7 +75,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
 
             var command = new UpdateUserProfile
             {
-                Id = userProfile.Id,
+                UserId = userProfile.Id,
                 Name = userProfile.Name,
                 Nickname = userProfile.Nickname,
                 Email = userProfile.Email,

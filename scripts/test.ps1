@@ -21,7 +21,8 @@ $exclusions = @{
     "SocialMedia.Persistence.Auth0.Models.*")
 
   "SocialMedia.Persistence.SqlServer" = @(
-    "SocialMedia.Persistence.SqlServer.Migrations.*")
+    "SocialMedia.Persistence.SqlServer.Migrations.*"
+    "SocialMedia.Persistence.SqlServer.Models.*")
 
   "SocialMedia.WebAPI"                = @(
     "Program",

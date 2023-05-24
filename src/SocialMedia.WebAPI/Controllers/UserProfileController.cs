@@ -19,7 +19,7 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpGet]
         [Authorize]
         [Route("/user-profile")]
-        public async Task<IActionResult> Get([ModelBinder(typeof(IdFromClaimModelBinder))] GetUserProfile request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get([ModelBinder(typeof(UserIdFromClaimModelBinder))] GetUserProfile request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);
 
@@ -29,7 +29,7 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpPatch]
         [Authorize]
         [Route("/user-profile")]
-        public async Task<IActionResult> Patch([ModelBinder(typeof(IdFromClaimModelBinder))] UpdateUserProfile request,
+        public async Task<IActionResult> Patch([ModelBinder(typeof(UserIdFromClaimModelBinder))] UpdateUserProfile request,
             CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);

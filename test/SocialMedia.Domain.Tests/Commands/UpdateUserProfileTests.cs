@@ -27,7 +27,7 @@ namespace SocialMedia.Domain.Tests.Commands
 
             var request = new UpdateUserProfile
             {
-                Id = userProfile.Id,
+                UserId = userProfile.Id,
                 Name = userProfile.Name,
                 Nickname = userProfile.Nickname,
                 Email = userProfile.Email

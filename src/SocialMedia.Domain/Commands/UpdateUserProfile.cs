@@ -9,7 +9,7 @@ namespace SocialMedia.Domain.Commands
     public record UpdateUserProfile : IRequest<UserProfile>
     {
         [Option(Required = false, HelpText = "User's ID")]
-        public required string Id { get; init; }
+        public required string UserId { get; init; }
 
         [Option(Required = false, HelpText = "User's name")]
         public string? Name { get; init; }
@@ -34,7 +34,7 @@ namespace SocialMedia.Domain.Commands
         {
             var userProfile = new UserProfile
             {
-                Id = request.Id,
+                Id = request.UserId,
                 Name = request.Name,
                 Nickname = request.Nickname,
                 Email = request.Email

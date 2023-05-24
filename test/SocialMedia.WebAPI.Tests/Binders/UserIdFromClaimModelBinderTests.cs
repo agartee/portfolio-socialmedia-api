@@ -12,22 +12,22 @@ using System.Text.Json;
 
 namespace SocialMedia.WebAPI.Tests.Binders
 {
-    public class IdFromClaimModelBinderTests
+    public class UserIdFromClaimModelBinderTests
     {
         [Fact]
         public async Task BindModelAsync_GivenValidIdClaim_BindsModelWithIdFromClaim()
         {
-            var id = "id";
+            var userId = "id";
             string name = "test";
-            var modelBindingContext = CreateModelBindingContext(id, typeof(Thing),
+            var modelBindingContext = CreateModelBindingContext(userId, typeof(Thing),
                 JsonSerializer.Serialize(new { name }));
 
-            var binder = new IdFromClaimModelBinder();
+            var binder = new UserIdFromClaimModelBinder();
             await binder.BindModelAsync(modelBindingContext);
 
             var model = modelBindingContext.Result.Model;
             model.Should().BeOfType<Thing>();
-            model.As<Thing>().Id.Should().Be(id);
+            model.As<Thing>().UserId.Should().Be(userId);
             model.As<Thing>().Name.Should().Be(name);
         }
 
@@ -37,25 +37,25 @@ namespace SocialMedia.WebAPI.Tests.Binders
         [InlineData(null)]
         public async Task BindModelAsync_GivenNullJsonInRequestBody_BindsModelWithOnlyIdFromClaim(string? body)
         {
-            var id = "id";
-            var modelBindingContext = CreateModelBindingContext(id, typeof(Thing), body);
+            var userId = "id";
+            var modelBindingContext = CreateModelBindingContext(userId, typeof(Thing), body);
 
-            var binder = new IdFromClaimModelBinder();
+            var binder = new UserIdFromClaimModelBinder();
             await binder.BindModelAsync(modelBindingContext);
 
             var model = modelBindingContext.Result.Model;
             model.Should().BeOfType<Thing>();
-            model.As<Thing>().Id.Should().Be(id);
+            model.As<Thing>().UserId.Should().Be(userId);
             model.As<Thing>().Name.Should().BeNull();
         }
 
         [Fact]
         public async Task BindModelAsync_GivenInvalidRequestBody_ThrowsInvalidOperationException()
         {
-            var id = "id";
-            var modelBindingContext = CreateModelBindingContext(id, typeof(Thing), "not JSON");
+            var userId = "id";
+            var modelBindingContext = CreateModelBindingContext(userId, typeof(Thing), "not JSON");
 
-            var binder = new IdFromClaimModelBinder();
+            var binder = new UserIdFromClaimModelBinder();
 
             var action = () => binder.BindModelAsync(modelBindingContext);
             await action.Should().ThrowAsync<InvalidOperationException>();
@@ -100,7 +100,7 @@ namespace SocialMedia.WebAPI.Tests.Binders
 
         public class Thing
         {
-            public required string Id { get; set; }
+            public required string UserId { get; set; }
             public string? Name { get; set; }
         }
     }

@@ -9,7 +9,7 @@ namespace SocialMedia.Domain.Commands
     public record GetUserProfile : IRequest<UserProfile>
     {
         [Option(Required = false, HelpText = "User's ID")]
-        public required string Id { get; init; }
+        public required string UserId { get; init; }
     }
 
     public class GetUserProfileHandler : IRequestHandler<GetUserProfile, UserProfile>
@@ -23,7 +23,7 @@ namespace SocialMedia.Domain.Commands
 
         public async Task<UserProfile> Handle(GetUserProfile request, CancellationToken cancellationToken)
         {
-            return await userProfileRepository.GetUserProfile(request.Id, cancellationToken);
+            return await userProfileRepository.GetUserProfile(request.UserId, cancellationToken);
         }
     }
 }
