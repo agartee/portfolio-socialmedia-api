@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
 using SocialMedia.Persistence.SqlServer.Models;
@@ -30,6 +31,21 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
             dbContext.Posts.Add(postData);
 
             await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Post>> GetAllPosts(CancellationToken cancellationToken)
+        {
+            var postsData = await dbContext.Posts
+                .Include(post => post.Content)
+                .ToListAsync();
+
+            return postsData.Select(p => new Post
+            {
+                Id = p.Id,
+                UserId = p.UserId,
+                Created = p.Created,
+                Text = p.Content.Text
+            });
         }
     }
 }

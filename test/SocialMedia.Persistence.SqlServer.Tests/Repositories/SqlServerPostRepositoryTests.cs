@@ -71,5 +71,56 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
 
             await action.Should().ThrowAsync<ArgumentException>();
         }
+
+        [Fact]
+        public async Task GetAllPosts_ReturnsAllPosts()
+        {
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+
+            var existingPosts = new[]
+            {
+                new PostData
+                {
+                    Id = id1,
+                    UserId = "user1",
+                    Created = DateTime.UtcNow,
+                    Content = new PostContentData
+                    {
+                        PostId = id1,
+                        Text = "text 1",
+                    }
+                },
+                new PostData
+                {
+                    Id = id2,
+                    UserId = "user2",
+                    Created = DateTime.UtcNow,
+                    Content = new PostContentData
+                    {
+                        PostId = id2,
+                        Text = "text 2",
+                    }
+                }
+            };
+
+            await fixture.Seed(existingPosts);
+
+            var repository = new SqlServerPostRepository(fixture.CreateDbContext());
+
+            var results = await repository.GetAllPosts(CancellationToken.None);
+
+            results.Should().HaveCount(2);
+
+            var result1 = results.First(p => p.Id == id1);
+            result1.UserId.Should().Be(existingPosts[0].UserId);
+            result1.Created.Should().Be(existingPosts[0].Created);
+            result1.Text.Should().Be(existingPosts[0].Content.Text);
+
+            var result2 = results.First(p => p.Id == id2);
+            result2.UserId.Should().Be(existingPosts[1].UserId);
+            result2.Created.Should().Be(existingPosts[1].Created);
+            result2.Text.Should().Be(existingPosts[1].Content.Text);
+        }
     }
 }
