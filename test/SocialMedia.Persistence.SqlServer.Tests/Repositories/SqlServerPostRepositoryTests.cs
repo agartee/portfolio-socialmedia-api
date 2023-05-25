@@ -73,38 +73,36 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
         }
 
         [Fact]
-        public async Task GetAllPosts_ReturnsAllPosts()
+        public async Task GetAllPosts_ReturnsAllPosts_OrderedByCreatedDesc()
         {
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
 
-            var existingPosts = new[]
+            var post1 = new PostData
             {
-                new PostData
+                Id = id1,
+                UserId = "user1",
+                Created = new DateTime(2023, 1, 1),
+                Content = new PostContentData
                 {
-                    Id = id1,
-                    UserId = "user1",
-                    Created = DateTime.UtcNow,
-                    Content = new PostContentData
-                    {
-                        PostId = id1,
-                        Text = "text 1",
-                    }
-                },
-                new PostData
-                {
-                    Id = id2,
-                    UserId = "user2",
-                    Created = DateTime.UtcNow,
-                    Content = new PostContentData
-                    {
-                        PostId = id2,
-                        Text = "text 2",
-                    }
+                    PostId = id1,
+                    Text = "text 1",
                 }
             };
 
-            await fixture.Seed(existingPosts);
+            var post2 = new PostData
+            {
+                Id = id2,
+                UserId = "user2",
+                Created = new DateTime(2023, 1, 2),
+                Content = new PostContentData
+                {
+                    PostId = id2,
+                    Text = "text 2",
+                }
+            };
+
+            await fixture.Seed(new[] { post1, post2 });
 
             var repository = new SqlServerPostRepository(fixture.CreateDbContext());
 
@@ -112,15 +110,15 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
 
             results.Should().HaveCount(2);
 
-            var result1 = results.First(p => p.Id == id1);
-            result1.UserId.Should().Be(existingPosts[0].UserId);
-            result1.Created.Should().Be(existingPosts[0].Created);
-            result1.Text.Should().Be(existingPosts[0].Content.Text);
+            var result1 = results.First();
+            result1.UserId.Should().Be(post2.UserId);
+            result1.Created.Should().Be(post2.Created);
+            result1.Text.Should().Be(post2.Content.Text);
 
-            var result2 = results.First(p => p.Id == id2);
-            result2.UserId.Should().Be(existingPosts[1].UserId);
-            result2.Created.Should().Be(existingPosts[1].Created);
-            result2.Text.Should().Be(existingPosts[1].Content.Text);
+            var result2 = results.Last();
+            result2.UserId.Should().Be(post1.UserId);
+            result2.Created.Should().Be(post1.Created);
+            result2.Text.Should().Be(post1.Content.Text);
         }
     }
 }

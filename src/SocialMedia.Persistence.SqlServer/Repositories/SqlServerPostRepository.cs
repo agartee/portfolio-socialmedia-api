@@ -37,6 +37,7 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
         {
             var postsData = await dbContext.Posts
                 .Include(post => post.Content)
+                .OrderByDescending(post => post.Created)
                 .ToListAsync();
 
             return postsData.Select(p => new Post
