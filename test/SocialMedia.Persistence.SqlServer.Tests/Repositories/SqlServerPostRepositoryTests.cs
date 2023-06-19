@@ -23,7 +23,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             var post = new Post
             {
                 Id = Guid.NewGuid(),
-                UserId = "userId",
+                Author = "userId",
                 Text = "text",
                 Created = DateTime.UtcNow,
             };
@@ -36,7 +36,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
                 .Include(p => p.Content)
                 .FirstAsync(p => p.Id == post.Id);
 
-            data.UserId.Should().Be(post.UserId);
+            data.UserId.Should().Be(post.Author);
             data.Created.Should().Be(post.Created);
             data.Content.Text.Should().Be(post.Text);
         }
@@ -47,7 +47,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             var post = new Post
             {
                 Id = Guid.NewGuid(),
-                UserId = "userId",
+                Author = "userId",
                 Text = "text",
                 Created = DateTime.UtcNow,
             };
@@ -55,7 +55,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             var existingPost = new PostData
             {
                 Id = post.Id,
-                UserId = post.UserId,
+                UserId = post.Author,
                 Created = post.Created,
                 Content = new PostContentData
                 {
@@ -73,7 +73,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
         }
 
         [Fact]
-        public async Task GetAllPosts_ReturnsAllPosts_OrderedByCreatedDesc()
+        public async Task GetAllPosts_ReturnsAllPostsWithUserDisplayNameWhenPresent_OrderedByCreatedDesc()
         {
             var id1 = Guid.NewGuid();
             var id2 = Guid.NewGuid();
@@ -87,6 +87,11 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
                 {
                     PostId = id1,
                     Text = "text 1",
+                },
+                UserProfile = new UserProfileData
+                {
+                    UserId = "user1",
+                    DisplayName = "User 1"
                 }
             };
 
@@ -102,7 +107,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
                 }
             };
 
-            await fixture.Seed(new[] { post1, post2 });
+            await fixture.Seed(new object[] { post1, post2 });
 
             var repository = new SqlServerPostRepository(fixture.CreateDbContext());
 
@@ -111,12 +116,12 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             results.Should().HaveCount(2);
 
             var result1 = results.First();
-            result1.UserId.Should().Be(post2.UserId);
+            result1.Author.Should().Be(post2.UserId);
             result1.Created.Should().Be(post2.Created);
             result1.Text.Should().Be(post2.Content.Text);
 
             var result2 = results.Last();
-            result2.UserId.Should().Be(post1.UserId);
+            result2.Author.Should().Be(post1.UserProfile.DisplayName);
             result2.Created.Should().Be(post1.Created);
             result2.Text.Should().Be(post1.Content.Text);
         }

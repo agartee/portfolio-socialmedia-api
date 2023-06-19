@@ -13,5 +13,7 @@ namespace SocialMedia.Persistence.SqlServer.Models
 
         [MaxLength(100)]
         public string? DisplayName { get; set; }
+
+        public List<PostData> Posts { get; set; } = new List<PostData>();
     }
 }

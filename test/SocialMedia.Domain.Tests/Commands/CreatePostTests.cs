@@ -23,7 +23,7 @@ namespace SocialMedia.Domain.Tests.Commands
             var result = await handler.Handle(request, CancellationToken.None);
 
             result.Id.Should().NotBe(Guid.Empty);
-            result.UserId.Should().Be(request.UserId);
+            result.Author.Should().Be(request.UserId);
             result.Text.Should().Be(request.Text);
             result.Created.Should()
                 .BeOnOrAfter(DateTime.UtcNow.AddMinutes(-10)) // for debugger safety

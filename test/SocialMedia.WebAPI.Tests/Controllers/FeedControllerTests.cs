@@ -20,7 +20,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
                 new Post
                 {
                     Id = Guid.NewGuid(),
-                    UserId = "id",
+                    Author = "id",
                     Text = "text",
                     Created = DateTime.UtcNow
                 }

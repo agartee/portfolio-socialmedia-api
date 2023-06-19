@@ -29,7 +29,7 @@ namespace SocialMedia.Domain.Commands
             var post = new Post
             {
                 Id = Guid.NewGuid(),
-                UserId = request.UserId,
+                Author = request.UserId,
                 Text = request.Text,
                 Created = DateTime.UtcNow
             };

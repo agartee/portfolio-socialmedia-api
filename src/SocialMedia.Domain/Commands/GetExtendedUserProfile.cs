@@ -22,7 +22,15 @@ namespace SocialMedia.Domain.Commands
 
         public async Task<ExtendedUserProfile> Handle(GetExtendedUserProfile request, CancellationToken cancellationToken)
         {
-            return await extendedUserProfileRepository.GetExtendedUserProfile(request.UserId, cancellationToken);
+            var result = await extendedUserProfileRepository.GetExtendedUserProfile(request.UserId, cancellationToken);
+
+            if (result != null)
+                return result;
+
+            return new ExtendedUserProfile
+            {
+                UserId = request.UserId
+            };
         }
     }
 }

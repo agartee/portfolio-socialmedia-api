@@ -18,7 +18,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             var post = new Post
             {
                 Id = Guid.NewGuid(),
-                UserId = "id",
+                Author = "id",
                 Text = "text",
                 Created = DateTime.UtcNow
             };
@@ -28,7 +28,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
                 .ReturnsAsync(post);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                new Claim(ClaimTypes.NameIdentifier, post.UserId),
+                new Claim(ClaimTypes.NameIdentifier, post.Author),
             }, "TestAuthentication"));
 
             var controller = new PostController(mediator.Object);
@@ -37,7 +37,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
 
             var command = new CreatePost
             {
-                UserId = post.UserId,
+                UserId = post.Author,
                 Text = post.Text
             };
 

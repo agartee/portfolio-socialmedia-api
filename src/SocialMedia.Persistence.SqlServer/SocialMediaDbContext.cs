@@ -20,6 +20,10 @@ namespace SocialMedia.Persistence.SqlServer
             modelBuilder.Entity<PostData>()
                 .HasOne(p => p.Content)
                 .WithOne(c => c.Post);
+
+            modelBuilder.Entity<PostData>()
+                .HasOne(p => p.UserProfile)
+                .WithMany(c => c.Posts);
         }
     }
 }

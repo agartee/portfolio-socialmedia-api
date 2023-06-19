@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Moq;
 using SocialMedia.Domain.Commands;
 using SocialMedia.Domain.Models;
@@ -9,7 +9,7 @@ namespace SocialMedia.Domain.Tests.Commands
     public class GetExtendedUserProfileTests
     {
         [Fact]
-        public async Task Handle_CallsRepositoryAndReturnsUserProfile()
+        public async Task Handle_WhenUserProfileExists_CallsRepositoryAndReturnsUserProfile()
         {
             var userProfile = new ExtendedUserProfile
             {
@@ -31,6 +31,28 @@ namespace SocialMedia.Domain.Tests.Commands
             var result = await handler.Handle(request, CancellationToken.None);
 
             result.Should().Be(userProfile);
+
+            repository.Verify(m => m.GetExtendedUserProfile(
+                It.Is<string>(s => s == request.UserId),
+                It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
+        public async Task Handle_WhenUserProfileNotExists_ReturnsEmptyUserProfile()
+        {
+            var userId = "123";
+
+            var repository = new Mock<IExtendedUserProfileRepository>();
+            var handler = new GetExtendedUserProfileHandler(repository.Object);
+            var request = new GetExtendedUserProfile
+            {
+                UserId = userId
+            };
+
+            var result = await handler.Handle(request, CancellationToken.None);
+
+            result.UserId.Should().Be(userId);
+            result.DisplayName.Should().BeNull();
 
             repository.Verify(m => m.GetExtendedUserProfile(
                 It.Is<string>(s => s == request.UserId),
