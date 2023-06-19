@@ -26,11 +26,19 @@ namespace SocialMedia.Domain.Commands
 
         public async Task<ExtendedUserProfile> Handle(UpdateExtendedUserProfile request, CancellationToken cancellationToken)
         {
-            var userProfile = new ExtendedUserProfile
+            var userProfile = await extendedUserProfileRepository.GetExtendedUserProfile(request.UserId, cancellationToken);
+
+            if (userProfile == null)
             {
-                UserId = request.UserId,
-                DisplayName = request.DisplayName
+                return await extendedUserProfileRepository.CreateExtendedUserProfile(new ExtendedUserProfile
+                {
+                    UserId = request.UserId,
+                    DisplayName = request.DisplayName
+                }, cancellationToken);
             };
+
+            if (request.DisplayName != null)
+                userProfile.DisplayName = request.DisplayName;
 
             return await extendedUserProfileRepository.UpdateExtendedUserProfile(userProfile, cancellationToken);
         }

@@ -6,11 +6,6 @@ namespace SocialMedia.Domain.Exceptions
 
         public EntityNotFoundException(string typeName, object? id) : base(string.Format(MESSAGE, typeName, id))
         {
-            TypeName = typeName;
-            Id = id ?? "Unknown";
         }
-
-        public string TypeName { get; }
-        public object Id { get; }
     }
 }

@@ -15,13 +15,13 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
             this.dbContext = dbContext;
         }
 
-        public async Task<ExtendedUserProfile> GetExtendedUserProfile(string userId, CancellationToken cancellationToken)
+        public async Task<ExtendedUserProfile?> GetExtendedUserProfile(string userId, CancellationToken cancellationToken)
         {
             var userProfileData = await dbContext.UserProfiles
                 .SingleOrDefaultAsync(p => p.UserId == userId);
 
             if (userProfileData == null)
-                throw new EntityNotFoundException(nameof(ExtendedUserProfile), userId);
+                return null;
 
             return new ExtendedUserProfile
             {

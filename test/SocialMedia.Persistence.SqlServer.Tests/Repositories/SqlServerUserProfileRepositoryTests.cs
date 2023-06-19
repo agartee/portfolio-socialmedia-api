@@ -34,21 +34,19 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             var repository = new SqlServerUserProfileRepository(fixture.CreateDbContext());
             var result = await repository.GetExtendedUserProfile(userId, CancellationToken.None);
 
-            result.UserId.Should().Be(existingUserProfile.UserId);
-            result.DisplayName.Should().Be(existingUserProfile.DisplayName);
+            result!.UserId.Should().Be(existingUserProfile.UserId);
+            result!.DisplayName.Should().Be(existingUserProfile.DisplayName);
         }
 
         [Fact]
-        public async Task GetExtendedUserProfile_WhenNotExists_Throws()
+        public async Task GetExtendedUserProfile_WhenNotExists_ReturnsNull()
         {
             var userId = "123";
 
             var repository = new SqlServerUserProfileRepository(fixture.CreateDbContext());
-            var action = () => repository.GetExtendedUserProfile(userId, CancellationToken.None);
+            var result = await repository.GetExtendedUserProfile(userId, CancellationToken.None);
 
-            await action.Should().ThrowAsync<EntityNotFoundException>()
-                .WithMessage($"*{userId}*")
-                .WithMessage($"*{nameof(ExtendedUserProfile)}*");
+            result.Should().BeNull();
         }
 
         [Fact]
