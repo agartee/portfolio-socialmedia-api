@@ -41,7 +41,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
                 Text = post.Text
             };
 
-            var result = await controller.Put(command, CancellationToken.None);
+            var result = await controller.Create(command, CancellationToken.None);
 
             result.Should().BeOfType<OkObjectResult>();
             result.As<OkObjectResult>().Value.Should().Be(post);

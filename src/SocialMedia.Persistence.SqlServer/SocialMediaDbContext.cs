@@ -9,6 +9,7 @@ namespace SocialMedia.Persistence.SqlServer
 
         public DbSet<PostData> Posts { get; set; }
         public DbSet<PostContentData> PostContents { get; set; }
+        public DbSet<UserProfileData> UserProfiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

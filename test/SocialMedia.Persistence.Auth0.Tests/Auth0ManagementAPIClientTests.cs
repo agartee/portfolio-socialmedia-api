@@ -12,7 +12,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
     public class Auth0ManagementAPIClientTests
     {
         [Fact]
-        public async Task GetUserProfile_QueriesAPIAndReturnsResult()
+        public async Task GetBasicUserProfile_QueriesAPIAndReturnsResult()
         {
             var id = "123";
 
@@ -29,11 +29,11 @@ namespace SocialMedia.Persistence.Auth0.Tests
 
             var apiClient = new Auth0ManagementAPIClient(httpClient);
 
-            var result = await apiClient.GetUserProfile(id, CancellationToken.None);
+            var result = await apiClient.GetBasicUserProfile(id, CancellationToken.None);
 
-            UserProfile expectedResult = new UserProfile
+            BasicUserProfile expectedResult = new BasicUserProfile
             {
-                Id = apiResponse.user_id,
+                UserId = apiResponse.user_id,
                 Name = apiResponse.name,
                 Nickname = apiResponse.nickname,
                 Email = apiResponse.email
@@ -53,7 +53,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
         [InlineData("null")]
         [InlineData("")]
         [InlineData(null)]
-        public async Task GetUserProfile_WhenAuthResponseBodyIsInvalid_Throws(string responseBody)
+        public async Task GetBasicUserProfile_WhenAuthResponseBodyIsInvalid_Throws(string responseBody)
         {
             var id = "id";
 
@@ -62,19 +62,19 @@ namespace SocialMedia.Persistence.Auth0.Tests
 
             var apiClient = new Auth0ManagementAPIClient(httpClient);
 
-            var action = () => apiClient.GetUserProfile(id, CancellationToken.None);
+            var action = () => apiClient.GetBasicUserProfile(id, CancellationToken.None);
 
             await action.Should().ThrowAsync<CannotDeserializeResponseException>();
         }
 
         [Fact]
-        public async Task UpdateUserProfile_PatchesAPIAndReturnsResult()
+        public async Task UpdateBasicUserProfile_PatchesAPIAndReturnsResult()
         {
             var id = "123";
 
-            var userProfile = new UserProfile
+            var userProfile = new BasicUserProfile
             {
-                Id = id,
+                UserId = id,
                 Name = "name",
                 Nickname = "nickname",
                 Email = "original@here.com"
@@ -91,7 +91,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
 
             var apiClient = new Auth0ManagementAPIClient(httpClient);
 
-            var result = await apiClient.UpdateUserProfile(userProfile, CancellationToken.None);
+            var result = await apiClient.UpdateBasicUserProfile(userProfile, CancellationToken.None);
 
             result.Should().Be(userProfile);
 
@@ -114,11 +114,11 @@ namespace SocialMedia.Persistence.Auth0.Tests
         [InlineData("null")]
         [InlineData("")]
         [InlineData(null)]
-        public async Task UpdateUserProfile_WhenAuthResponseBodyIsInvalid_Throws(string responseBody)
+        public async Task UpdateBasicUserProfile_WhenAuthResponseBodyIsInvalid_Throws(string responseBody)
         {
-            var userProfile = new UserProfile
+            var userProfile = new BasicUserProfile
             {
-                Id = "id",
+                UserId = "id",
                 Name = "name",
                 Nickname = "nickname",
                 Email = "original@here.com"
@@ -130,7 +130,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
 
             var apiClient = new Auth0ManagementAPIClient(httpClient);
 
-            var action = () => apiClient.UpdateUserProfile(userProfile, CancellationToken.None);
+            var action = () => apiClient.UpdateBasicUserProfile(userProfile, CancellationToken.None);
 
             await action.Should().ThrowAsync<CannotDeserializeResponseException>();
         }

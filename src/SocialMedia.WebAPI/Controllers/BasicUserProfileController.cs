@@ -7,19 +7,19 @@ using SocialMedia.WebAPI.Binders;
 namespace SocialMedia.WebAPI.Controllers
 {
     [ApiController]
-    public class UserProfileController : ControllerBase
+    public class BasicUserProfileController : ControllerBase
     {
         private IMediator mediator;
 
-        public UserProfileController(IMediator mediator)
+        public BasicUserProfileController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
         [HttpGet]
         [Authorize]
-        [Route("/user-profile")]
-        public async Task<IActionResult> Get([ModelBinder(typeof(UserIdFromClaimModelBinder))] GetUserProfile request, CancellationToken cancellationToken)
+        [Route("/basic-user-profile")]
+        public async Task<IActionResult> Get([ModelBinder(typeof(UserIdFromClaimModelBinder))] GetBasicUserProfile request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);
 
@@ -28,8 +28,8 @@ namespace SocialMedia.WebAPI.Controllers
 
         [HttpPatch]
         [Authorize]
-        [Route("/user-profile")]
-        public async Task<IActionResult> Patch([ModelBinder(typeof(UserIdFromClaimModelBinder))] UpdateUserProfile request,
+        [Route("/basic-user-profile")]
+        public async Task<IActionResult> Update([ModelBinder(typeof(UserIdFromClaimModelBinder))] UpdateBasicUserProfile request,
             CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);

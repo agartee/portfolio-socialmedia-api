@@ -18,7 +18,7 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpPut]
         [Authorize]
         [Route("/post")]
-        public async Task<IActionResult> Put([ModelBinder(typeof(UserIdFromClaimModelBinder))] CreatePost request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create([ModelBinder(typeof(UserIdFromClaimModelBinder))] CreatePost request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);
 
