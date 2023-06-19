@@ -8,6 +8,7 @@ namespace SocialMedia.WebAPI.Configuration
         public static IServiceCollection AddSqlServerPersistenceServices(this IServiceCollection services)
         {
             services.AddTransient<IPostRepository, SqlServerPostRepository>();
+            services.AddTransient<IExtendedUserProfileRepository, SqlServerUserProfileRepository>();
 
             return services;
         }
