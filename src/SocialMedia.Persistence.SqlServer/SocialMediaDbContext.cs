@@ -23,7 +23,8 @@ namespace SocialMedia.Persistence.SqlServer
 
             modelBuilder.Entity<PostData>()
                 .HasOne(p => p.UserProfile)
-                .WithMany(c => c.Posts);
+                .WithMany(c => c.Posts)
+                .HasForeignKey(p => p.UserId);
         }
     }
 }
