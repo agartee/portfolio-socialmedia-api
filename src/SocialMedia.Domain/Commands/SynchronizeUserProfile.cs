@@ -13,11 +13,11 @@ namespace SocialMedia.Domain.Commands
 
     public class SynchronizeUserProfileHandler : IRequestHandler<SynchronizeUserProfile, UserProfile>
     {
-        private readonly IUserProfileRepository userProfileRepository;
+        private readonly IUserProfileSynchronizer userProfileSynchronizer;
 
-        public SynchronizeUserProfileHandler(IUserProfileRepository userProfileRepository)
+        public SynchronizeUserProfileHandler(IUserProfileSynchronizer userProfileSynchronizer)
         {
-            this.userProfileRepository = userProfileRepository;
+            this.userProfileSynchronizer = userProfileSynchronizer;
         }
 
         public async Task<UserProfile> Handle(SynchronizeUserProfile request, CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ namespace SocialMedia.Domain.Commands
                 Email = request.Email
             };
 
-            return await userProfileRepository.UpdateUserProfile(userProfile, cancellationToken);
+            return await userProfileSynchronizer.UpdateUserProfile(userProfile, cancellationToken);
         }
     }
 }

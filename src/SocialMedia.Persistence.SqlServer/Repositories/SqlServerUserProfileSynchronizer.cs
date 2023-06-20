@@ -31,11 +31,15 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
 
         private void CreateUserProfile(UserProfile userProfile)
         {
+            var now = DateTime.UtcNow;
+
             dbContext.UserProfiles.Add(new UserProfileData
             {
                 UserId = userProfile.UserId,
                 Name = userProfile.Name,
-                Email = userProfile.Email
+                Email = userProfile.Email,
+                Created = now,
+                LastUpdated = now
             });
         }
 
@@ -43,6 +47,7 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
         {
             userProfileData.Name = userProfile.Name;
             userProfileData.Email = userProfile.Email;
+            userProfileData.LastUpdated = DateTime.UtcNow;
         }
     }
 }

@@ -17,6 +17,9 @@ namespace SocialMedia.Persistence.SqlServer.Models
         [MaxLength(255)]
         public required string Email { get; set; }
 
+        public required DateTime Created { get; set; }
+        public required DateTime LastUpdated { get; set; }
+
         public List<PostData> Posts { get; set; } = new List<PostData>();
     }
 }

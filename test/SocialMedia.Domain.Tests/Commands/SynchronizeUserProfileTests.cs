@@ -18,7 +18,7 @@ namespace SocialMedia.Domain.Tests.Commands
                 Email = "me@here.com"
             };
 
-            var synchronizer = new Mock<IUserProfileRepository>();
+            var synchronizer = new Mock<IUserProfileSynchronizer>();
             synchronizer.Setup(s => s.UpdateUserProfile(It.IsAny<UserProfile>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
