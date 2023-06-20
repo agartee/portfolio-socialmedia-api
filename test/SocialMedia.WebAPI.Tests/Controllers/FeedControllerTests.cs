@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +17,10 @@ namespace SocialMedia.WebAPI.Tests.Controllers
         {
             var feed = new[]
             {
-                new Post
+                new PostInfo
                 {
                     Id = Guid.NewGuid(),
-                    Author = "id",
+                    Author = "User 1",
                     Text = "text",
                     Created = DateTime.UtcNow
                 }

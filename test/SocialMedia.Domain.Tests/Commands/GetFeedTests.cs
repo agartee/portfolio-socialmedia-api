@@ -13,10 +13,10 @@ namespace SocialMedia.Domain.Tests.Commands
         {
             var feed = new[]
             {
-                new Post
+                new PostInfo
                 {
                     Id = Guid.NewGuid(),
-                    Author = "id",
+                    Author = "User 1",
                     Text = "text",
                     Created = DateTime.UtcNow
                 }
