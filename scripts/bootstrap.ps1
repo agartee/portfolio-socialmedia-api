@@ -67,7 +67,7 @@ if ((Test-Path $binDir\ccr.exe)) {
   Write-Host "Test coverage reporter tool found. Skipping download." -ForegroundColor Green
 }
 else {
-  $ccrVersion = "v1.2.1"
+  $ccrVersion = "v1.3.0"
   $toolSrc = "https://github.com/agartee/cobertura-console-reporter/releases/download/$($ccrVersion)/ccr_windows_$($ccrVersion)_amd64.zip"
   $toolDest = "$binDir\ccr.zip"
 
