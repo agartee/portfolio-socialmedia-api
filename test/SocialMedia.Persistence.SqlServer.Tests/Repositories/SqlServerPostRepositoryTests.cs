@@ -18,7 +18,36 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
         }
 
         [Fact]
-        public async Task CreatePost_WhenNotExists_CreatesRows()
+        public async Task CreatePost_WhenNotExists_CreatesRowsAndReturnsPost()
+        {
+            var post = new Post
+            {
+                Id = Guid.NewGuid(),
+                UserId = "user1",
+                Text = "text",
+                Created = DateTime.UtcNow,
+            };
+
+            var repository = new SqlServerPostRepository(fixture.CreateDbContext());
+            var result = await repository.CreatePost(post, CancellationToken.None);
+
+            result.Id.Should().Be(post.Id);
+            result.Author.Should().Be(post.UserId);
+            result.Created.Should().Be(post.Created);
+            result.Text.Should().Be(post.Text);
+
+            using var dbContext = fixture.CreateDbContext();
+            var data = await dbContext.Posts
+                .Include(p => p.Content)
+                .FirstAsync(p => p.Id == post.Id);
+
+            data.UserId.Should().Be(post.UserId);
+            data.Created.Should().Be(post.Created);
+            data.Content.Text.Should().Be(post.Text);
+        }
+
+        [Fact]
+        public async Task CreatePost_WhenNotExistsAndUserHasDisplayName_CreatesRowsAndReturnsPost()
         {
             var userProfile = new UserProfileData
             {
@@ -60,7 +89,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             var post = new Post
             {
                 Id = Guid.NewGuid(),
-                UserId = "userId",
+                UserId = "123",
                 Text = "text",
                 Created = DateTime.UtcNow,
             };
@@ -74,54 +103,63 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
                 {
                     PostId = post.Id,
                     Text = post.Text,
+                },
+                UserProfile = new UserProfileData
+                {
+                    UserId = post.UserId
                 }
             };
+
             await fixture.Seed(new[] { existingPost });
 
             var repository = new SqlServerPostRepository(fixture.CreateDbContext());
 
             var action = () => repository.CreatePost(post, CancellationToken.None);
 
-            await action.Should().ThrowAsync<ArgumentException>();
+            await action.Should().ThrowAsync<ArgumentException>()
+                .WithMessage($"*{"An item with the same key has already been added"}*")
+                .WithMessage($"*{post.Id}*"); ;
         }
 
         [Fact]
-        public async Task GetAllPosts_ReturnsAllPostsWithUserDisplayName_OrderedByCreatedDesc()
+        public async Task GetAllPosts_ReturnsAllPostsWithUserDisplayNameWhenAvailable_OrderedByCreatedDesc()
         {
-            var id1 = Guid.NewGuid();
-            var id2 = Guid.NewGuid();
-
-            var userProfile = new UserProfileData
-            {
-                UserId = "user1",
-                DisplayName = "User 1"
-            };
+            var user1Id = "123";
+            var user1DisplayName = "User 1";
+            var user2Id = "456";
+            var post1Id = Guid.NewGuid();
+            var post2Id = Guid.NewGuid();
 
             var post1 = new PostData
             {
-                Id = id1,
-                UserId = userProfile.UserId,
+                Id = post1Id,
+                UserId = user1Id,
                 Created = new DateTime(2023, 1, 1),
                 Content = new PostContentData
                 {
-                    PostId = id1,
+                    PostId = post1Id,
                     Text = "text 1",
                 },
+                UserProfile = new UserProfileData
+                {
+                    UserId = user1Id,
+                    DisplayName = user1DisplayName
+                }
             };
 
             var post2 = new PostData
             {
-                Id = id2,
-                UserId = userProfile.UserId,
+                Id = post2Id,
+                UserId = user2Id,
                 Created = new DateTime(2023, 1, 2),
                 Content = new PostContentData
                 {
-                    PostId = id2,
+                    PostId = post2Id,
                     Text = "text 2",
                 }
             };
 
-            await fixture.Seed(new object[] { post1, post2, userProfile });
+            await fixture.Seed(new object[] { post1, post2 });
 
             var repository = new SqlServerPostRepository(fixture.CreateDbContext());
 
@@ -130,12 +168,12 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             results.Should().HaveCount(2);
 
             var result1 = results.First();
-            result1.Author.Should().Be(userProfile.DisplayName);
+            result1.Author.Should().Be(user2Id);
             result1.Created.Should().Be(post2.Created);
             result1.Text.Should().Be(post2.Content.Text);
 
             var result2 = results.Last();
-            result2.Author.Should().Be(userProfile.DisplayName);
+            result2.Author.Should().Be(user1DisplayName);
             result2.Created.Should().Be(post1.Created);
             result2.Text.Should().Be(post1.Content.Text);
         }
