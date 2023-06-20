@@ -6,7 +6,7 @@ using SocialMedia.Domain.Services;
 namespace SocialMedia.Domain.Commands
 {
     [Verb("update user profile", HelpText = "Update an existing user's profile.")]
-    public record UpdateUserProfile : IRequest<UserProfile>
+    public record UpdateBasicUserProfile : IRequest<BasicUserProfile>
     {
         [Option(Required = false, HelpText = "User's ID")]
         public required string UserId { get; init; }
@@ -21,26 +21,26 @@ namespace SocialMedia.Domain.Commands
         public string? Email { get; init; }
     }
 
-    public class UpdateUserProfileHandler : IRequestHandler<UpdateUserProfile, UserProfile>
+    public class UpdateBasicUserProfileHandler : IRequestHandler<UpdateBasicUserProfile, BasicUserProfile>
     {
-        private readonly IUserProfileRepository userProfileRepository;
+        private readonly IBasicUserProfileRepository basicUserProfileRepository;
 
-        public UpdateUserProfileHandler(IUserProfileRepository userProfileRepository)
+        public UpdateBasicUserProfileHandler(IBasicUserProfileRepository userProfileRepository)
         {
-            this.userProfileRepository = userProfileRepository;
+            this.basicUserProfileRepository = userProfileRepository;
         }
 
-        public async Task<UserProfile> Handle(UpdateUserProfile request, CancellationToken cancellationToken)
+        public async Task<BasicUserProfile> Handle(UpdateBasicUserProfile request, CancellationToken cancellationToken)
         {
-            var userProfile = new UserProfile
+            var userProfile = new BasicUserProfile
             {
-                Id = request.UserId,
+                UserId = request.UserId,
                 Name = request.Name,
                 Nickname = request.Nickname,
                 Email = request.Email
             };
 
-            return await userProfileRepository.UpdateUserProfile(userProfile, cancellationToken);
+            return await basicUserProfileRepository.UpdateBasicUserProfile(userProfile, cancellationToken);
         }
     }
 }

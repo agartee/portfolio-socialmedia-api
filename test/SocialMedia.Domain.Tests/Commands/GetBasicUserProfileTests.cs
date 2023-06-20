@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Moq;
 using SocialMedia.Domain.Commands;
 using SocialMedia.Domain.Models;
@@ -6,35 +6,35 @@ using SocialMedia.Domain.Services;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
-    public class GetUserProfileTests
+    public class GetBasicUserProfileTests
     {
         [Fact]
         public async Task Handle_CallsRepositoryAndReturnsUserProfile()
         {
-            var userProfile = new UserProfile
+            var userProfile = new BasicUserProfile
             {
-                Id = "id",
+                UserId = "id",
                 Name = "name",
                 Nickname = "nickname",
                 Email = "me@here.com"
             };
 
-            var repository = new Mock<IUserProfileRepository>();
-            repository.Setup(r => r.GetUserProfile(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            var repository = new Mock<IBasicUserProfileRepository>();
+            repository.Setup(r => r.GetBasicUserProfile(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
-            var handler = new GetUserProfileHandler(repository.Object);
+            var handler = new GetBasicUserProfileHandler(repository.Object);
 
-            var request = new GetUserProfile
+            var request = new GetBasicUserProfile
             {
-                UserId = userProfile.Id
+                UserId = userProfile.UserId
             };
 
             var result = await handler.Handle(request, CancellationToken.None);
 
             result.Should().Be(userProfile);
 
-            repository.Verify(m => m.GetUserProfile(
+            repository.Verify(m => m.GetBasicUserProfile(
                 It.Is<string>(s => s == request.UserId),
                 It.IsAny<CancellationToken>()));
         }

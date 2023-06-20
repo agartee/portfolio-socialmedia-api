@@ -6,11 +6,11 @@ using SocialMedia.Domain.Services;
 namespace SocialMedia.Domain.Commands
 {
     [Verb("get feed", HelpText = "Get the latest feed.")]
-    public class GetFeed : IRequest<IEnumerable<Post>>
+    public class GetFeed : IRequest<IEnumerable<PostInfo>>
     {
     }
 
-    public class GetFeedHandler : IRequestHandler<GetFeed, IEnumerable<Post>>
+    public class GetFeedHandler : IRequestHandler<GetFeed, IEnumerable<PostInfo>>
     {
         private readonly IPostRepository postRepository;
 
@@ -19,7 +19,7 @@ namespace SocialMedia.Domain.Commands
             this.postRepository = postRepository;
         }
 
-        public async Task<IEnumerable<Post>> Handle(GetFeed request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PostInfo>> Handle(GetFeed request, CancellationToken cancellationToken)
         {
             return await postRepository.GetAllPosts(cancellationToken);
         }

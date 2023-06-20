@@ -6,7 +6,7 @@ using SocialMedia.Domain.Services;
 namespace SocialMedia.Domain.Commands
 {
     [Verb("create post", HelpText = "Create a new post.")]
-    public class CreatePost : IRequest<Post>
+    public class CreatePost : IRequest<PostInfo>
     {
         [Option(Required = false, HelpText = "User's ID")]
         public required string UserId { get; init; }
@@ -15,7 +15,7 @@ namespace SocialMedia.Domain.Commands
         public required string Text { get; init; }
     }
 
-    public class CreatePostHandler : IRequestHandler<CreatePost, Post>
+    public class CreatePostHandler : IRequestHandler<CreatePost, PostInfo>
     {
         private readonly IPostRepository postRepository;
 
@@ -24,7 +24,7 @@ namespace SocialMedia.Domain.Commands
             this.postRepository = postRepository;
         }
 
-        public async Task<Post> Handle(CreatePost request, CancellationToken cancellationToken)
+        public async Task<PostInfo> Handle(CreatePost request, CancellationToken cancellationToken)
         {
             var post = new Post
             {
@@ -34,9 +34,7 @@ namespace SocialMedia.Domain.Commands
                 Created = DateTime.UtcNow
             };
 
-            await postRepository.CreatePost(post, cancellationToken);
-
-            return post;
+            return await postRepository.CreatePost(post, cancellationToken);
         }
     }
 }

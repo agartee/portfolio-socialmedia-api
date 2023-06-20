@@ -4,7 +4,7 @@ namespace SocialMedia.Domain.Services
 {
     public interface IPostRepository
     {
-        Task CreatePost(Post post, CancellationToken cancellationToken);
-        Task<IEnumerable<Post>> GetAllPosts(CancellationToken cancellationToken);
+        Task<PostInfo> CreatePost(Post post, CancellationToken cancellationToken);
+        Task<IEnumerable<PostInfo>> GetAllPosts(CancellationToken cancellationToken);
     }
 }

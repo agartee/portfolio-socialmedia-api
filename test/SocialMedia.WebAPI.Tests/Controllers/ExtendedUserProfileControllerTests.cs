@@ -10,34 +10,32 @@ using System.Security.Claims;
 
 namespace SocialMedia.WebAPI.Tests.Controllers
 {
-    public class UserProfileControllerTests
+    public class ExtendedUserProfileControllerTests
     {
         [Fact]
         public async Task Get_SubmitsCommandAndReturnsResult()
         {
-            var userProfile = new UserProfile
+            var userProfile = new ExtendedUserProfile
             {
-                Id = "id",
-                Name = "name",
-                Nickname = "nickname",
-                Email = "email",
+                UserId = "id",
+                DisplayName = "display name"
             };
 
             var mediator = new Mock<IMediator>();
-            mediator.Setup(m => m.Send(It.IsAny<GetUserProfile>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(m => m.Send(It.IsAny<GetExtendedUserProfile>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                new Claim(ClaimTypes.NameIdentifier, userProfile.Id),
+                new Claim(ClaimTypes.NameIdentifier, userProfile.UserId),
             }, "TestAuthentication"));
 
-            var controller = new UserProfileController(mediator.Object);
+            var controller = new ExtendedUserProfileController(mediator.Object);
             controller.ControllerContext = new ControllerContext();
             controller.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
-            var command = new GetUserProfile
+            var command = new GetExtendedUserProfile
             {
-                UserId = userProfile.Id
+                UserId = userProfile.UserId
             };
 
             var result = await controller.Get(command, CancellationToken.None);
@@ -46,48 +44,44 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             result.As<OkObjectResult>().Value.Should().Be(userProfile);
 
             mediator.Verify(m => m.Send(
-                It.Is<GetUserProfile>(r => r == command),
+                It.Is<GetExtendedUserProfile>(r => r == command),
                 It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task Update_SubmitsCommandAndReturnsResult()
+        public async Task Patch_SubmitsCommandAndReturnsResult()
         {
-            var userProfile = new UserProfile
+            var userProfile = new ExtendedUserProfile
             {
-                Id = "id",
-                Name = "name",
-                Nickname = "nickname",
-                Email = "email",
+                UserId = "id",
+                DisplayName = "display name"
             };
 
             var mediator = new Mock<IMediator>();
-            mediator.Setup(m => m.Send(It.IsAny<UpdateUserProfile>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(m => m.Send(It.IsAny<UpdateExtendedUserProfile>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                new Claim(ClaimTypes.NameIdentifier, userProfile.Id),
+                new Claim(ClaimTypes.NameIdentifier, userProfile.UserId),
             }, "TestAuthentication"));
 
-            var controller = new UserProfileController(mediator.Object);
+            var controller = new WebAPI.Controllers.ExtendedUserProfileController(mediator.Object);
             controller.ControllerContext = new ControllerContext();
             controller.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
-            var command = new UpdateUserProfile
+            var command = new UpdateExtendedUserProfile
             {
-                UserId = userProfile.Id,
-                Name = userProfile.Name,
-                Nickname = userProfile.Nickname,
-                Email = userProfile.Email,
+                UserId = userProfile.UserId,
+                DisplayName = userProfile.DisplayName
             };
 
-            var result = await controller.Patch(command, CancellationToken.None);
+            var result = await controller.Update(command, CancellationToken.None);
 
             result.Should().BeOfType<OkObjectResult>();
             result.As<OkObjectResult>().Value.Should().Be(userProfile);
 
             mediator.Verify(m => m.Send(
-                It.Is<UpdateUserProfile>(r => r == command),
+                It.Is<UpdateExtendedUserProfile>(r => r == command),
                 It.IsAny<CancellationToken>()));
         }
     }

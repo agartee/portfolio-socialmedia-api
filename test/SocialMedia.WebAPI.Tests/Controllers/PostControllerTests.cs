@@ -15,10 +15,12 @@ namespace SocialMedia.WebAPI.Tests.Controllers
         [Fact]
         public async Task Create_SubmitsCommandAndReturnsResult()
         {
-            var post = new Post
+            var userId = "123";
+
+            var post = new PostInfo
             {
                 Id = Guid.NewGuid(),
-                UserId = "id",
+                Author = "User 1",
                 Text = "text",
                 Created = DateTime.UtcNow
             };
@@ -28,7 +30,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
                 .ReturnsAsync(post);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                new Claim(ClaimTypes.NameIdentifier, post.UserId),
+                new Claim(ClaimTypes.NameIdentifier, userId),
             }, "TestAuthentication"));
 
             var controller = new PostController(mediator.Object);
@@ -37,11 +39,11 @@ namespace SocialMedia.WebAPI.Tests.Controllers
 
             var command = new CreatePost
             {
-                UserId = post.UserId,
+                UserId = userId,
                 Text = post.Text
             };
 
-            var result = await controller.Put(command, CancellationToken.None);
+            var result = await controller.Create(command, CancellationToken.None);
 
             result.Should().BeOfType<OkObjectResult>();
             result.As<OkObjectResult>().Value.Should().Be(post);

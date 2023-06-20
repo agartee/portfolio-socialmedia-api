@@ -15,5 +15,6 @@ namespace SocialMedia.Persistence.SqlServer.Models
         public required DateTime Created { get; set; }
 
         public required PostContentData Content { get; set; }
+        public UserProfileData? UserProfile { get; set; }
     }
 }
