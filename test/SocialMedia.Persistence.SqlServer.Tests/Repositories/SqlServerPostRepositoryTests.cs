@@ -18,7 +18,36 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
         }
 
         [Fact]
-        public async Task CreatePost_WhenNotExists_CreatesRows()
+        public async Task CreatePost_WhenNotExists_CreatesRowsAndReturnsPost()
+        {
+            var post = new Post
+            {
+                Id = Guid.NewGuid(),
+                UserId = "user1",
+                Text = "text",
+                Created = DateTime.UtcNow,
+            };
+
+            var repository = new SqlServerPostRepository(fixture.CreateDbContext());
+            var result = await repository.CreatePost(post, CancellationToken.None);
+
+            result.Id.Should().Be(post.Id);
+            result.Author.Should().Be(post.UserId);
+            result.Created.Should().Be(post.Created);
+            result.Text.Should().Be(post.Text);
+
+            using var dbContext = fixture.CreateDbContext();
+            var data = await dbContext.Posts
+                .Include(p => p.Content)
+                .FirstAsync(p => p.Id == post.Id);
+
+            data.UserId.Should().Be(post.UserId);
+            data.Created.Should().Be(post.Created);
+            data.Content.Text.Should().Be(post.Text);
+        }
+
+        [Fact]
+        public async Task CreatePost_WhenNotExistsAndUserHasDisplayName_CreatesRowsAndReturnsPost()
         {
             var userProfile = new UserProfileData
             {
