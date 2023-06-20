@@ -9,32 +9,31 @@ using System.Security.Claims;
 
 namespace SocialMedia.WebAPI.Tests.Controllers
 {
-    public class BasicUserProfileControllerTests
+    public class UserProfileControllerTests
     {
         [Fact]
         public async Task Get_SubmitsCommandAndReturnsResult()
         {
-            var userProfile = new BasicUserProfile
+            var userProfile = new UserProfile
             {
                 UserId = "id",
                 Name = "name",
-                Nickname = "nickname",
                 Email = "email",
             };
 
             var mediator = new Mock<IMediator>();
-            mediator.Setup(m => m.Send(It.IsAny<GetBasicUserProfile>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(m => m.Send(It.IsAny<GetUserProfile>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                 new Claim(ClaimTypes.NameIdentifier, userProfile.UserId),
             }, "TestAuthentication"));
 
-            var controller = new WebAPI.Controllers.BasicUserProfileController(mediator.Object);
+            var controller = new WebAPI.Controllers.UserProfileController(mediator.Object);
             controller.ControllerContext = new ControllerContext();
             controller.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
-            var command = new GetBasicUserProfile
+            var command = new GetUserProfile
             {
                 UserId = userProfile.UserId
             };
@@ -45,38 +44,36 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             result.As<OkObjectResult>().Value.Should().Be(userProfile);
 
             mediator.Verify(m => m.Send(
-                It.Is<GetBasicUserProfile>(r => r == command),
+                It.Is<GetUserProfile>(r => r == command),
                 It.IsAny<CancellationToken>()));
         }
 
         [Fact]
-        public async Task Patch_SubmitsCommandAndReturnsResult()
+        public async Task Update_SubmitsCommandAndReturnsResult()
         {
-            var userProfile = new BasicUserProfile
+            var userProfile = new UserProfile
             {
                 UserId = "id",
                 Name = "name",
-                Nickname = "nickname",
                 Email = "email",
             };
 
             var mediator = new Mock<IMediator>();
-            mediator.Setup(m => m.Send(It.IsAny<UpdateBasicUserProfile>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(m => m.Send(It.IsAny<UpdateUserProfile>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
                 new Claim(ClaimTypes.NameIdentifier, userProfile.UserId),
             }, "TestAuthentication"));
 
-            var controller = new WebAPI.Controllers.BasicUserProfileController(mediator.Object);
+            var controller = new WebAPI.Controllers.UserProfileController(mediator.Object);
             controller.ControllerContext = new ControllerContext();
             controller.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
-            var command = new UpdateBasicUserProfile
+            var command = new UpdateUserProfile
             {
                 UserId = userProfile.UserId,
                 Name = userProfile.Name,
-                Nickname = userProfile.Nickname,
                 Email = userProfile.Email,
             };
 
@@ -86,7 +83,46 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             result.As<OkObjectResult>().Value.Should().Be(userProfile);
 
             mediator.Verify(m => m.Send(
-                It.Is<UpdateBasicUserProfile>(r => r == command),
+                It.Is<UpdateUserProfile>(r => r == command),
+                It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
+        public async Task Synchronize_SubmitsCommandAndReturnsResult()
+        {
+            var userProfile = new UserProfile
+            {
+                UserId = "id",
+                Name = "name",
+                Email = "email",
+            };
+
+            var mediator = new Mock<IMediator>();
+            mediator.Setup(m => m.Send(It.IsAny<SynchronizeUserProfile>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(userProfile);
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+                new Claim(ClaimTypes.NameIdentifier, userProfile.UserId),
+            }, "TestAuthentication"));
+
+            var controller = new WebAPI.Controllers.UserProfileController(mediator.Object);
+            controller.ControllerContext = new ControllerContext();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
+
+            var command = new SynchronizeUserProfile
+            {
+                UserId = userProfile.UserId,
+                Name = userProfile.Name,
+                Email = userProfile.Email,
+            };
+
+            var result = await controller.Synchronize(command, CancellationToken.None);
+
+            result.Should().BeOfType<OkObjectResult>();
+            result.As<OkObjectResult>().Value.Should().Be(userProfile);
+
+            mediator.Verify(m => m.Send(
+                It.Is<SynchronizeUserProfile>(r => r == command),
                 It.IsAny<CancellationToken>()));
         }
     }

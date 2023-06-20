@@ -40,7 +40,7 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
             return new PostInfo
             {
                 Id = resultData.Id,
-                Author = resultData.UserProfile?.DisplayName ?? resultData.UserId,
+                Author = resultData.UserProfile!.Name,
                 Created = resultData.Created,
                 Text = resultData.Content.Text
             };
@@ -57,7 +57,7 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
             return postsData.Select(p => new PostInfo
             {
                 Id = p.Id,
-                Author = p.UserProfile?.DisplayName ?? p.UserId,
+                Author = p.UserProfile!.Name,
                 Created = p.Created,
                 Text = p.Content.Text
             });

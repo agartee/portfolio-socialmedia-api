@@ -12,7 +12,10 @@ namespace SocialMedia.Persistence.SqlServer.Models
         public required string UserId { get; set; }
 
         [MaxLength(100)]
-        public string? DisplayName { get; set; }
+        public required string Name { get; set; }
+
+        [MaxLength(255)]
+        public required string Email { get; set; }
 
         public List<PostData> Posts { get; set; } = new List<PostData>();
     }

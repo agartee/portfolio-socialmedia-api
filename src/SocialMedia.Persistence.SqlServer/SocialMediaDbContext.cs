@@ -5,6 +5,8 @@ namespace SocialMedia.Persistence.SqlServer
 {
     public class SocialMediaDbContext : DbContext
     {
+        public const string SCHEMA_NAME = "SocialMedia";
+
         public SocialMediaDbContext(DbContextOptions<SocialMediaDbContext> options) : base(options) { }
 
         public DbSet<PostData> Posts { get; set; }
@@ -15,7 +17,7 @@ namespace SocialMedia.Persistence.SqlServer
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.HasDefaultSchema("SocialMedia");
+            modelBuilder.HasDefaultSchema(SCHEMA_NAME);
 
             modelBuilder.Entity<PostData>()
                 .HasOne(p => p.Content)

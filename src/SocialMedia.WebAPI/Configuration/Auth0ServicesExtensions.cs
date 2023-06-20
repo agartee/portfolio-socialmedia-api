@@ -27,8 +27,8 @@ namespace SocialMedia.WebAPI.Configuration
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             });
 
-            services.AddTransient<IBasicUserProfileRepository, Auth0ManagementAPIClient>();
-            services.AddHttpClient<IBasicUserProfileRepository, Auth0ManagementAPIClient>(client =>
+            services.AddTransient<IUserProfileRepository, Auth0ManagementAPIClient>();
+            services.AddHttpClient<IUserProfileRepository, Auth0ManagementAPIClient>(client =>
             {
                 var baseUrl = config["userManagement:authentication:audience"];
                 if (baseUrl != null)

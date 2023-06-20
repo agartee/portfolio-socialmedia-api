@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 
 namespace SocialMedia.Persistence.Auth0
 {
-    public class Auth0ManagementAPIClient : IBasicUserProfileRepository
+    public class Auth0ManagementAPIClient : IUserProfileRepository
     {
         private readonly HttpClient httpClient;
 
@@ -16,7 +16,7 @@ namespace SocialMedia.Persistence.Auth0
             this.httpClient = httpClient;
         }
 
-        public async Task<BasicUserProfile> GetBasicUserProfile(string userId, CancellationToken cancellationToken)
+        public async Task<UserProfile> GetUserProfile(string userId, CancellationToken cancellationToken)
         {
             string url = $"users/{userId}";
 
@@ -26,21 +26,19 @@ namespace SocialMedia.Persistence.Auth0
             if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
-            return new BasicUserProfile
+            return new UserProfile
             {
                 UserId = userResponse.Id,
                 Name = userResponse.Name,
-                Nickname = userResponse.Nickname,
                 Email = userResponse.Email,
             };
         }
 
-        public async Task<BasicUserProfile> UpdateBasicUserProfile(BasicUserProfile userProfile, CancellationToken cancellationToken)
+        public async Task<UserProfile> UpdateUserProfile(UserProfile userProfile, CancellationToken cancellationToken)
         {
             var payload = new UserRequest
             {
                 Name = userProfile.Name,
-                Nickname = userProfile.Nickname,
                 Email = userProfile.Email
             };
 
@@ -52,11 +50,10 @@ namespace SocialMedia.Persistence.Auth0
             if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
-            return new BasicUserProfile
+            return new UserProfile
             {
                 UserId = userResponse.Id,
                 Name = userResponse.Name,
-                Nickname = userResponse.Nickname,
                 Email = userResponse.Email,
             };
         }

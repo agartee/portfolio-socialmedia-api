@@ -6,30 +6,28 @@ using SocialMedia.Domain.Services;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
-    public class UpdateBasicUserProfileTests
+    public class SynchronizeUserProfileTests
     {
         [Fact]
-        public async Task Handle_CallsRepositoryAndReturnsUserProfile()
+        public async Task Handle_CallsSynchronizerAndReturnsUserProfile()
         {
-            var userProfile = new BasicUserProfile
+            var userProfile = new UserProfile
             {
                 UserId = "id",
                 Name = "name",
-                Nickname = "nickname",
                 Email = "me@here.com"
             };
 
-            var repository = new Mock<IBasicUserProfileRepository>();
-            repository.Setup(r => r.UpdateBasicUserProfile(It.IsAny<BasicUserProfile>(), It.IsAny<CancellationToken>()))
+            var synchronizer = new Mock<IUserProfileRepository>();
+            synchronizer.Setup(s => s.UpdateUserProfile(It.IsAny<UserProfile>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(userProfile);
 
-            var handler = new UpdateBasicUserProfileHandler(repository.Object);
+            var handler = new SynchronizeUserProfileHandler(synchronizer.Object);
 
-            var request = new UpdateBasicUserProfile
+            var request = new SynchronizeUserProfile
             {
                 UserId = userProfile.UserId,
                 Name = userProfile.Name,
-                Nickname = userProfile.Nickname,
                 Email = userProfile.Email
             };
 
@@ -37,8 +35,8 @@ namespace SocialMedia.Domain.Tests.Commands
 
             result.Should().Be(userProfile);
 
-            repository.Verify(m => m.UpdateBasicUserProfile(
-                It.Is<BasicUserProfile>(s => s == userProfile),
+            synchronizer.Verify(s => s.UpdateUserProfile(
+                It.Is<UserProfile>(s => s == userProfile),
                 It.IsAny<CancellationToken>()));
         }
     }
