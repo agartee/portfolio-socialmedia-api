@@ -30,7 +30,7 @@ namespace SocialMedia.Persistence.Auth0
             {
                 UserId = userResponse.Id,
                 Name = userResponse.Name,
-                Email = userResponse.Email,
+                Email = userResponse.Email
             };
         }
 
@@ -54,7 +54,7 @@ namespace SocialMedia.Persistence.Auth0
             {
                 UserId = userResponse.Id,
                 Name = userResponse.Name,
-                Email = userResponse.Email,
+                Email = userResponse.Email
             };
         }
     }

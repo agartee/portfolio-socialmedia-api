@@ -20,11 +20,11 @@ namespace SocialMedia.Domain.Commands
 
     public class UpdateUserProfileHandler : IRequestHandler<UpdateUserProfile, UserProfile>
     {
-        private readonly IUserProfileRepository basicUserProfileRepository;
+        private readonly IUserProfileRepository userProfileRepository;
 
         public UpdateUserProfileHandler(IUserProfileRepository userProfileRepository)
         {
-            this.basicUserProfileRepository = userProfileRepository;
+            this.userProfileRepository = userProfileRepository;
         }
 
         public async Task<UserProfile> Handle(UpdateUserProfile request, CancellationToken cancellationToken)
@@ -36,7 +36,7 @@ namespace SocialMedia.Domain.Commands
                 Email = request.Email
             };
 
-            return await basicUserProfileRepository.UpdateUserProfile(userProfile, cancellationToken);
+            return await userProfileRepository.UpdateUserProfile(userProfile, cancellationToken);
         }
     }
 }
