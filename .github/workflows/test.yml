@@ -14,7 +14,7 @@ on:
       
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     services:
       mssql:
@@ -38,9 +38,12 @@ jobs:
 
       - name: Run bootstrap script
         run: ./scripts/bootstrap.ps1 -ci
+        shell: pwsh
 
       - name: Run build script
         run: ./scripts/build.ps1 -configuration Release
+        shell: pwsh
 
       - name: Run test script
         run: ./scripts/test.ps1 -configuration Release
+        shell: pwsh
