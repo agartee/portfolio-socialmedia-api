@@ -10,24 +10,10 @@ param(
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
 
-# **************************************************************************************
-# Local
-# **************************************************************************************
 if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
-  $solutionFile = "$rootDir\SocialMedia.sln"
-
-  dotnet build "$solutionFile" --configuration $configuration
+  . $rootDir/scripts/support/build-local.ps1
 }
 
-# **************************************************************************************
-# Docker
-# **************************************************************************************
 if ($docker) {
-  $imageName = "socialmedia-api"
-  $tagName = "dev"
-
-  docker image build `
-    --tag "$($imageName):$($tagName)" `
-    --build-arg CONFIG=$configuration `
-    "$rootDir"
+  . $rootDir/scripts/support/build-docker.ps1
 }
