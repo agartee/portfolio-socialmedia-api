@@ -11,11 +11,23 @@ on:
     paths-ignore:
       - "**.md"
       - "**.example"
-
+      
 jobs:
   build-and-test:
     runs-on: windows-latest
 
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: ${{ secrets.SQL_SA_PASSWORD }}
+          ACCEPT_EULA: 'Y'
+        ports:
+          - 1433:1433
+
+    env:
+      CONNECTIONSTRINGS__TEST_DATABASE: Server=mssql;Database=SocialMedia;User=sa;Password=${{ secrets.SQL_SA_PASSWORD }};TrustServerCertificate=True;MultipleActiveResultSets=true
+          
     steps:
       - uses: actions/checkout@v3
 
