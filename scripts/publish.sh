@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
+rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 projectFile="$rootDir/src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj"
 
-rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 configuration="Release"
 publishDir="$rootDir/.publish"
 
