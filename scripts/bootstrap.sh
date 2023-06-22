@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+appEnv="local"
 
 case "$(uname -s)" in
 	Linux)
@@ -14,8 +15,6 @@ case "$(uname -s)" in
 		NC='\033[m'
 		;;
 esac
-
-appEnv="local"
 
 while (( "$#" )); do
   case "$1" in
