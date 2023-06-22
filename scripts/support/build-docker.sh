@@ -1,9 +1,9 @@
 #!/bin/bash
 
-image_name="socialmedia-api"
-tag_name="dev"
-
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+config=$(cat "$rootDir/scripts/scripts.json")
+imageName=$(echo "$config" | jq -r '.build.docker.imageName')
+tagName=$(echo "$config" | jq -r '.build.docker.tagName')
 configuration="Debug"
 
 while (( "$#" )); do
@@ -29,6 +29,6 @@ while (( "$#" )); do
 done
 
 docker image build \
-  --tag "${image_name}:${tag_name}" \
+  --tag "${imageName}:${tagName}" \
   --build-arg CONFIG=${configuration} \
   "$rootDir"

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-solutionFile="$rootDir/SocialMedia.sln"
-
+config=$(cat "$rootDir/scripts/scripts.json")
+solutionFile=$(echo "$config" | jq -r '.build.local.solutionFile')
 configuration="Debug"
 
 while (( "$#" )); do

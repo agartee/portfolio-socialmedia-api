@@ -1,6 +1,26 @@
 {
+  "build": {
+    "local": {
+      "solutionFile": "SocialMedia.sln"
+    },
+    "docker": {
+      "imageName": "socialmedia-api",
+      "tagName": "dev"
+    }
+  },
   "publish": {
     "projectFile": "src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj"
+  },
+  "server": {
+    "local": {
+      "projectFile": "src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj"
+    },
+    "docker": {
+      "imageName": "socialmedia-api",
+      "tagName": "dev",
+      "containerName": "socialmedia-api",
+      "userSecretsId": "agartee-socialmedia"
+    }
   },
   "test": {
     "exclusions": [
