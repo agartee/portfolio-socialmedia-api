@@ -1,20 +1,7 @@
 #!/usr/bin/env bash
 
-# reminder: add a comma at the beginning of subsequent exclusions for a project
-declare -A exclusions
-exclusions["SocialMedia.Domain"]="SocialMedia.Domain.Models.*"
-
-exclusions["SocialMedia.Persistence.Auth0"]="SocialMedia.Persistence.Auth0.Configuration.*"
-exclusions["SocialMedia.Persistence.Auth0"]+=",SocialMedia.Persistence.Auth0.Models.*"
-
-exclusions["SocialMedia.Persistence.SqlServer"]="SocialMedia.Persistence.SqlServer.Migrations.*"
-exclusions["SocialMedia.Persistence.SqlServer"]+=",SocialMedia.Persistence.SqlServer.Models.*"
-
-exclusions["SocialMedia.WebAPI"]="Program"
-exclusions["SocialMedia.WebAPI"]+=",SocialMedia.WebAPI.Configuration.*"
-exclusions["SocialMedia.WebAPI"]+=",SocialMedia.WebAPI.Formatters.*"
-
 rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+config=$(jq '.' "$rootDir/scripts/scripts.json")
 testProjects=$(find "$rootDir/test" -name "*.csproj")
 coverageDir="$rootDir/.test-coverage"
 binDir="$rootDir/.bin"
@@ -33,6 +20,25 @@ case "$(uname -s)" in
 		NO_COLOR="\033[m"
 		;;
 esac
+
+declare -A exclusions
+
+exclusionLength=$(echo "$config" | jq '.["test-coverage"].exclusions | length')
+
+for (( i=0; i<$exclusionLength; i++ ))
+do
+    project=$(echo "$config" | jq -r ".[\"test-coverage\"].exclusions[$i].project")
+    excludeLength=$(echo "$config" | jq ".[\"test-coverage\"].exclusions[$i].exclude | length")
+    exclusions["$project"]=""
+    for (( j=0; j<$excludeLength; j++ ))
+    do
+        exclude=$(echo "$config" | jq -r ".[\"test-coverage\"].exclusions[$i].exclude[$j]")
+        if [ -n "${exclusions[$project]}" ]; then
+            exclusions["$project"]+=","
+        fi
+        exclusions["$project"]+="$exclude"
+    done
+done
 
 while (( "$#" )); do
   case "$1" in
