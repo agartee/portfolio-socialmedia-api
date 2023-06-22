@@ -56,7 +56,7 @@ foreach ($testProject in $testProjects) {
 
   if ($exclude) {
     Write-Host "Coverage Exclusions:" -ForegroundColor Blue
-    $exclusions[$projectName] | ForEach-Object { Write-Host "  $_" -ForegroundColor Blue }
+    $exclusions[$projectName] | ForEach-Object { Write-Host "  $_" }
     Write-Host
   }
 }
