@@ -36,9 +36,14 @@ while (( "$#" )); do
         exit 1
       fi
       ;;
-    *)
-      echo "Unknown parameter passed: $1"
+    -*|--*=)
+      echo "Error: Unsupported flag $1" >&2
       exit 1
+      ;;
+    *) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
   esac
 done
 
