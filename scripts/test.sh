@@ -34,7 +34,6 @@ case "$(uname -s)" in
 		;;
 esac
 
-# Parse command-line options
 while (( "$#" )); do
   case "$1" in
     --configuration|-c)
@@ -71,7 +70,7 @@ do
   do
     exclude+=",[$projectName]$pattern"
   done
-  exclude=${exclude#","}  # Remove the leading comma
+  exclude=${exclude#","}
 
   echo -e "${BLUE}Executing tests for $testProject...${NO_COLOR}"
 
@@ -92,9 +91,7 @@ do
   if [ -n "${exclude}" ]; then
     echo -e "${BLUE}Coverage Exclusions:${NO_COLOR}"
     for exclusion in "${exclusions[$projectName]}"; do
-      # Substitutes the "[projectName]" part of the string with an empty string, effectively removing it
       exclusion="${exclusion#"\[$projectName\]"}"
-      # Split the exclusion string on commas and print each one on a new line
       IFS=',' read -ra split_exclusions <<< "$exclusion"
       for i in "${split_exclusions[@]}"; do
         echo "  $i"
