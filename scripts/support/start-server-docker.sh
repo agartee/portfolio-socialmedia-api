@@ -1,27 +1,26 @@
 #!/usr/bin/env bash
 
-rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-
-configuration="Debug"
 imageName="socialmedia-api"
 tagName="dev"
 containerName="socialmedia-api"
 userSecretsId="agartee-socialmedia"
 
+rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+configuration="Debug"
+
 case "$(uname -s)" in
 	Linux)
 		RED='\e[31m'
-		GREEN='\e[32m'
-		NC='\e[0m'
+		GREEN="\e[32m"
+		NO_COLOR="\e[0m"
 		;;
 	Darwin)
 		RED='\033[31m'
-		GREEN='\033[32m'
-		NC='\033[m'
+		GREEN="\033[32m"
+		NO_COLOR="\033[m"
 		;;
 esac
 
-# Parse command-line options
 while (( "$#" )); do
   case "$1" in
     --configuration|-c)

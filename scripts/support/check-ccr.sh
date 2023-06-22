@@ -1,18 +1,19 @@
 #!/bin/bash
 
-case "$(uname -s)" in
-	Linux)
-		GREEN='\e[32m'
-		NC='\e[0m'
-		;;
-	Darwin)
-		GREEN='\033[32m'
-		NC='\033[m'
-		;;
-esac
-
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 binDir="$rootDir/.bin"
+toolDest="$binDir/ccr.tar.gz"
+
+case "$(uname -s)" in
+	Linux)
+		GREEN="\e[32m"
+		NO_COLOR="\e[0m"
+		;;
+	Darwin)
+		GREEN="\033[32m"
+		NO_COLOR="\033[m"
+		;;
+esac
 
 if [[ -f "$binDir/ccr" ]]; then
   echo -e "${GREEN}Test coverage reporter tool found. Skipping download.${NC}"
@@ -22,7 +23,6 @@ else
   osName=$(uname)
   case "$osName" in
     Linux)
-      # Detect the specific Linux distribution
       distroName=$(lsb_release -si)
       distroVersion=$(lsb_release -sr)
       
@@ -43,8 +43,6 @@ else
       exit 1
       ;;
   esac
-
-  toolDest="$binDir/ccr.tar.gz"
 
   if [[ ! -d "$binDir" ]]; then
     mkdir -p "$binDir"

@@ -10,13 +10,13 @@ status=0
 case "$(uname -s)" in
 	Linux)
     BLUE='\e[34m'
-    GREEN='\e[32m'
-		NC='\e[0m'
+    GREEN="\e[32m"
+		NO_COLOR="\e[0m"
 		;;
 	Darwin)
     BLUE='\033[34m'
-    GREEN='\033[32m'
-		NC='\033[m'
+    GREEN="\033[32m"
+		NO_COLOR="\033[m"
 		;;
 esac
 

@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# Default configuration
 configuration="Debug"
 
-# Parse command-line options
 while (( "$#" )); do
   case "$1" in
     --configuration|-c)
