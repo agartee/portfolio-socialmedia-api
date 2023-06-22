@@ -12,7 +12,7 @@ $status = 0
 
 $exclusions = @{}
 
-foreach ($exclusion in $config.'test-coverage'.exclusions) {
+foreach ($exclusion in $config.'test'.exclusions) {
   $exclusions[$exclusion.project] = @($exclusion.exclude)
 }
 
