@@ -17,10 +17,10 @@ case "$(uname -s)" in
 esac
 
 echo ""
-echo -e "${BLUE}To run the application over HTTPS (local or via Docker), ensure a local dev certificate is installed:${NC}"
-echo -e "${MAGENTA}dotnet dev-certs https --check --trust${NC}"
+echo -e "${BLUE}To run the application over HTTPS (local or via Docker), ensure a local dev certificate is installed:${NO_COLOR}"
+echo -e "${MAGENTA}dotnet dev-certs https --check --trust${NO_COLOR}"
 echo ""
 
-echo -e "${BLUE}To create a new trusted local dev certificate:${NC}"
-echo -e "${MAGENTA}dotnet dev-certs https --export-path ${pfxPath} --password \"<PASSWORD>\" --trust${NC}"
+echo -e "${BLUE}To create a new trusted local dev certificate:${NO_COLOR}"
+echo -e "${MAGENTA}dotnet dev-certs https --export-path ${pfxPath} --password \"<PASSWORD>\" --trust${NO_COLOR}"
 echo ""

@@ -15,10 +15,10 @@ esac
 
 currentVer=$(docker --version 2> /dev/null)
 if [ -z "$currentVer" ]
-    then echo -e "${RED}Docker installation not found.${NC}"
+    then echo -e "${RED}Docker installation not found.${NO_COLOR}"
     exit 1
 fi
 
 currentVer="${currentVer/Docker version /""}"
 
-echo -e "${GREEN}Docker installation found: ${currentVer}.${NC}"
+echo -e "${GREEN}Docker installation found: ${currentVer}.${NO_COLOR}"

@@ -16,7 +16,7 @@ case "$(uname -s)" in
 esac
 
 if [[ -f "$binDir/ccr" ]]; then
-  echo -e "${GREEN}Test coverage reporter tool found. Skipping download.${NC}"
+  echo -e "${GREEN}Test coverage reporter tool found. Skipping download.${NO_COLOR}"
 else
   ccrVersion="v1.3.0"
   
@@ -52,5 +52,5 @@ else
   tar -xzvf $toolDest -C $binDir
   rm $toolDest
 
-  echo -e "${GREEN}Test coverage console tool downloaded to $binDir.${NC}"
+  echo -e "${GREEN}Test coverage console tool downloaded to $binDir.${NO_COLOR}"
 fi

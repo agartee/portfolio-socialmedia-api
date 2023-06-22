@@ -48,6 +48,6 @@ fi
 dotnet publish "$projectFile" --configuration "$configuration" \
   --no-restore --no-build --output "$publishDir" /p:UseAppHost=false
 
-echo -e "\n${BLUE}Publish directory contents:${NC}"
+echo -e "\n${BLUE}Publish directory contents:${NO_COLOR}"
 echo ""
 ls -l "$publishDir"

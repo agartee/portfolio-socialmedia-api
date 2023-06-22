@@ -14,8 +14,8 @@ case "$(uname -s)" in
 esac
 
 if ! type -t dpkg &> /dev/null
-    then echo -e "${RED}dpkg installation not found.${NC}"
+    then echo -e "${RED}dpkg installation not found.${NO_COLOR}"
     exit 1
 fi
 
-echo -e "${GREEN}dpkg installation found.${NC}" 
+echo -e "${GREEN}dpkg installation found.${NO_COLOR}" 

@@ -72,7 +72,7 @@ docker container run \
     "$imageName:$tagName"
 
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}Container started successfully.${NC}"
+    echo -e "${GREEN}Container started successfully.${NO_COLOR}"
 else
-    echo -e "${RED}Failed to start the container.${NC}"
+    echo -e "${RED}Failed to start the container.${NO_COLOR}"
 fi

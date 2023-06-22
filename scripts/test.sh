@@ -73,7 +73,7 @@ do
   done
   exclude=${exclude#","}  # Remove the leading comma
 
-  echo -e "${BLUE}Executing tests for $testProject...${NC}"
+  echo -e "${BLUE}Executing tests for $testProject...${NO_COLOR}"
 
   dotnet test "$testProject" --no-build -c "$configuration" \
     --results-directory "$coverageDir" \
@@ -90,7 +90,7 @@ do
   $binDir/ccr --coverage-file "$coverageFile" --package "$projectName"
 
   if [ -n "${exclude}" ]; then
-    echo -e "${BLUE}Coverage Exclusions:${NC}"
+    echo -e "${BLUE}Coverage Exclusions:${NO_COLOR}"
     for exclusion in "${exclusions[$projectName]}"; do
       # Substitutes the "[projectName]" part of the string with an empty string, effectively removing it
       exclusion="${exclusion#"\[$projectName\]"}"
