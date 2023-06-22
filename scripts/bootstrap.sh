@@ -15,16 +15,16 @@ case "$(uname -s)" in
 		;;
 esac
 
-paramSet="local"
+appEnv="local"
 
 while (( "$#" )); do
   case "$1" in
     -l|--local)
-      paramSet="local"
+      appEnv="local"
       shift
       ;;
     -c|--ci)
-      paramSet="ci"
+      appEnv="ci"
       shift
       ;;
     *)
@@ -36,7 +36,7 @@ done
 bash $rootDir/scripts/support/check-dotnet.sh
 bash $rootDir/scripts/support/check-ccr.sh
 
-if [ "$paramSet" = "local" ]; then
+if [ "$appEnv" = "local" ]; then
   bash $rootDir/scripts/support/check-docker.sh
   bash $rootDir/scripts/support/check-ssl.sh
 fi

@@ -2,7 +2,7 @@
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-paramSet="local"
+appEnv="local"
 configuration="Debug"
 
 case "$(uname -s)" in
@@ -21,11 +21,11 @@ esac
 while (( "$#" )); do
   case "$1" in
     -l|--local)
-      paramSet="local"
+      appEnv="local"
       shift
       ;;
     -d|--docker)
-      paramSet="docker"
+      appEnv="docker"
       shift
       ;;
     -c|--configuration)
@@ -43,10 +43,10 @@ while (( "$#" )); do
   esac
 done
 
-if [ "$paramSet" = "local" ]; then
+if [ "$appEnv" = "local" ]; then
   bash $rootDir/scripts/support/build-local.sh --configuration "$configuration"
 fi
 
-if [ "$paramSet" = "docker" ]; then
+if [ "$appEnv" = "docker" ]; then
   bash $rootDir/scripts/support/build-docker.sh --configuration "$configuration"
 fi
