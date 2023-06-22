@@ -1,7 +1,15 @@
 #!/bin/bash
 
-GREEN="\033[0;32m"
-NC="\033[0m" # No Color
+case "$(uname -s)" in
+	Linux)
+		GREEN='\e[32m'
+		NC='\e[0m'
+		;;
+	Darwin)
+		GREEN='\033[32m'
+		NC='\033[m'
+		;;
+esac
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 binDir="$rootDir/.bin"
