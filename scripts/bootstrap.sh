@@ -35,6 +35,8 @@ while (( "$#" )); do
   esac
 done
 
+bash $rootDir/scripts/support/check-dpkg.sh
+bash $rootDir/scripts/support/check-jq.sh
 bash $rootDir/scripts/support/check-dotnet.sh
 bash $rootDir/scripts/support/check-ccr.sh
 
