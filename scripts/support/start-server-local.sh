@@ -27,10 +27,6 @@ while (( "$#" )); do
 done
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-image_name="socialmedia-api"
-tag_name="dev"
 
-docker image build \
-  --tag "${image_name}:${tag_name}" \
-  --build-arg CONFIG=${configuration} \
-  "$rootDir"
+projectFile="$rootDir/src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj"
+dotnet run --project $projectFile --launch-profile https

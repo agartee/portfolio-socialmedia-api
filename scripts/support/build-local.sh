@@ -15,7 +15,7 @@ while (( "$#" )); do
         exit 1
       fi
       ;;
-    -*|--*=) # unsupported flags
+    -*|--*=)
       echo "Error: Unsupported flag $1" >&2
       exit 1
       ;;
