@@ -1,34 +1,37 @@
 {
-  "test-coverage": {
-      "exclusions": [
-          {
-              "project": "SocialMedia.Domain",
-              "exclude": [
-                  "SocialMedia.Domain.Models.*"
-              ]
-          },
-          {
-              "project": "SocialMedia.Persistence.Auth0",
-              "exclude": [
-                  "SocialMedia.Persistence.Auth0.Configuration.*",
-                  "SocialMedia.Persistence.Auth0.Models.*"
-              ]
-          },
-          {
-              "project": "SocialMedia.Persistence.SqlServer",
-              "exclude": [
-                  "SocialMedia.Persistence.SqlServer.Migrations.*",
-                  "SocialMedia.Persistence.SqlServer.Models.*"
-              ]
-          },
-          {
-              "project": "SocialMedia.WebAPI",
-              "exclude": [
-                  "Program",
-                  "SocialMedia.WebAPI.Configuration.*",
-                  "SocialMedia.WebAPI.Formatters.*"
-              ]
-          }
-      ]
+  "publish": {
+    "projectFile": "src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj"
+  },
+  "test": {
+    "exclusions": [
+      {
+        "project": "SocialMedia.Domain",
+        "exclude": [
+          "SocialMedia.Domain.Models.*"
+        ]
+      },
+      {
+        "project": "SocialMedia.Persistence.Auth0",
+        "exclude": [
+          "SocialMedia.Persistence.Auth0.Configuration.*",
+          "SocialMedia.Persistence.Auth0.Models.*"
+        ]
+      },
+      {
+        "project": "SocialMedia.Persistence.SqlServer",
+        "exclude": [
+          "SocialMedia.Persistence.SqlServer.Migrations.*",
+          "SocialMedia.Persistence.SqlServer.Models.*"
+        ]
+      },
+      {
+        "project": "SocialMedia.WebAPI",
+        "exclude": [
+          "Program",
+          "SocialMedia.WebAPI.Configuration.*",
+          "SocialMedia.WebAPI.Formatters.*"
+        ]
+      }
+    ]
   }
 }

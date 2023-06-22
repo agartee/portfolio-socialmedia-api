@@ -23,16 +23,16 @@ esac
 
 declare -A exclusions
 
-exclusionLength=$(echo "$config" | jq '.["test-coverage"].exclusions | length')
+exclusionLength=$(echo "$config" | jq '.test.exclusions | length')
 
 for (( i=0; i<$exclusionLength; i++ ))
 do
-    project=$(echo "$config" | jq -r ".[\"test-coverage\"].exclusions[$i].project")
-    excludeLength=$(echo "$config" | jq ".[\"test-coverage\"].exclusions[$i].exclude | length")
+    project=$(echo "$config" | jq -r ".test.exclusions[$i].project")
+    excludeLength=$(echo "$config" | jq ".test.exclusions[$i].exclude | length")
     exclusions["$project"]=""
     for (( j=0; j<$excludeLength; j++ ))
     do
-        exclude=$(echo "$config" | jq -r ".[\"test-coverage\"].exclusions[$i].exclude[$j]")
+        exclude=$(echo "$config" | jq -r ".test.exclusions[$i].exclude[$j]")
         if [ -n "${exclusions[$project]}" ]; then
             exclusions["$project"]+=","
         fi
