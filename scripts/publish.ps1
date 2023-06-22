@@ -4,8 +4,8 @@ param(
 )
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
-
 $projectFile = "$rootDir\src\SocialMedia.WebAPI\SocialMedia.WebAPI.csproj"
+
 $publishDir = "$($rootDir)\.publish"
 
 if (Test-Path -Path $publishDir) {

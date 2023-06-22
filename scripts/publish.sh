@@ -8,13 +8,13 @@ publishDir="$rootDir/.publish"
 
 case "$(uname -s)" in
 	Linux)
+    RED="\e[31m"
     BLUE="\e[34m"
-		GREEN="\e[32m"
 		NO_COLOR="\e[0m"
 		;;
 	Darwin)
+    RED="\033[31m"
     BLUE="\033[34m"
-		GREEN="\033[32m"
 		NO_COLOR="\033[m"
 		;;
 esac
@@ -26,12 +26,12 @@ while (( "$#" )); do
         configuration=$2
         shift 2
       else
-        echo "Error: Argument for $1 is missing" >&2
+        echo "${RED}Error: Argument for $1 is missing${NO_COLOR}" >&2
         exit 1
       fi
       ;;
     -*|--*=)
-      echo "Error: Unsupported flag $1" >&2
+      echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2
       exit 1
       ;;
     *) # preserve positional arguments

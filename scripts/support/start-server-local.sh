@@ -1,5 +1,8 @@
 #!/bin/bash
 
+rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+projectFile="$rootDir/src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj"
+
 configuration="Debug"
 
 while (( "$#" )); do
@@ -14,7 +17,7 @@ while (( "$#" )); do
       fi
       ;;
     -*|--*=)
-      echo "Error: Unsupported flag $1" >&2
+      echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2
       exit 1
       ;;
     *) # preserve positional arguments
@@ -24,7 +27,4 @@ while (( "$#" )); do
   esac
 done
 
-rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-
-projectFile="$rootDir/src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj"
 dotnet run --project $projectFile --launch-profile https

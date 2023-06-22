@@ -3,9 +3,10 @@ param(
   [string]$configuration = "Debug"
 )
 
-$rootDir = (get-item $PSScriptRoot).Parent.Parent.FullName
 $imageName = "socialmedia-api"
 $tagName = "dev"
+
+$rootDir = (get-item $PSScriptRoot).Parent.Parent.FullName
 
 docker image build `
   --tag "$($imageName):$($tagName)" `

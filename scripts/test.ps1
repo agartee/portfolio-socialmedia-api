@@ -2,15 +2,6 @@ Param(
   [Parameter(Mandatory = $false, HelpMessage = "Configuration name (e.g. Release, Debug)")]
   [string]$configuration = "Debug"
 )
-$status = 0
-$rootDir = (get-item $PSScriptRoot).Parent.FullName
-$binDir = "$rootDir\.bin"
-$testProjects = Get-ChildItem -Path $rootDir\test -Filter *.csproj -Recurse -File | ForEach-Object { $_ }
-
-$coverageDir = "$rootDir\.test-coverage"
-if (Test-Path $coverageDir) {
-  Remove-Item $coverageDir -Recurse -Force
-}
 
 $exclusions = @{
   "SocialMedia.Domain"                = @(
@@ -29,6 +20,16 @@ $exclusions = @{
     "SocialMedia.WebAPI.Configuration.*",
     "SocialMedia.WebAPI.Formatters.*"
   )
+}
+
+$rootDir = (get-item $PSScriptRoot).Parent.FullName
+$testProjects = Get-ChildItem -Path $rootDir\test -Filter *.csproj -Recurse -File | ForEach-Object { $_ }
+$coverageDir = "$rootDir\.test-coverage"
+$binDir = "$rootDir\.bin"
+$status = 0
+
+if (Test-Path $coverageDir) {
+  Remove-Item $coverageDir -Recurse -Force
 }
 
 foreach ($testProject in $testProjects) {

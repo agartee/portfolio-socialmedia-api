@@ -1,5 +1,9 @@
 #!/bin/bash
 
+image_name="socialmedia-api"
+tag_name="dev"
+
+rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 configuration="Debug"
 
 while (( "$#" )); do
@@ -14,7 +18,7 @@ while (( "$#" )); do
       fi
       ;;
     -*|--*=)
-      echo "Error: Unsupported flag $1" >&2
+      echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2
       exit 1
       ;;
     *) # preserve positional arguments
@@ -23,10 +27,6 @@ while (( "$#" )); do
       ;;
   esac
 done
-
-rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-image_name="socialmedia-api"
-tag_name="dev"
 
 docker image build \
   --tag "${image_name}:${tag_name}" \

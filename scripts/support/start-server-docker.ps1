@@ -3,11 +3,12 @@ param(
   [string]$configuration = "Debug"
 )
 
-$rootDir = (get-item $PSScriptRoot).Parent.Parent.FullName
 $imageName = "socialmedia-api"
 $tagName = "dev"
 $containerName = "socialmedia-api"
 $userSecretsId = "agartee-socialmedia"
+
+$rootDir = (get-item $PSScriptRoot).Parent.Parent.FullName
 
 docker container rm "$containerName" --force 2>&1 | Out-Null
 . "$rootDir\scripts\build.ps1" -docker -configuration $configuration

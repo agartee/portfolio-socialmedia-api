@@ -1,21 +1,35 @@
 #!/usr/bin/env bash
 
+# reminder: add a comma at the beginning of subsequent exclusions for a project
+declare -A exclusions
+exclusions["SocialMedia.Domain"]="SocialMedia.Domain.Models.*"
+
+exclusions["SocialMedia.Persistence.Auth0"]="SocialMedia.Persistence.Auth0.Configuration.*"
+exclusions["SocialMedia.Persistence.Auth0"]+=",SocialMedia.Persistence.Auth0.Models.*"
+
+exclusions["SocialMedia.Persistence.SqlServer"]="SocialMedia.Persistence.SqlServer.Migrations.*"
+exclusions["SocialMedia.Persistence.SqlServer"]+=",SocialMedia.Persistence.SqlServer.Models.*"
+
+exclusions["SocialMedia.WebAPI"]="Program"
+exclusions["SocialMedia.WebAPI"]+=",SocialMedia.WebAPI.Configuration.*"
+exclusions["SocialMedia.WebAPI"]+=",SocialMedia.WebAPI.Formatters.*"
+
 rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-configuration="Debug"
 testProjects=$(find "$rootDir/test" -name "*.csproj")
 coverageDir="$rootDir/.test-coverage"
 binDir="$rootDir/.bin"
+configuration="Debug"
 status=0
 
 case "$(uname -s)" in
 	Linux)
+    RED="\e[31m"
     BLUE="\e[34m"
-    GREEN="\e[32m"
 		NO_COLOR="\e[0m"
 		;;
 	Darwin)
+    RED="\033[31m"
     BLUE="\033[34m"
-    GREEN="\033[32m"
 		NO_COLOR="\033[m"
 		;;
 esac
@@ -33,7 +47,7 @@ while (( "$#" )); do
       fi
       ;;
     -*|--*=)
-      echo "Error: Unsupported flag $1" >&2
+      echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2
       exit 1
       ;;
     *) # preserve positional arguments
@@ -42,20 +56,6 @@ while (( "$#" )); do
       ;;
   esac
 done
-
-# reminder: add a comma at the beginning of subsequent exclusions for a project
-declare -A exclusions
-exclusions["SocialMedia.Domain"]="SocialMedia.Domain.Models.*"
-
-exclusions["SocialMedia.Persistence.Auth0"]="SocialMedia.Persistence.Auth0.Configuration.*"
-exclusions["SocialMedia.Persistence.Auth0"]+=",SocialMedia.Persistence.Auth0.Models.*"
-
-exclusions["SocialMedia.Persistence.SqlServer"]="SocialMedia.Persistence.SqlServer.Migrations.*"
-exclusions["SocialMedia.Persistence.SqlServer"]+=",SocialMedia.Persistence.SqlServer.Models.*"
-
-exclusions["SocialMedia.WebAPI"]="Program"
-exclusions["SocialMedia.WebAPI"]+=",SocialMedia.WebAPI.Configuration.*"
-exclusions["SocialMedia.WebAPI"]+=",SocialMedia.WebAPI.Formatters.*"
 
 rm -rf "$coverageDir"
 
