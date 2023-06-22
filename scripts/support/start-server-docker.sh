@@ -2,6 +2,7 @@
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
+configuration="Debug"
 imageName="socialmedia-api"
 tagName="dev"
 containerName="socialmedia-api"
@@ -19,9 +20,6 @@ case "$(uname -s)" in
 		NC='\033[m'
 		;;
 esac
-
-# Default configuration
-configuration="Debug"
 
 # Parse command-line options
 while (( "$#" )); do
