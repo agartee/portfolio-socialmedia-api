@@ -2,7 +2,7 @@
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 config=$(cat "$rootDir/scripts/scripts.json")
-solutionFile=$(echo "$config" | jq -r '.build.local.solutionFile')
+solutionFile="$rootDir/$(echo "$config" | jq -r '.build.local.solutionFile')"
 configuration="Debug"
 
 while (( "$#" )); do
