@@ -2,8 +2,8 @@
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 config=$(cat "$rootDir/scripts/scripts.json")
-imageName=$(echo "$config" | jq -r '.build.docker.imageName')
-tagName=$(echo "$config" | jq -r '.build.docker.tagName')
+imageName=$(echo "$config" | jq -r '.docker.imageName')
+tagName=$(echo "$config" | jq -r '.docker.tagName')
 configuration="Debug"
 
 while (( "$#" )); do

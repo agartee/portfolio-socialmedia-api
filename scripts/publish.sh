@@ -2,7 +2,7 @@
 
 rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 config=$(cat "$rootDir/scripts/scripts.json")
-projectFile="$rootDir/$(echo "$config" | jq -r '.publish.projectFile')"
+projectFile="$rootDir/$(echo "$config" | jq -r '.webAppProjectFile')"
 configuration="Release"
 publishDir="$rootDir/.publish"
 

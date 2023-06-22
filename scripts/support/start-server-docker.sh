@@ -2,10 +2,10 @@
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 config=$(cat "$rootDir/scripts/scripts.json")
-imageName=$(echo "$config" | jq -r '.server.docker.imageName')
-tagName=$(echo "$config" | jq -r '.server.docker.tagName')
-containerName=$(echo "$config" | jq -r '.server.docker.containerName')
-userSecretsId=$(echo "$config" | jq -r '.server.docker.userSecretsId')
+imageName=$(echo "$config" | jq -r '.docker.imageName')
+containerName=$(echo "$config" | jq -r '.docker.containerName')
+tagName=$(echo "$config" | jq -r '.docker.tagName')
+userSecretsId=$(echo "$config" | jq -r '.userSecretsId')
 configuration="Debug"
 
 case "$(uname -s)" in
