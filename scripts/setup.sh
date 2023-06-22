@@ -4,11 +4,11 @@ rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
 case "$(uname -s)" in
 	Linux)
-    BLUE='\e[34m'
+    BLUE="\e[34m"
 		NO_COLOR="\e[0m"
 		;;
 	Darwin)
-    BLUE='\033[34m'
+    BLUE="\033[34m"
 		NO_COLOR="\033[m"
 		;;
 esac

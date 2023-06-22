@@ -9,12 +9,12 @@ currentVer=$(dotnet --version 2> /dev/null)
 
 case "$(uname -s)" in
 	Linux)
-		RED='\e[31m'
+		RED="\e[31m"
 		GREEN="\e[32m"
 		NO_COLOR="\e[0m"
 		;;
 	Darwin)
-		RED='\033[31m'
+		RED="\033[31m"
 		GREEN="\033[32m"
 		NO_COLOR="\033[m"
 		;;

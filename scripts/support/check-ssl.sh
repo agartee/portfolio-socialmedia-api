@@ -5,12 +5,12 @@ pfxPath="${rootDir}/.ssl/localhost.pfx"
 
 case "$(uname -s)" in
 	Linux)
-		BLUE='\e[34m'
+		BLUE="\e[34m"
 		MAGENTA="\e[35m"
 		NO_COLOR="\e[0m"
 		;;
 	Darwin)
-		BLUE='\033[34m'
+		BLUE="\033[34m"
 		MAGENTA="\033[35m"
 		NO_COLOR="\033[m"
 		;;
