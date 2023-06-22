@@ -3,30 +3,18 @@ Param(
   [string]$configuration = "Debug"
 )
 
-$exclusions = @{
-  "SocialMedia.Domain"                = @(
-    "SocialMedia.Domain.Models.*")
-
-  "SocialMedia.Persistence.Auth0"     = @(
-    "SocialMedia.Persistence.Auth0.Configuration.*"
-    "SocialMedia.Persistence.Auth0.Models.*")
-
-  "SocialMedia.Persistence.SqlServer" = @(
-    "SocialMedia.Persistence.SqlServer.Migrations.*"
-    "SocialMedia.Persistence.SqlServer.Models.*")
-
-  "SocialMedia.WebAPI"                = @(
-    "Program",
-    "SocialMedia.WebAPI.Configuration.*",
-    "SocialMedia.WebAPI.Formatters.*"
-  )
-}
-
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
+$config = Get-Content -Raw -Path "$rootDir\scripts\scripts.json" | ConvertFrom-Json
 $testProjects = Get-ChildItem -Path $rootDir\test -Filter *.csproj -Recurse -File | ForEach-Object { $_ }
 $coverageDir = "$rootDir\.test-coverage"
 $binDir = "$rootDir\.bin"
 $status = 0
+
+$exclusions = @{}
+
+foreach ($exclusion in $config.'test-coverage'.exclusions) {
+  $exclusions[$exclusion.project] = @($exclusion.exclude)
+}
 
 if (Test-Path $coverageDir) {
   Remove-Item $coverageDir -Recurse -Force
