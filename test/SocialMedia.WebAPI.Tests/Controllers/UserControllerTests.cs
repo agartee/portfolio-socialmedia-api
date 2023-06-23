@@ -17,8 +17,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             var user = new User
             {
                 UserId = "id",
-                Name = "name",
-                Email = "email",
+                Name = "name"
             };
 
             var mediator = new Mock<IMediator>();
@@ -55,8 +54,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             var user = new User
             {
                 UserId = "id",
-                Name = "name",
-                Email = "email",
+                Name = "name"
             };
 
             var mediator = new Mock<IMediator>();
@@ -75,8 +73,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             var command = new UpdateUser
             {
                 UserId = user.UserId,
-                Name = user.Name,
-                Email = user.Email,
+                Name = user.Name
             };
 
             var result = await controller.Update(command, CancellationToken.None);
@@ -95,8 +92,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             var user = new User
             {
                 UserId = "id",
-                Name = "name",
-                Email = "email",
+                Name = "name"
             };
 
             var mediator = new Mock<IMediator>();
@@ -115,8 +111,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             var command = new SynchronizeUser
             {
                 UserId = user.UserId,
-                Name = user.Name,
-                Email = user.Email,
+                Name = user.Name
             };
 
             var result = await controller.Synchronize(command, CancellationToken.None);

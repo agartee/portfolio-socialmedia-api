@@ -37,7 +37,6 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
             {
                 UserId = user.UserId,
                 Name = user.Name,
-                Email = user.Email,
                 Created = now,
                 LastUpdated = now
             });
@@ -46,7 +45,6 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
         private static void UpdateUser(User user, UserData userData)
         {
             userData.Name = user.Name;
-            userData.Email = user.Email;
             userData.LastUpdated = DateTime.UtcNow;
         }
     }

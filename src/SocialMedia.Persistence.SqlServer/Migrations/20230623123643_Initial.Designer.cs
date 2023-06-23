@@ -12,7 +12,7 @@ using SocialMedia.Persistence.SqlServer;
 namespace SocialMedia.Persistence.SqlServer.Migrations
 {
     [DbContext(typeof(SocialMediaDbContext))]
-    [Migration("20230623111543_Initial")]
+    [Migration("20230623123643_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -69,11 +69,6 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");

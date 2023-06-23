@@ -14,8 +14,7 @@ namespace SocialMedia.Domain.Tests.Commands
             var user = new User
             {
                 UserId = "id",
-                Name = "name",
-                Email = "me@here.com"
+                Name = "name"
             };
 
             var repository = new Mock<IUserRepository>();

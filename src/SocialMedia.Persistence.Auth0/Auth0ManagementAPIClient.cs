@@ -29,8 +29,7 @@ namespace SocialMedia.Persistence.Auth0
             return new User
             {
                 UserId = userResponse.Id,
-                Name = userResponse.Name,
-                Email = userResponse.Email
+                Name = userResponse.Name
             };
         }
 
@@ -38,8 +37,7 @@ namespace SocialMedia.Persistence.Auth0
         {
             var payload = new UserRequest
             {
-                Name = user.Name,
-                Email = user.Email
+                Name = user.Name
             };
 
             var url = $"users/{user.UserId}";
@@ -53,8 +51,7 @@ namespace SocialMedia.Persistence.Auth0
             return new User
             {
                 UserId = userResponse.Id,
-                Name = userResponse.Name,
-                Email = userResponse.Email
+                Name = userResponse.Name
             };
         }
     }

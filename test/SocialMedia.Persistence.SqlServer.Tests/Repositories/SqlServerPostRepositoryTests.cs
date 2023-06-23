@@ -27,7 +27,6 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             {
                 UserId = userId,
                 Name = "User 1",
-                Email = "email",
                 Created = DateTime.UtcNow,
                 LastUpdated = DateTime.UtcNow,
             };
@@ -87,7 +86,6 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
                 {
                     UserId = post.UserId,
                     Name = "User 1",
-                    Email = "email",
                     Created = DateTime.UtcNow,
                     LastUpdated = DateTime.UtcNow,
                 }
@@ -116,7 +114,6 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             {
                 UserId = userId,
                 Name = "User 1",
-                Email = "email",
                 Created = DateTime.UtcNow,
                 LastUpdated = DateTime.UtcNow,
             };

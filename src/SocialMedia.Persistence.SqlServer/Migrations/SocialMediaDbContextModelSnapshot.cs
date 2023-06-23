@@ -67,11 +67,6 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 

@@ -14,8 +14,7 @@ namespace SocialMedia.Domain.Tests.Commands
             var user = new User
             {
                 UserId = "id",
-                Name = "name",
-                Email = "me@here.com"
+                Name = "name"
             };
 
             var repository = new Mock<IUserRepository>();
@@ -27,8 +26,7 @@ namespace SocialMedia.Domain.Tests.Commands
             var request = new UpdateUser
             {
                 UserId = user.UserId,
-                Name = user.Name,
-                Email = user.Email
+                Name = user.Name
             };
 
             var result = await handler.Handle(request, CancellationToken.None);

@@ -8,7 +8,6 @@ namespace SocialMedia.Domain.Commands
     {
         public required string UserId { get; init; }
         public required string Name { get; init; }
-        public required string Email { get; init; }
     }
 
     public class UpdateUserHandler : IRequestHandler<UpdateUser, User>
@@ -25,8 +24,7 @@ namespace SocialMedia.Domain.Commands
             var user = new User
             {
                 UserId = request.UserId,
-                Name = request.Name,
-                Email = request.Email
+                Name = request.Name
             };
 
             return await userRepository.UpdateUser(user, cancellationToken);

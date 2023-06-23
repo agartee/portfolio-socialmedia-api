@@ -26,8 +26,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             var user = new User
             {
                 UserId = userId,
-                Name = "name",
-                Email = "email",
+                Name = "name"
             };
 
             var synchronizer = new SqlServerUserSynchronizer(fixture.CreateDbContext());
@@ -38,7 +37,6 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
                 .FirstAsync(p => p.UserId == userId);
 
             data.Name.Should().Be(user.Name);
-            data.Email.Should().Be(user.Email);
         }
 
         [Fact]
@@ -50,7 +48,6 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             {
                 UserId = userId,
                 Name = "original name",
-                Email = "original email",
                 Created = DateTime.UtcNow,
                 LastUpdated = DateTime.UtcNow,
             };
@@ -60,8 +57,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             var updatedUser = new User
             {
                 UserId = userId,
-                Name = "updated name",
-                Email = "updated email",
+                Name = "updated name"
             };
 
             var synchronizer = new SqlServerUserSynchronizer(fixture.CreateDbContext());
@@ -72,7 +68,6 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
                 .FirstAsync(p => p.UserId == userId);
 
             data.Name.Should().Be(updatedUser.Name);
-            data.Email.Should().Be(updatedUser.Email);
         }
     }
 }

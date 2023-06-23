@@ -34,8 +34,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
             User expectedResult = new User
             {
                 UserId = apiResponse.user_id,
-                Name = apiResponse.name,
-                Email = apiResponse.email
+                Name = apiResponse.name
             };
 
             result.Should().Be(expectedResult);
@@ -74,16 +73,14 @@ namespace SocialMedia.Persistence.Auth0.Tests
             var user = new User
             {
                 UserId = id,
-                Name = "name",
-                Email = "original@here.com"
+                Name = "name"
             };
 
             var (httpClient, httpMessageHandler) = CreateMockHttpClient(
                 baseUrl: "https://test.com/", new
                 {
                     user_id = id,
-                    name = user.Name,
-                    email = user.Email
+                    name = user.Name
                 });
 
             var apiClient = new Auth0ManagementAPIClient(httpClient);
@@ -94,8 +91,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
 
             var expectedRequest = new UserRequest
             {
-                Name = user.Name,
-                Email = user.Email
+                Name = user.Name
             };
 
             httpMessageHandler.Protected().Verify(
@@ -115,8 +111,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
             var user = new User
             {
                 UserId = "id",
-                Name = "name",
-                Email = "original@here.com"
+                Name = "name"
             };
 
             var (httpClient, _) = CreateMockHttpClient(
