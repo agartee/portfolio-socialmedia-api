@@ -8,45 +8,45 @@ using SocialMedia.Persistence.SqlServer.Tests.Fixtures;
 namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
 {
     [Collection("SqlServerTestCollection")]
-    public class SqlServerUserProfileSynchronizerTests
+    public class SqlServerUserSynchronizerTests
     {
         private readonly SqlServerFixture fixture;
 
-        public SqlServerUserProfileSynchronizerTests(SqlServerFixture fixture)
+        public SqlServerUserSynchronizerTests(SqlServerFixture fixture)
         {
             fixture.ClearData();
             this.fixture = fixture;
         }
 
         [Fact]
-        public async Task UpdateUserProfile_WhenNotExists_CreatesRow()
+        public async Task UpdateUser_WhenNotExists_CreatesRow()
         {
             var userId = "123";
 
-            var userProfile = new UserProfile
+            var user = new User
             {
                 UserId = userId,
                 Name = "name",
                 Email = "email",
             };
 
-            var synchronizer = new SqlServerUserProfileSynchronizer(fixture.CreateDbContext());
-            await synchronizer.UpdateUserProfile(userProfile, CancellationToken.None);
+            var synchronizer = new SqlServerUserSynchronizer(fixture.CreateDbContext());
+            await synchronizer.SyncUser(user, CancellationToken.None);
 
             using var dbContext = fixture.CreateDbContext();
-            var data = await dbContext.UserProfiles
+            var data = await dbContext.Users
                 .FirstAsync(p => p.UserId == userId);
 
-            data.Name.Should().Be(userProfile.Name);
-            data.Email.Should().Be(userProfile.Email);
+            data.Name.Should().Be(user.Name);
+            data.Email.Should().Be(user.Email);
         }
 
         [Fact]
-        public async Task UpdateExtendedUserProfile_WhenExists_UpdatesRow()
+        public async Task UpdateExtendedUser_WhenExists_UpdatesRow()
         {
             var userId = "123";
 
-            var userProfile = new UserProfileData
+            var user = new UserData
             {
                 UserId = userId,
                 Name = "original name",
@@ -55,24 +55,24 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
                 LastUpdated = DateTime.UtcNow,
             };
 
-            await fixture.Seed(new[] { userProfile });
+            await fixture.Seed(new[] { user });
 
-            var updatedUserProfile = new UserProfile
+            var updatedUser = new User
             {
                 UserId = userId,
                 Name = "updated name",
                 Email = "updated email",
             };
 
-            var synchronizer = new SqlServerUserProfileSynchronizer(fixture.CreateDbContext());
-            await synchronizer.UpdateUserProfile(updatedUserProfile, CancellationToken.None);
+            var synchronizer = new SqlServerUserSynchronizer(fixture.CreateDbContext());
+            await synchronizer.SyncUser(updatedUser, CancellationToken.None);
 
             using var dbContext = fixture.CreateDbContext();
-            var data = await dbContext.UserProfiles
+            var data = await dbContext.Users
                 .FirstAsync(p => p.UserId == userId);
 
-            data.Name.Should().Be(updatedUserProfile.Name);
-            data.Email.Should().Be(updatedUserProfile.Email);
+            data.Name.Should().Be(updatedUser.Name);
+            data.Email.Should().Be(updatedUser.Email);
         }
     }
 }

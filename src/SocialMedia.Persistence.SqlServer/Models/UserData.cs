@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SocialMedia.Persistence.SqlServer.Models
 {
     [Table(TABLE_NAME)]
-    public class UserProfileData
+    public class UserData
     {
-        public const string TABLE_NAME = "UserProfile";
+        public const string TABLE_NAME = "User";
 
         [Key, MaxLength(100)]
         public required string UserId { get; set; }

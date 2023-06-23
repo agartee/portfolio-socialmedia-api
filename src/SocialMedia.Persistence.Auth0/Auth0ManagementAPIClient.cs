@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 
 namespace SocialMedia.Persistence.Auth0
 {
-    public class Auth0ManagementAPIClient : IUserProfileRepository
+    public class Auth0ManagementAPIClient : IUserRepository
     {
         private readonly HttpClient httpClient;
 
@@ -16,7 +16,7 @@ namespace SocialMedia.Persistence.Auth0
             this.httpClient = httpClient;
         }
 
-        public async Task<UserProfile> GetUserProfile(string userId, CancellationToken cancellationToken)
+        public async Task<User> GetUser(string userId, CancellationToken cancellationToken)
         {
             string url = $"users/{userId}";
 
@@ -26,7 +26,7 @@ namespace SocialMedia.Persistence.Auth0
             if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
-            return new UserProfile
+            return new User
             {
                 UserId = userResponse.Id,
                 Name = userResponse.Name,
@@ -34,15 +34,15 @@ namespace SocialMedia.Persistence.Auth0
             };
         }
 
-        public async Task<UserProfile> UpdateUserProfile(UserProfile userProfile, CancellationToken cancellationToken)
+        public async Task<User> UpdateUser(User user, CancellationToken cancellationToken)
         {
             var payload = new UserRequest
             {
-                Name = userProfile.Name,
-                Email = userProfile.Email
+                Name = user.Name,
+                Email = user.Email
             };
 
-            var url = $"users/{userProfile.UserId}";
+            var url = $"users/{user.UserId}";
 
             var httpResponse = await httpClient.PatchAsJsonAsync(url, payload, cancellationToken);
             var userResponse = await httpResponse.Content.TryReadFromJsonAsync<UserResponse>(cancellationToken);
@@ -50,7 +50,7 @@ namespace SocialMedia.Persistence.Auth0
             if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
-            return new UserProfile
+            return new User
             {
                 UserId = userResponse.Id,
                 Name = userResponse.Name,

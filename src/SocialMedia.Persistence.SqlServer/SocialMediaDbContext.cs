@@ -11,7 +11,7 @@ namespace SocialMedia.Persistence.SqlServer
 
         public DbSet<PostData> Posts { get; set; }
         public DbSet<PostContentData> PostContents { get; set; }
-        public DbSet<UserProfileData> UserProfiles { get; set; }
+        public DbSet<UserData> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,10 +24,9 @@ namespace SocialMedia.Persistence.SqlServer
                 .WithOne(c => c.Post);
 
             modelBuilder.Entity<PostData>()
-                .HasOne(p => p.UserProfile)
+                .HasOne(p => p.User)
                 .WithMany(c => c.Posts)
-                .HasForeignKey(p => p.UserId)
-                .IsRequired(false);
+                .HasForeignKey(p => p.UserId);
         }
     }
 }

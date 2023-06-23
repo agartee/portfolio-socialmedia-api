@@ -1,6 +1,6 @@
 namespace SocialMedia.Domain.Models
 {
-    public record UserProfile
+    public record User
     {
         public required string UserId { get; init; }
         public required string Name { get; init; }

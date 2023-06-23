@@ -47,7 +47,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Fixtures
             var sqlCommandList = CreateList(
                 new { Order = 1, SqlCommand = $"DELETE FROM [{SocialMediaDbContext.SCHEMA_NAME}].[{PostContentData.TABLE_NAME}]" },
                 new { Order = 2, SqlCommand = $"DELETE FROM [{SocialMediaDbContext.SCHEMA_NAME}].[{PostData.TABLE_NAME}]" },
-                new { Order = 3, SqlCommand = $"DELETE FROM [{SocialMediaDbContext.SCHEMA_NAME}].[{UserProfileData.TABLE_NAME}]" });
+                new { Order = 3, SqlCommand = $"DELETE FROM [{SocialMediaDbContext.SCHEMA_NAME}].[{UserData.TABLE_NAME}]" });
 
             var sql = string.Join(Environment.NewLine, sqlCommandList
                 .OrderBy(item => item.Order)
