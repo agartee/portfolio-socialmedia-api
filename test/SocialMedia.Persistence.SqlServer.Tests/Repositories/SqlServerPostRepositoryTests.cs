@@ -58,8 +58,6 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             data.UserId.Should().Be(post.UserId);
             data.Created.Should().Be(post.Created);
             data.Content.Text.Should().Be(post.Text);
-
-            throw new Exception("bite me!");
         }
 
         [Fact]
