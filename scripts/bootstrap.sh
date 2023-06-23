@@ -20,7 +20,7 @@ while (( "$#" )); do
       appEnv="local"
       shift
       ;;
-    -c|--ci)
+    -ci|--ci)
       appEnv="ci"
       shift
       ;;
