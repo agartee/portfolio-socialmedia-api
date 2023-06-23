@@ -4,7 +4,7 @@ Param(
 )
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
-$config = Get-Content -Raw -Path "$rootDir\scripts\scripts.json" | ConvertFrom-Json
+$config = Get-Content -Raw -Path "$rootDir\scripts\.settings.json" | ConvertFrom-Json
 $testProjects = Get-ChildItem -Path $rootDir\test -Filter *.csproj -Recurse -File | ForEach-Object { $_ }
 $coverageDir = "$rootDir\.test-coverage"
 $binDir = "$rootDir\.bin"

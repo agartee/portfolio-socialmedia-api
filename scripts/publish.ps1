@@ -5,7 +5,7 @@ param(
 )
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
-$config = Get-Content -Raw -Path "$rootDir\scripts\scripts.json" | ConvertFrom-Json
+$config = Get-Content -Raw -Path "$rootDir\scripts\.settings.json" | ConvertFrom-Json
 $projectFile = Join-Path -Path $rootDir -ChildPath $config.webAppProjectFile
 $publishDir = "$rootDir\.publish"
 

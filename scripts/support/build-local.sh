@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-config=$(cat "$rootDir/scripts/scripts.json")
+config=$(cat "$rootDir/scripts/.settings.json")
 solutionFile="$rootDir/$(echo "$config" | jq -r '.solutionFile')"
 configuration="Debug"
 

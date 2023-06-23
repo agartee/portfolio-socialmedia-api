@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-config=$(cat "$rootDir/scripts/scripts.json")
+config=$(cat "$rootDir/scripts/.settings.json")
 imageName=$(echo "$config" | jq -r '.docker.imageName')
 containerName=$(echo "$config" | jq -r '.docker.containerName')
 tagName=$(echo "$config" | jq -r '.docker.tagName')

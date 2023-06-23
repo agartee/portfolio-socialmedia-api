@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-config=$(jq '.' "$rootDir/scripts/scripts.json")
+config=$(jq '.' "$rootDir/scripts/.settings.json")
 testProjects=$(find "$rootDir/test" -name "*.csproj")
 coverageDir="$rootDir/.test-coverage"
 binDir="$rootDir/.bin"

@@ -5,7 +5,7 @@ param(
 )
 
 $rootDir = (get-item $PSScriptRoot).Parent.Parent.FullName
-$config = Get-Content -Raw -Path "$rootDir\scripts\scripts.json" | ConvertFrom-Json
+$config = Get-Content -Raw -Path "$rootDir\scripts\.settings.json" | ConvertFrom-Json
 $imageName = $config.docker.imageName
 $tagName = $config.docker.tagName
 
