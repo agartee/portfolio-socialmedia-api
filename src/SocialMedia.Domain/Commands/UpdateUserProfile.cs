@@ -1,21 +1,14 @@
-using CommandLine;
 using MediatR;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
 
 namespace SocialMedia.Domain.Commands
 {
-    [Verb("update user profile", HelpText = "Update an existing user's profile.")]
     public record UpdateUserProfile : IRequest<UserProfile>
     {
-        [Option(Required = false, HelpText = "User's ID")]
         public required string UserId { get; init; }
-
-        [Option(Required = false, HelpText = "User's name")]
-        public string? Name { get; init; }
-
-        [Option(Required = false, HelpText = "User's email address")]
-        public string? Email { get; init; }
+        public required string Name { get; init; }
+        public required string Email { get; init; }
     }
 
     public class UpdateUserProfileHandler : IRequestHandler<UpdateUserProfile, UserProfile>
