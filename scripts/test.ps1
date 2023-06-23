@@ -12,12 +12,12 @@ $status = 0
 
 $exclusions = @{}
 
-foreach ($exclusion in $config.'test'.exclusions) {
+foreach ($exclusion in $config.test.exclusions) {
   $exclusions[$exclusion.project] = @($exclusion.exclude)
 }
 
-if (Test-Path $coverageDir) {
-  Remove-Item $coverageDir -Recurse -Force
+if (Test-Path "$coverageDir") {
+  Remove-Item "$coverageDir" -Recurse -Force
 }
 
 foreach ($testProject in $testProjects) {
@@ -30,7 +30,7 @@ foreach ($testProject in $testProjects) {
   Write-Host "Executing tests for $($testProject.Name)..." -ForegroundColor Blue
 
   dotnet test $testProject.FullName --no-build -c $configuration `
-    --results-directory $coverageDir `
+    --results-directory "$coverageDir" `
     --collect:"XPlat Code Coverage" `
     -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="$exclude"
 
@@ -38,7 +38,7 @@ foreach ($testProject in $testProjects) {
     $status = $LASTEXITCODE
   }
 
-  $coverageFile = Get-ChildItem -Path $coverageDir -Filter "coverage.cobertura.xml" `
+  $coverageFile = Get-ChildItem -Path "$coverageDir" -Filter "coverage.cobertura.xml" `
     -Recurse -File | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
 
   & $binDir\ccr.exe --coverage-file $coverageFile.FullName --package $projectName
