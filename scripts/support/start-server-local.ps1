@@ -6,6 +6,6 @@ param(
 
 $rootDir = (get-item $PSScriptRoot).Parent.Parent.FullName
 $config = Get-Content -Raw -Path "$rootDir\scripts\.settings.json" | ConvertFrom-Json
-$projectFile = Join-Path -Path $rootDir -ChildPath $config.webAppProjectFile
+$projectFile = Join-Path -Path "$rootDir" -ChildPath $config.webAppProjectFile
 
 dotnet run --project $projectFile --launch-profile https --configuration $configuration

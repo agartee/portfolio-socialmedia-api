@@ -12,9 +12,9 @@ param(
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
 
 if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
-  & "$rootDir\scripts\support\start-server-local.ps1" -configuration $configuration
+  & "$rootDir\scripts\support\start-server-local.ps1" -configuration "$configuration"
 }
 
 if ($docker) {
-  & "$rootDir\scripts\support\start-server-docker.ps1" -configuration $configuration
+  & "$rootDir\scripts\support\start-server-docker.ps1" -configuration "$configuration"
 }

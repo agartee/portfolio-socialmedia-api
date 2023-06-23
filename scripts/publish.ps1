@@ -6,11 +6,11 @@ param(
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
 $config = Get-Content -Raw -Path "$rootDir\scripts\.settings.json" | ConvertFrom-Json
-$projectFile = Join-Path -Path $rootDir -ChildPath $config.webAppProjectFile
+$projectFile = Join-Path -Path "$rootDir" -ChildPath $config.webAppProjectFile
 $publishDir = "$rootDir\.publish"
 
-if (Test-Path -Path $publishDir) {
-  Remove-Item -Recurse -Force $publishDir
+if (Test-Path -Path "$publishDir") {
+  Remove-Item -Recurse -Force "$publishDir"
 }
 
 dotnet publish $projectFile --configuration "$configuration" `
