@@ -85,9 +85,11 @@ do
     --collect:"XPlat Code Coverage" \
     -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="$exclude"
 
-  if [ $? -eq 0 ]
+  exitCode=$?
+
+  if [ $status -eq 0 ]
   then
-    status=$?
+    status=$exitCode
   fi
 
   coverageFile=$(find "$coverageDir" -name 'coverage.cobertura.xml' -print0 | xargs -0 ls -t | head -n 1)
