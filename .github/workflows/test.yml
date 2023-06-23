@@ -37,13 +37,10 @@ jobs:
           dotnet-version: "7.x"
 
       - name: Run bootstrap script
-        run: ./scripts/bootstrap.ps1 -ci
-        shell: pwsh
+        run: ./scripts/bootstrap.sh -ci
 
       - name: Run build script
-        run: ./scripts/build.ps1 -configuration Release
-        shell: pwsh
+        run: ./scripts/build.sh --configuration Release
 
       - name: Run test script
-        run: ./scripts/test.ps1 -configuration Release
-        shell: pwsh
+        run: ./scripts/test.sh --configuration Release
