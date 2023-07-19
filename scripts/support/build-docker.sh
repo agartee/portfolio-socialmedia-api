@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-config=$(cat "$rootDir/scripts/.settings.json")
+config=$(cat "$rootDir/scripts/.project-settings.json")
 imageName=$(echo "$config" | jq -r '.docker.imageName')
 tagName=$(echo "$config" | jq -r '.docker.tagName')
 configuration="Debug"
