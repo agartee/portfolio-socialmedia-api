@@ -9,8 +9,5 @@ namespace SocialMedia.Persistence.Auth0.Models
 
         [JsonPropertyName("nickname")]
         public string? Nickname { get; init; }
-
-        [JsonPropertyName("email")]
-        public string? Email { get; init; }
     }
 }

@@ -14,7 +14,19 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: ${{ secrets.SQL_SA_PASSWORD }}
+          ACCEPT_EULA: "Y"
+        ports:
+          - 1433:1433
+
+    env:
+      CONNECTIONSTRINGS__TEST_DATABASE: Server=localhost;Database=SocialMedia;User=sa;Password=${{ secrets.SQL_SA_PASSWORD }};TrustServerCertificate=True;MultipleActiveResultSets=true
 
     steps:
       - uses: actions/checkout@v3
@@ -25,10 +37,11 @@ jobs:
           dotnet-version: "7.x"
 
       - name: Run bootstrap script
-        run: ./scripts/bootstrap.ps1 -ci
+        run: ./scripts/bootstrap.sh -ci
 
       - name: Run build script
-        run: ./scripts/build.ps1 -configuration Release
+        run: ./scripts/build.sh --configuration Release
 
       - name: Run test script
-        run: ./scripts/test.ps1 -configuration Release
+        run: ./scripts/test.sh --configuration Release
+
