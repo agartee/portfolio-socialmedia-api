@@ -34,13 +34,13 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
 
             var resultData = await dbContext.Posts
                 .Include(p => p.Content)
-                .Include(p => p.UserProfile)
+                .Include(p => p.User)
                 .SingleAsync(p => p.Id == post.Id);
 
             return new PostInfo
             {
                 Id = resultData.Id,
-                Author = resultData.UserProfile?.DisplayName ?? resultData.UserId,
+                Author = resultData.User!.Name,
                 Created = resultData.Created,
                 Text = resultData.Content.Text
             };
@@ -50,14 +50,14 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
         {
             var postsData = await dbContext.Posts
                 .Include(post => post.Content)
-                .Include(post => post.UserProfile)
+                .Include(post => post.User)
                 .OrderByDescending(post => post.Created)
                 .ToListAsync();
 
             return postsData.Select(p => new PostInfo
             {
                 Id = p.Id,
-                Author = p.UserProfile?.DisplayName ?? p.UserId,
+                Author = p.User!.Name,
                 Created = p.Created,
                 Text = p.Content.Text
             });

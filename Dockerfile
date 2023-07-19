@@ -16,6 +16,10 @@ RUN dotnet publish "SocialMedia.WebAPI.csproj" --configuration $CONFIG --output 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
+RUN apt-get update
+RUN apt-get install -y curl
 
 ENTRYPOINT ["dotnet", "SocialMedia.WebAPI.dll"]
+
+HEALTHCHECK --interval=2s --timeout=30s \
+  CMD curl https://localhost/health --insecure || exit 1

@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 
 namespace SocialMedia.Persistence.Auth0
 {
-    public class Auth0ManagementAPIClient : IBasicUserProfileRepository
+    public class Auth0ManagementAPIClient : IUserRepository
     {
         private readonly HttpClient httpClient;
 
@@ -16,7 +16,7 @@ namespace SocialMedia.Persistence.Auth0
             this.httpClient = httpClient;
         }
 
-        public async Task<BasicUserProfile> GetBasicUserProfile(string userId, CancellationToken cancellationToken)
+        public async Task<User> GetUser(string userId, CancellationToken cancellationToken)
         {
             string url = $"users/{userId}";
 
@@ -26,25 +26,21 @@ namespace SocialMedia.Persistence.Auth0
             if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
-            return new BasicUserProfile
+            return new User
             {
                 UserId = userResponse.Id,
-                Name = userResponse.Name,
-                Nickname = userResponse.Nickname,
-                Email = userResponse.Email,
+                Name = userResponse.Name
             };
         }
 
-        public async Task<BasicUserProfile> UpdateBasicUserProfile(BasicUserProfile userProfile, CancellationToken cancellationToken)
+        public async Task<User> UpdateUser(User user, CancellationToken cancellationToken)
         {
             var payload = new UserRequest
             {
-                Name = userProfile.Name,
-                Nickname = userProfile.Nickname,
-                Email = userProfile.Email
+                Name = user.Name
             };
 
-            var url = $"users/{userProfile.UserId}";
+            var url = $"users/{user.UserId}";
 
             var httpResponse = await httpClient.PatchAsJsonAsync(url, payload, cancellationToken);
             var userResponse = await httpResponse.Content.TryReadFromJsonAsync<UserResponse>(cancellationToken);
@@ -52,12 +48,10 @@ namespace SocialMedia.Persistence.Auth0
             if (userResponse == null)
                 throw new CannotDeserializeResponseException(url, typeof(UserResponse));
 
-            return new BasicUserProfile
+            return new User
             {
                 UserId = userResponse.Id,
-                Name = userResponse.Name,
-                Nickname = userResponse.Nickname,
-                Email = userResponse.Email,
+                Name = userResponse.Name
             };
         }
     }
