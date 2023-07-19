@@ -25,6 +25,9 @@ function PromptForEnvVar {
 
 $envPath = "$rootDir\.env"
 if (!(Test-Path -Path $envPath)) {
+
+  Write-Host "Generating .env file..." -ForegroundColor Blue
+
   New-Item -Path $envPath -ItemType File | Out-Null
 
   Add-Content -Path $envPath -Value (PromptForEnvVar `

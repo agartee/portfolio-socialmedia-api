@@ -14,5 +14,6 @@ $rootDir = (get-item $PSScriptRoot).Parent.FullName
 
 if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
   . "$rootDir\scripts\support\check-docker.ps1"
-  . "$rootDir\scripts\support\check-ssl.ps1"
+  . "$rootDir\scripts\support\check-ssl.ps1" 
+  . "$rootDir\scripts\support\create-dotenv.ps1"
 }

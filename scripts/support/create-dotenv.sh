@@ -1,5 +1,16 @@
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
+case "$(uname -s)" in
+	Linux)
+		BLUE="\e[34m"
+		NO_COLOR="\e[0m"
+		;;
+	Darwin)
+		BLUE="\033[34m"
+		NO_COLOR="\033[m"
+		;;
+esac
+
 prompt_for_env_var() {
   local key=$1
   local prompt=$2
@@ -17,6 +28,8 @@ prompt_for_env_var() {
 
 envPath="$rootDir/.env"
 if [ ! -f "$envPath" ]; then
+  echo -e "${BLUE}Generating .env file...${NO_COLOR}"
+  
   touch "$envPath"
 
   echo "$(prompt_for_env_var "SSL_PFX_PATH" "SSL PFX file path?" "$rootDir/.ssl/localhost.pfx")" >> "$envPath"
