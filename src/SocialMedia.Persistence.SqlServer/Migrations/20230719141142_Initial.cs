@@ -46,8 +46,7 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                         column: x => x.UserId,
                         principalSchema: "SocialMedia",
                         principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -66,8 +65,7 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                         column: x => x.PostId,
                         principalSchema: "SocialMedia",
                         principalTable: "Post",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

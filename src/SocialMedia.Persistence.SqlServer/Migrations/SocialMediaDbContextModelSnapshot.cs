@@ -85,7 +85,7 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                     b.HasOne("SocialMedia.Persistence.SqlServer.Models.PostData", "Post")
                         .WithOne("Content")
                         .HasForeignKey("SocialMedia.Persistence.SqlServer.Models.PostContentData", "PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Post");
@@ -96,7 +96,7 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                     b.HasOne("SocialMedia.Persistence.SqlServer.Models.UserData", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");

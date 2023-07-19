@@ -21,12 +21,14 @@ namespace SocialMedia.Persistence.SqlServer
 
             modelBuilder.Entity<PostData>()
                 .HasOne(p => p.Content)
-                .WithOne(c => c.Post);
+                .WithOne(c => c.Post)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<PostData>()
                 .HasOne(p => p.User)
                 .WithMany(c => c.Posts)
-                .HasForeignKey(p => p.UserId);
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
