@@ -16,5 +16,6 @@ if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
 }
 
 if ($docker) {
+  & "$rootDir\scripts\build.ps1" -docker -configuration "$configuration"
   & "$rootDir\scripts\support\start-server-docker.ps1" -configuration "$configuration"
 }

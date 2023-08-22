@@ -5,7 +5,6 @@ minVer="7.0.0"
 minMajorVer=$(echo $minVer | cut -d. -f1)
 maxMajorVer=$(($(echo $minVer | cut -d. -f1) + 1))
 maxVer="${maxMajorVer}.0.0"
-currentVer=$(dotnet --version 2> /dev/null)
 
 case "$(uname -s)" in
 	Linux)
@@ -20,16 +19,25 @@ case "$(uname -s)" in
 		;;
 esac
 
-if [ -z "$currentVer" ]
-then 
-    echo -e "${RED}.NET installation not found (minimum: ${minVer}).${NO_COLOR}"
-    exit 1
+sdks=$(dotnet --list-sdks 2>&1)
+
+if [[ ! $sdks ]]; then
+  echo -e "${RED}.NET CLI installation not found (target: ${minMajorVer}.x; min: ${minVer}).${NO_COLOR}" >&2
+  exit 1
 fi
 
-if $(dpkg --compare-versions "${currentVer}" "lt" "${minVer}") || $(dpkg --compare-versions "${currentVer}" "ge" "${maxVer}")
-then 
-    echo -e "${RED}Current .NET version not supported (found: ${currentVer}; required: ${minMajorVer}.x.x).${NO_COLOR}"
-    exit 1
+hasTargetVer=false
+while read -r sdk; do
+  currentVer=${sdk%% *}
+	if $(dpkg --compare-versions "${currentVer}" "ge" "${minVer}") && $(dpkg --compare-versions "${currentVer}" "lt" "${maxVer}"); then
+    hasTargetVer=true
+    break
+  fi
+done <<< "$sdks"
+
+if [[ $hasTargetVer = false ]]; then
+  echo -e "${RED}Target .NET version not found: ${minMajorVer}.x (minimum: ${minVer}).${NO_COLOR}" >&2
+  exit 1
 fi
 
-echo -e "${GREEN}.NET installation found: ${currentVer} (found: ${currentVer}; required: ${minMajorVer}.x.x)${NO_COLOR}"
+echo -e "${GREEN}.NET installation found: ${currentVer} (target: ${minMajorVer}.x; min: ${minVer})${NO_COLOR}"

@@ -4,25 +4,31 @@ $minMajorVer = $minVer.Split('.')[0]
 $maxMajorVer = [int]$minMajorVer + 1
 $maxVer = "$($maxMajorVer).0.0"
 
-Invoke-Expression "dotnet --version" -OutVariable succOut 2>&1 | Out-Null
+Invoke-Expression "dotnet --list-sdks" -OutVariable succOut 2>&1 | Out-Null
 
 try {
   if (-not $succOut) {
-    throw [System.InvalidOperationException] `
-      ".NET CLI installation not found (minimum: $($minMajorVer).x.x)."
+    throw [System.Exception] `
+      ".NET CLI installation not found (target: $($minMajorVer).x; min: $($minVer))."
   }
 
-  $currentVer = $succOut[0]
-  if ([System.Version] $currentVer -lt [System.Version] $minVer `
-      -or [System.Version] $currentVer -gt [System.Version] $maxVer) {
-    
-    throw [System.InvalidOperationException] `
-    ("Current .NET version not supported (found: $($currentVer);" `
-        + " required: $($minMajorVer).x.x).")
+  $hasTargetVer = $false
+  foreach ($result in $succOut) {
+    $currentVer = $result.Split(' ')[0]
+    if ([System.Version] $currentVer -gt [System.Version] $minVer `
+        -and [System.Version] $currentVer -lt [System.Version] $maxVer) {
+      $hasTargetVer = $true
+      break
+    }
   }
 
-  Write-Host (".NET installation found: $($currentVer)" `
-      + " (required: $($minMajorVer).x.x).") -ForegroundColor Green
+  if (-not $hasTargetVer) {
+    throw [System.Exception] `
+    ("Target .NET version not found: $($minMajorVer).x (minimum: $($minVer)).")
+  }
+
+  Write-Host ".NET installation found: $($currentVer)" `
+    "(target: $($minMajorVer).x; min: $($minVer))" -ForegroundColor Green
 }
 catch [System.Exception] {
   Write-Host $_.Exception.Message -ForegroundColor Red

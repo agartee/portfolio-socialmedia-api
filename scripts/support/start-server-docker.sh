@@ -43,7 +43,7 @@ while (( "$#" )); do
   esac
 done
 
-docker container rm "$containerName" --force 2> /dev/null
+docker container rm "$containerName" --force &>/dev/null
 
 # Read SSL_PFX_PATH and SSL_PFX_PASSWORD from .env file
 while read -r line || [[ -n "$line" ]]; do
@@ -71,7 +71,5 @@ docker container run \
     "$imageName:$tagName"
 
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}Container started successfully.${NO_COLOR}"
-else
-    echo -e "${RED}Failed to start the container.${NO_COLOR}"
+  "$rootDir/scripts/support/wait-for-healthy-container.sh" $containerName
 fi

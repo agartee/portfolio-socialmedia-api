@@ -1,5 +1,4 @@
-Invoke-Expression "docker --version" `
-  -OutVariable succOut 2>&1 | Out-Null
+Invoke-Expression "dockerer --version" -OutVariable succOut 2>&1 | Out-Null
 
 try {
   if (-not $succOut) {
@@ -13,4 +12,6 @@ catch [System.Exception] {
   Write-Host "Warning: $($_.Exception.Message)" -ForegroundColor Yellow
   Write-Host "Some scripts have an additional '-docker' switch that cannot be" `
     "utilized until Docker is installed." -ForegroundColor Yellow
+
+  exit 1
 }

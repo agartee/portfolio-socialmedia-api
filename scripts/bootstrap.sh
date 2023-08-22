@@ -42,6 +42,6 @@ bash $rootDir/scripts/support/check-ccr.sh
 
 if [ "$appEnv" = "local" ]; then
   bash $rootDir/scripts/support/check-docker.sh
-  bash $rootDir/scripts/support/check-ssl.sh
+  bash $rootDir/scripts/support/check-trusted-ssl-cert.sh
   bash $rootDir/scripts/support/create-dotenv.sh
 fi
