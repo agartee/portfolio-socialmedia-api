@@ -36,5 +36,3 @@ if [ -d "$sslDir" ]; then
   echo -e "${BLUE}Removing $sslDir...${NO_COLOR}"
   rm -rf "$sslDir"
 fi
-
-bash "$rootDir/scripts/bootstrap.sh"

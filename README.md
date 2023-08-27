@@ -56,12 +56,12 @@ These scripts are aimed to normalize script patterns across projects and platfor
 
 | Script | Description |
 | --- | --- |
-| `./scripts/setup.ps1` | Sets project back to an initial state and then runs `bootstrap.ps1`. |
-| `./scripts/bootstrap.ps1` | Checks for app dependencies. Errors/warnings will be displayed if any required software is missing (this script will not install software on your system). |
-| `./scripts/build.ps1` | Builds the app.<br>Command args:<br>&nbsp;&nbsp;`[-local]`: Builds the app locally.<br>&nbsp;&nbsp;`[-docker]`: Builds a Docker image.<br>&nbsp;&nbsp;`[-configuration]`: The configuration to use. Defaults to "Debug". |
-| `./scripts/test.ps1` | Executes tests in all projects under `./test`.<br>Command args:<br>&nbsp;&nbsp;`[-configuration]`: The configuration to use. Defaults to "Debug". |
-| `./scripts/server.ps1` | Builds and runs the app in the "Release" configuration.<br>Command args:<br>&nbsp;&nbsp;`[-local]`: Run via `dotnet run`.<br>&nbsp;&nbsp;`[-docker]`: Builds a Docker image and starts a new container.<br>&nbsp;&nbsp;`[-configuration]`: The configuration to use. Defaults to "Release". |
-| `./scripts/publish.ps1` | Publishes the app to `./.publish`<br>Command args:<br>&nbsp;&nbsp;`[-configuration]`: The configuration to use. Defaults to "Release". |
+| `./scripts/clean.{ps1|sh}` | Sets project back to an initial state. |
+| `./scripts/bootstrap.{ps1|sh}` | Checks for app dependencies. Errors/warnings will be displayed if any required software is missing (this script will not install software on your system). |
+| `./scripts/build.{ps1|sh}` | Builds the app.<br>Command args:<br>&nbsp;&nbsp;`[-local]`: Builds the app locally.<br>&nbsp;&nbsp;`[-docker]`: Builds a Docker image.<br>&nbsp;&nbsp;`[-configuration]`: The configuration to use. Defaults to "Debug". |
+| `./scripts/test.{ps1|sh}` | Executes tests in all projects under `./test`.<br>Command args:<br>&nbsp;&nbsp;`[-configuration]`: The configuration to use. Defaults to "Debug". |
+| `./scripts/server.{ps1|sh}` | Builds and runs the app in the "Release" configuration.<br>Command args:<br>&nbsp;&nbsp;`[-local]`: Run via `dotnet run`.<br>&nbsp;&nbsp;`[-docker]`: Builds a Docker image and starts a new container.<br>&nbsp;&nbsp;`[-configuration]`: The configuration to use. Defaults to "Release". |
+| `./scripts/publish.{ps1|sh}` | Publishes the app to `./.publish`<br>Command args:<br>&nbsp;&nbsp;`[-configuration]`: The configuration to use. Defaults to "Release". |
 
 
 ## SQL Server Configuration Recommendations for Docker (Local Development)

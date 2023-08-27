@@ -23,5 +23,3 @@ if (Test-Path -Path $sslDir) {
   Write-Host "Removing $sslDir..." -ForegroundColor Blue
   Remove-Item -Recurse -Force "$sslDir"
 }
-
-& "$rootDir\scripts\bootstrap.ps1"
