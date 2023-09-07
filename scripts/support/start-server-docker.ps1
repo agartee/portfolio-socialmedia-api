@@ -5,11 +5,13 @@ param(
 )
 
 $rootDir = (get-item $PSScriptRoot).Parent.Parent.FullName
+$scriptName = [System.IO.Path]::GetFileNameWithoutExtension($MyInvocation.MyCommand.Name)
 $config = Get-Content -Raw -Path "$rootDir\scripts\.project-settings.json" | ConvertFrom-Json
 $imageName = $config.docker.imageName
 $containerName = $config.docker.containerName
 $tagName = $config.docker.tagName
 $userSecretsId = $config.userSecretsId
+$databaseConnectionStringName = $config.scripts.$scriptName.databaseConnectionStringName
 
 docker container rm "$containerName" --force 2>&1 | Out-Null
 
@@ -25,7 +27,7 @@ $pfxPassword = Get-Content "$rootDir\.env" | Select-String '^SSL_PFX_PASSWORD=' 
 $secretsDir = "$env:APPDATA\Microsoft\UserSecrets\$userSecretsId"
   
 docker container run `
-  --name "$containerName" `
+  --name $containerName `
   --publish 5000:80 --publish 5001:443 `
   --env "ASPNETCORE_ENVIRONMENT=Development" `
   --env "ASPNETCORE_URLS=https://+:443;http://+:80" `
@@ -33,8 +35,10 @@ docker container run `
   --env "ASPNETCORE_Kestrel__Certificates__Default__Password=$($pfxPassword)" `
   --volume "$($secretsDir):/root/.microsoft/usersecrets/$($userSecretsId):ro" `
   --volume "$($pfxDir):/https:ro" `
+  --entrypoint dotnet `
   --detach `
-  "$($imageName):$($tagName)"
+  "$($imageName):$($tagName)" `
+  /app/SocialMedia.WebAPI.dll --d $databaseConnectionStringName
 
 if ($LASTEXITCODE -eq 0) {
   & "$rootDir\scripts\support\wait-for-healthy-container.ps1" -c $containerName

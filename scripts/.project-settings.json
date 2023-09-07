@@ -7,6 +7,11 @@
     "containerName": "socialmedia-api",
     "tagName": "dev"
   },
+  "scripts": {
+    "start-server-docker": {
+      "databaseConnectionStringName": "docker_database"
+    }
+  },
   "test": {
     "exclusions": [
       {

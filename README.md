@@ -17,7 +17,9 @@ Configuration settings that are required by the application at runtime are gener
 
 | Setting | Description |
 | --- | --- |
-| `connectionStrings:database` | Connection string to the app database. When using a Docker container to host the app, username and password must be used in place of a trusted connection. |
+| `connectionStrings:database` | Connection string to the database when running the application |
+| `connectionStrings:test_database` | Connection string to the application database used for integration testing |
+| `connectionStrings:docker_database` | Connection string to the database when running the application in a Docker container |
 | `authentication:authority` | Auth0 authority for your account |
 | `authentication:audience` | API identifier in Auth0 |
 | `userManagement:authentication:audience` | API identifier in Auth0 for the Management API |
@@ -30,7 +32,9 @@ Configuration settings that are required by the application at runtime are gener
 ```json
 {
   "connectionStrings": {
-    "database": "Server=localhost;Database=SocialMedia;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"
+    "database": "Server=localhost;Database=SocialMedia;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true",
+    "docker_database": "Server=host.docker.internal;Database=SocialMedia;User=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true",
+    "test_database": "Server=localhost;Database=SocialMediaTests;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"
   },
   "authentication": {
     "authority": "<ACCOUNT>.auth0.com",
