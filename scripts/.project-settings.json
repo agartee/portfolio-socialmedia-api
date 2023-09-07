@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start-server-docker": {
-      "databaseConnectionStringName": "database_docker"
+      "databaseConnectionStringName": "docker_database"
     }
   },
   "test": {
