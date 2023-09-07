@@ -1,13 +1,14 @@
 #!/bin/bash
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-scriptName="${0##*/}" | sed 's/\(.*\)\..*/\1/'
+scriptName=$(echo "${0##*/}" | sed 's/\(.*\)\..*/\1/')
 config=$(cat "$rootDir/scripts/.project-settings.json")
 imageName=$(echo "$config" | jq -r '.docker.imageName')
 containerName=$(echo "$config" | jq -r '.docker.containerName')
 tagName=$(echo "$config" | jq -r '.docker.tagName')
 userSecretsId=$(echo "$config" | jq -r '.userSecretsId')
-databaseConnectionStringName=$(echo "$config" | jq -r ".scripts.${scriptName}.databaseConnectionStringName")
+databaseConnectionStringName=$(echo "$config" | jq -r --arg scriptName "$scriptName" '.scripts[$scriptName].databaseConnectionStringName')
+
 configuration="Debug"
 
 case "$(uname -s)" in
