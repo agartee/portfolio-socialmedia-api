@@ -69,8 +69,11 @@ builder.Services.AddMediatR(config =>
 builder.Services.AddTransient<ICliRequestBuilder>(services =>
     new CliRequestBuilder(requestTypes));
 builder.Services.AddSingleton(new HelpTextConfiguration(cliRequestTypes));
+
+var dbConnectionStringName = new Parser(settings => { settings.CaseSensitive = false; })
+    .GetConnectionStringName(args);
 builder.Services.AddDbContext<SocialMediaDbContext>(options =>
-    options.UseSqlServer(builder.Configuration["connectionStrings:database"]));
+    options.UseSqlServer(builder.Configuration[$"connectionStrings:{dbConnectionStringName}"]));
 
 builder.Services.AddAuth0ManagementServices(builder.Configuration);
 builder.Services.AddSqlServerPersistenceServices();
