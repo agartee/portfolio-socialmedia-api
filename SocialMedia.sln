@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2102D0F7-9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EC50639E-08FB-40AC-BE60-C481FB527693}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		Dockerfile = Dockerfile
 		README.md = README.md
@@ -26,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialMedia.Persistence.Sql
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialMedia.Persistence.SqlServer.Tests", "test\SocialMedia.Persistence.SqlServer.Tests\SocialMedia.Persistence.SqlServer.Tests.csproj", "{9E81503B-8111-4C33-9F6E-64BCE30B1D75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialMedia.Persistence.Auth0", "src\SocialMedia.Persistence.Auth0\SocialMedia.Persistence.Auth0.csproj", "{35AB00D5-39F3-4495-A4CD-B2A4ACC249E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialMedia.Persistence.Auth0", "src\SocialMedia.Persistence.Auth0\SocialMedia.Persistence.Auth0.csproj", "{35AB00D5-39F3-4495-A4CD-B2A4ACC249E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialMedia.Persistence.Auth0.Tests", "test\SocialMedia.Persistence.Auth0.Tests\SocialMedia.Persistence.Auth0.Tests.csproj", "{0526F9CF-EFA9-489A-9FA8-455B6B79202A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialMedia.Persistence.Auth0.Tests", "test\SocialMedia.Persistence.Auth0.Tests\SocialMedia.Persistence.Auth0.Tests.csproj", "{0526F9CF-EFA9-489A-9FA8-455B6B79202A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

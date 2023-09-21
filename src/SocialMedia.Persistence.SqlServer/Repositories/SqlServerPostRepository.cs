@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
+using SocialMedia.Persistence.SqlServer.Extensions;
 using SocialMedia.Persistence.SqlServer.Models;
 
 namespace SocialMedia.Persistence.SqlServer.Repositories
@@ -37,13 +38,7 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
                 .Include(p => p.User)
                 .SingleAsync(p => p.Id == post.Id);
 
-            return new PostInfo
-            {
-                Id = resultData.Id,
-                Author = resultData.User!.Name,
-                Created = resultData.Created,
-                Text = resultData.Content.Text
-            };
+            return postData.ToPostInfo();
         }
 
         public async Task<IEnumerable<PostInfo>> GetAllPosts(CancellationToken cancellationToken)
@@ -54,13 +49,7 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
                 .OrderByDescending(post => post.Created)
                 .ToListAsync();
 
-            return postsData.Select(p => new PostInfo
-            {
-                Id = p.Id,
-                Author = p.User!.Name,
-                Created = p.Created,
-                Text = p.Content.Text
-            });
+            return postsData.Select(p => p.ToPostInfo());
         }
     }
 }
