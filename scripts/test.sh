@@ -85,7 +85,7 @@ do
   echo -e "${BLUE}Executing tests for $testProject...${NO_COLOR}"
 
   dotnetTestArgs=(
-    "$testProjectFullName"
+    "$testProject"
     "-c" "$configuration"
     "--results-directory" "$coverageDir"
     "--collect" "XPlat Code Coverage"
