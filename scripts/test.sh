@@ -51,6 +51,10 @@ while (( "$#" )); do
         exit 1
       fi
       ;;
+    --nobuild)
+      noBuild=true
+      shift
+      ;;
     -*|--*=)
       echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2
       exit 1
@@ -80,9 +84,18 @@ do
 
   echo -e "${BLUE}Executing tests for $testProject...${NO_COLOR}"
 
-  dotnet test "$testProject" --no-build -c "$configuration" \
-    --results-directory "$coverageDir" \
-    --collect:"XPlat Code Coverage" \
+  dotnetTestArgs=(
+    "$testProjectFullName"
+    "-c" "$configuration"
+    "--results-directory" "$coverageDir"
+    "--collect" "XPlat Code Coverage"
+  )
+
+  if [ "$noBuild" = "true" ]; then
+    dotnetTestArgs+=("--no-build")
+  fi
+
+  dotnet test "${dotnetTestArgs[@]}" \
     -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="$exclude"
 
   exitCode=$?
