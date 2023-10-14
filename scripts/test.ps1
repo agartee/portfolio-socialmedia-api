@@ -1,6 +1,8 @@
 Param(
   [Parameter(Mandatory = $false, HelpMessage = "Configuration name (e.g. Release, Debug)")]
-  [string]$configuration = "Debug"
+  [string]$configuration = "Debug",
+  [Parameter(Mandatory = $false, HelpMessage = "Do not perform build on projects before running tests")]
+  [switch]$noBuild
 )
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
@@ -29,11 +31,20 @@ foreach ($testProject in $testProjects) {
 
   Write-Host "Executing tests for $($testProject.Name)..." -ForegroundColor Blue
 
-  dotnet test $testProject.FullName --no-build -c $configuration `
-    --results-directory "$coverageDir" `
-    --collect:"XPlat Code Coverage" `
-    -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="$exclude"
+  $dotnetTestArgs = @(
+    $testProject.FullName,
+    "-c", $configuration
+    "--results-directory", $coverageDir,
+    "--collect", "XPlat Code Coverage"
+  )
 
+  if ($noBuild) {
+    $dotnetTestArgs += "--no-build"
+  }
+
+  & dotnet test $dotnetTestArgs `
+  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="$exclude"
+  
   if ($status -eq 0) {
     $status = $LASTEXITCODE
   }
