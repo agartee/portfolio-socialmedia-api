@@ -40,7 +40,7 @@ jobs:
         run: ./scripts/bootstrap.sh -ci
 
       - name: Run build script
-        run: ./scripts/build.sh --configuration Release
+        run: ./scripts/build.sh --configuration Release --nobuild
 
       - name: Run test script
         run: ./scripts/test.sh --configuration Release
