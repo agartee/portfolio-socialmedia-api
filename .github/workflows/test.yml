@@ -44,4 +44,3 @@ jobs:
 
       - name: Run test script
         run: ./scripts/test.sh --configuration Release
-
