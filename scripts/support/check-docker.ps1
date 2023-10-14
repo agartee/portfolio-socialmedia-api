@@ -1,4 +1,4 @@
-Invoke-Expression "dockerer --version" -OutVariable succOut 2>&1 | Out-Null
+Invoke-Expression "docker --version" -OutVariable succOut 2>&1 | Out-Null
 
 try {
   if (-not $succOut) {

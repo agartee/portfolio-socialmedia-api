@@ -43,5 +43,4 @@ jobs:
         run: ./scripts/build.sh --configuration Release
 
       - name: Run test script
-        run: ./scripts/test.sh --configuration Release
-
+        run: ./scripts/test.sh --configuration Release --nobuild
