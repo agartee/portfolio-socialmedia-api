@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Moq;
+using SocialMedia.Domain.Models;
 using SocialMedia.WebAPI.Binders;
 using System.Security.Claims;
 using System.Text;
@@ -17,7 +18,7 @@ namespace SocialMedia.WebAPI.Tests.Binders
         [Fact]
         public async Task BindModelAsync_GivenValidIdClaim_BindsModelWithIdFromClaim()
         {
-            var userId = "id";
+            var userId = new UserId("id");
             string name = "test";
             var modelBindingContext = CreateModelBindingContext(userId, typeof(Thing),
                 JsonSerializer.Serialize(new { name }));
@@ -37,7 +38,7 @@ namespace SocialMedia.WebAPI.Tests.Binders
         [InlineData(null)]
         public async Task BindModelAsync_GivenNullJsonInRequestBody_BindsModelWithOnlyIdFromClaim(string? body)
         {
-            var userId = "id";
+            var userId = new UserId("id");
             var modelBindingContext = CreateModelBindingContext(userId, typeof(Thing), body);
 
             var binder = new UserIdFromClaimModelBinder();
@@ -52,7 +53,7 @@ namespace SocialMedia.WebAPI.Tests.Binders
         [Fact]
         public async Task BindModelAsync_GivenInvalidRequestBody_ThrowsInvalidOperationException()
         {
-            var userId = "id";
+            var userId = new UserId("id");
             var modelBindingContext = CreateModelBindingContext(userId, typeof(Thing), "not JSON");
 
             var binder = new UserIdFromClaimModelBinder();
@@ -61,7 +62,7 @@ namespace SocialMedia.WebAPI.Tests.Binders
             await action.Should().ThrowAsync<InvalidOperationException>();
         }
 
-        private DefaultModelBindingContext CreateModelBindingContext(string userId, Type modelType, string? body)
+        private DefaultModelBindingContext CreateModelBindingContext(UserId userId, Type modelType, string? body)
         {
             var httpContext = new DefaultHttpContext();
             httpContext.User = CreateUser(userId);
@@ -81,11 +82,11 @@ namespace SocialMedia.WebAPI.Tests.Binders
             };
         }
 
-        private static ClaimsPrincipal CreateUser(string userId)
+        private static ClaimsPrincipal CreateUser(UserId userId)
         {
             return new ClaimsPrincipal(new ClaimsIdentity(new[]
-                        {
-                new Claim(ClaimTypes.NameIdentifier, userId)
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId.Value)
             }));
         }
 
@@ -100,7 +101,7 @@ namespace SocialMedia.WebAPI.Tests.Binders
 
         public class Thing
         {
-            public required string UserId { get; set; }
+            public required UserId UserId { get; set; }
             public string? Name { get; set; }
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SocialMedia.Domain.Commands;
-using SocialMedia.Domain.Models;
+using SocialMedia.TestUtilities.Builders;
 using SocialMedia.WebAPI.Controllers;
 using System.Security.Claims;
 
@@ -12,18 +12,14 @@ namespace SocialMedia.WebAPI.Tests.Controllers
 {
     public class FeedControllerTests
     {
+        private readonly PostBuilder postBuilder = new();
+
         [Fact]
         public async Task Get_SubmitsCommandAndReturnsResult()
         {
             var feed = new[]
             {
-                new PostInfo
-                {
-                    Id = Guid.NewGuid(),
-                    Author = "User 1",
-                    Text = "text",
-                    Created = DateTime.UtcNow
-                }
+                postBuilder.CreatePost().ToPostInfo()
             };
 
             var mediator = new Mock<IMediator>();

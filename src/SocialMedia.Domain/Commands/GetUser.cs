@@ -9,7 +9,7 @@ namespace SocialMedia.Domain.Commands
     public record GetUser : IRequest<User>
     {
         [Option(Required = false, HelpText = "User's ID")]
-        public required string UserId { get; init; }
+        public required UserId UserId { get; init; }
     }
 
     public class GetUserHandler : IRequestHandler<GetUser, User>

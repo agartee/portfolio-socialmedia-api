@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SocialMedia.Domain.Models;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -14,7 +15,7 @@ namespace SocialMedia.WebAPI.Binders
                 ? new Dictionary<string, object>()
                 : DeserializeToDictionary(body);
 
-            dict["userId"] = userId;
+            dict["userId"] = new UserId(userId);
 
             var model = JsonSerializer.Deserialize(
                 JsonSerializer.Serialize(dict),

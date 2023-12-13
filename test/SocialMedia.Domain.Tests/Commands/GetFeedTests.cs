@@ -1,41 +1,39 @@
 using FluentAssertions;
 using Moq;
 using SocialMedia.Domain.Commands;
-using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
+using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
     public class GetFeedTests
     {
+        private readonly GetFeedHandler handler;
+        private readonly Mock<IPostRepository> postRepository;
+        private readonly PostBuilder postBuilder = new();
+
+        public GetFeedTests()
+        {
+            postRepository = new Mock<IPostRepository>();
+            handler = new GetFeedHandler(postRepository.Object);
+        }
+
         [Fact]
         public async Task Handle_CallsRepositoryAndReturnsFeed()
         {
-            var feed = new[]
-            {
-                new PostInfo
-                {
-                    Id = Guid.NewGuid(),
-                    Author = "User 1",
-                    Text = "text",
-                    Created = DateTime.UtcNow
-                }
-            };
+            var feed = new[] { postBuilder.CreatePost().ToPostInfo() };
 
-            var repository = new Mock<IPostRepository>();
-            repository.Setup(r => r.GetAllPosts(It.IsAny<CancellationToken>()))
+            postRepository.Setup(r => r.GetAllPosts(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(feed);
 
-            var handler = new GetFeedHandler(repository.Object);
-
             var request = new GetFeed();
+            var cancellationToken = CancellationToken.None;
 
-            var results = await handler.Handle(request, CancellationToken.None);
+            var results = await handler.Handle(request, cancellationToken);
 
             results.Should().BeEquivalentTo(feed);
 
-            repository.Verify(repo => repo.GetAllPosts(
-                It.IsAny<CancellationToken>()));
+            postRepository.Verify(repo => repo.GetAllPosts(cancellationToken));
         }
     }
 }

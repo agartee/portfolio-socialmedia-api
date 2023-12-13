@@ -6,10 +6,10 @@ using SocialMedia.Domain.Services;
 namespace SocialMedia.Domain.Commands
 {
     [Verb("create post", HelpText = "Create a new post.")]
-    public class CreatePost : IRequest<PostInfo>
+    public record CreatePost : IRequest<PostInfo>
     {
         [Option(Required = false, HelpText = "User's ID")]
-        public required string UserId { get; init; }
+        public required UserId UserId { get; init; }
 
         [Option(Required = false, HelpText = "Text content of the post")]
         public required string Text { get; init; }
@@ -28,8 +28,8 @@ namespace SocialMedia.Domain.Commands
         {
             var post = new Post
             {
-                Id = Guid.NewGuid(),
-                UserId = request.UserId,
+                Id = PostId.NewId(),
+                AuthorUserId = request.UserId,
                 Text = request.Text,
                 Created = DateTime.UtcNow
             };

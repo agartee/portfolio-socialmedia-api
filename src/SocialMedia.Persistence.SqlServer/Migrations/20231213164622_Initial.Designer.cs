@@ -12,7 +12,7 @@ using SocialMedia.Persistence.SqlServer;
 namespace SocialMedia.Persistence.SqlServer.Migrations
 {
     [DbContext(typeof(SocialMediaDbContext))]
-    [Migration("20230719141142_Initial")]
+    [Migration("20231213164622_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -46,24 +46,24 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
+                    b.Property<string>("AuthorUserId")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AuthorUserId");
 
                     b.ToTable("Post", "SocialMedia");
                 });
 
             modelBuilder.Entity("SocialMedia.Persistence.SqlServer.Models.UserData", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("Id")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -78,7 +78,7 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("User", "SocialMedia");
                 });
@@ -98,7 +98,7 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                 {
                     b.HasOne("SocialMedia.Persistence.SqlServer.Models.UserData", "User")
                         .WithMany("Posts")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AuthorUserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

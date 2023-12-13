@@ -3,39 +3,40 @@ using Moq;
 using SocialMedia.Domain.Commands;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
+using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
     public class UpdateUserTests
     {
+        private readonly UpdateUserHandler handler;
+        private readonly Mock<IUserRepository> userRepository;
+        private readonly UserBuilder userBuilder = new();
+
+        public UpdateUserTests()
+        {
+            userRepository = new Mock<IUserRepository>();
+            handler = new UpdateUserHandler(userRepository.Object);
+        }
+
         [Fact]
         public async Task Handle_CallsRepositoryAndReturnsUser()
         {
-            var user = new User
-            {
-                UserId = "id",
-                Name = "name"
-            };
+            var user = userBuilder.CreateUser().ToUser();
 
-            var repository = new Mock<IUserRepository>();
-            repository.Setup(r => r.UpdateUser(It.IsAny<User>(), It.IsAny<CancellationToken>()))
+            userRepository.Setup(r => r.UpdateUser(It.IsAny<User>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
-            var handler = new UpdateUserHandler(repository.Object);
+            var request = new UpdateUser { UserId = user.Id, Name = user.Name };
+            var cancellationToken = CancellationToken.None;
 
-            var request = new UpdateUser
-            {
-                UserId = user.UserId,
-                Name = user.Name
-            };
-
-            var result = await handler.Handle(request, CancellationToken.None);
+            var result = await handler.Handle(request, cancellationToken);
 
             result.Should().Be(user);
 
-            repository.Verify(r => r.UpdateUser(
+            userRepository.Verify(r => r.UpdateUser(
                 It.Is<User>(s => s == user),
-                It.IsAny<CancellationToken>()));
+                cancellationToken));
         }
     }
 }

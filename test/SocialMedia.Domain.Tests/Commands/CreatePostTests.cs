@@ -3,45 +3,42 @@ using Moq;
 using SocialMedia.Domain.Commands;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
+using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
     public class CreatePostTests
     {
+        private readonly CreatePostHandler handler;
+        private readonly Mock<IPostRepository> postRepository;
+        private readonly PostBuilder postBuilder = new();
+
+        public CreatePostTests()
+        {
+            postRepository = new Mock<IPostRepository>();
+            handler = new CreatePostHandler(postRepository.Object);
+        }
+
         [Fact]
         public async Task Handle_CallsRepositoryAndReturnsPost()
         {
-            var repository = new Mock<IPostRepository>();
-            repository.Setup(r => r.CreatePost(It.IsAny<Post>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Post post, CancellationToken cancellationToken) => new PostInfo
-                {
-                    Id = post.Id,
-                    Author = "User 1",
-                    Text = post.Text,
-                    Created = post.Created
-                });
+            var post = postBuilder.CreatePost();
 
-            var handler = new CreatePostHandler(repository.Object);
+            postRepository.Setup(r => r.CreatePost(It.IsAny<Post>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(post.ToPostInfo());
 
-            var request = new CreatePost
-            {
-                UserId = "123",
-                Text = "text"
-            };
+            var request = new CreatePost { UserId = post.Author!.Id!, Text = post.Text! };
+            var cancellationToken = CancellationToken.None;
 
-            var result = await handler.Handle(request, CancellationToken.None);
+            var result = await handler.Handle(request, cancellationToken);
 
-            result.Id.Should().NotBe(Guid.Empty);
-            result.Author.Should().Be("User 1");
-            result.Text.Should().Be(request.Text);
-            result.Created.Should()
-                .BeOnOrAfter(DateTime.UtcNow.AddMinutes(-10)) // for debugger safety
-                .And
-                .BeOnOrBefore(DateTime.UtcNow);
+            result.Should().Be(post.ToPostInfo());
 
-            repository.Verify(repo => repo.CreatePost(
-                It.IsAny<Post>(),
-                It.IsAny<CancellationToken>()));
+            postRepository.Verify(repo => repo.CreatePost(
+                It.Is<Post>(p =>
+                    p.AuthorUserId == post.Author.Id
+                    && p.Text == post.Text),
+                cancellationToken));
         }
     }
 }

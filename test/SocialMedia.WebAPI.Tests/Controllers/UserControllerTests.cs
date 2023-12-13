@@ -4,21 +4,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SocialMedia.Domain.Commands;
-using SocialMedia.Domain.Models;
+using SocialMedia.TestUtilities.Builders;
 using System.Security.Claims;
 
 namespace SocialMedia.WebAPI.Tests.Controllers
 {
     public class UserControllerTests
     {
+        private readonly UserBuilder userBuilder = new();
+
         [Fact]
         public async Task Get_SubmitsCommandAndReturnsUser()
         {
-            var user = new User
-            {
-                UserId = "id",
-                Name = "name"
-            };
+            var user = userBuilder.CreateUser().ToUser();
 
             var mediator = new Mock<IMediator>();
             mediator.Setup(m => m.Send(It.IsAny<GetUser>(), It.IsAny<CancellationToken>()))
@@ -29,13 +27,13 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             controller.ControllerContext.HttpContext = new DefaultHttpContext
             {
                 User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserId),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.Value),
                 }, "TestAuthentication"))
             };
 
             var command = new GetUser
             {
-                UserId = user.UserId
+                UserId = user.Id
             };
 
             var result = await controller.Get(command, CancellationToken.None);
@@ -51,11 +49,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
         [Fact]
         public async Task Update_SubmitsCommandAndReturnsUser()
         {
-            var user = new User
-            {
-                UserId = "id",
-                Name = "name"
-            };
+            var user = userBuilder.CreateUser().ToUser();
 
             var mediator = new Mock<IMediator>();
             mediator.Setup(m => m.Send(It.IsAny<UpdateUser>(), It.IsAny<CancellationToken>()))
@@ -66,13 +60,13 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             controller.ControllerContext.HttpContext = new DefaultHttpContext
             {
                 User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserId),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.Value),
                 }, "TestAuthentication"))
             };
 
             var command = new UpdateUser
             {
-                UserId = user.UserId,
+                UserId = user.Id,
                 Name = user.Name
             };
 
@@ -89,11 +83,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
         [Fact]
         public async Task Synchronize_SubmitsCommandAndReturnsUser()
         {
-            var user = new User
-            {
-                UserId = "id",
-                Name = "name"
-            };
+            var user = userBuilder.CreateUser().ToUser();
 
             var mediator = new Mock<IMediator>();
             mediator.Setup(m => m.Send(It.IsAny<SynchronizeUser>(), It.IsAny<CancellationToken>()))
@@ -104,13 +94,13 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             controller.ControllerContext.HttpContext = new DefaultHttpContext
             {
                 User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserId),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.Value),
                 }, "TestAuthentication"))
             };
 
             var command = new SynchronizeUser
             {
-                UserId = user.UserId,
+                UserId = user.Id,
                 Name = user.Name
             };
 

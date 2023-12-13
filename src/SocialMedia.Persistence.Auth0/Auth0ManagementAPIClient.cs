@@ -16,7 +16,7 @@ namespace SocialMedia.Persistence.Auth0
             this.httpClient = httpClient;
         }
 
-        public async Task<User> GetUser(string userId, CancellationToken cancellationToken)
+        public async Task<User> GetUser(UserId userId, CancellationToken cancellationToken)
         {
             string url = $"users/{userId}";
 
@@ -28,7 +28,7 @@ namespace SocialMedia.Persistence.Auth0
 
             return new User
             {
-                UserId = userResponse.Id,
+                Id = new UserId(userResponse.Id),
                 Name = userResponse.Name
             };
         }
@@ -40,7 +40,7 @@ namespace SocialMedia.Persistence.Auth0
                 Name = user.Name
             };
 
-            var url = $"users/{user.UserId}";
+            var url = $"users/{user.Id}";
 
             var httpResponse = await httpClient.PatchAsJsonAsync(url, payload, cancellationToken);
             var userResponse = await httpResponse.Content.TryReadFromJsonAsync<UserResponse>(cancellationToken);
@@ -50,7 +50,7 @@ namespace SocialMedia.Persistence.Auth0
 
             return new User
             {
-                UserId = userResponse.Id,
+                Id = new UserId(userResponse.Id),
                 Name = userResponse.Name
             };
         }

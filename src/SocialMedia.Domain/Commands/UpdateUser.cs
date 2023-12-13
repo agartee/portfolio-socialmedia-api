@@ -6,7 +6,7 @@ namespace SocialMedia.Domain.Commands
 {
     public record UpdateUser : IRequest<User>
     {
-        public required string UserId { get; init; }
+        public required UserId UserId { get; init; }
         public required string Name { get; init; }
     }
 
@@ -23,7 +23,7 @@ namespace SocialMedia.Domain.Commands
         {
             var user = new User
             {
-                UserId = request.UserId,
+                Id = request.UserId,
                 Name = request.Name
             };
 

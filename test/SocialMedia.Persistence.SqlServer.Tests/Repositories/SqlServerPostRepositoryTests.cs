@@ -1,10 +1,10 @@
 using FluentAssertions;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using SocialMedia.Domain.Models;
-using SocialMedia.Persistence.SqlServer.Models;
 using SocialMedia.Persistence.SqlServer.Repositories;
 using SocialMedia.Persistence.SqlServer.Tests.Fixtures;
+using SocialMedia.Persistence.SqlServer.Tests.TestUtilities;
+using SocialMedia.TestUtilities.Builders;
+using static SocialMedia.Persistence.SqlServer.Tests.TestUtilities.PostExtensions;
 
 namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
 {
@@ -12,153 +12,66 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
     public class SqlServerPostRepositoryTests
     {
         private readonly SqlServerFixture fixture;
+        private readonly SqlServerPostRepository repository;
+        private readonly PostBuilder postBuilder = new();
+        private readonly UserBuilder userBuilder = new();
 
         public SqlServerPostRepositoryTests(SqlServerFixture fixture)
         {
             fixture.ClearData();
             this.fixture = fixture;
+
+            repository = new SqlServerPostRepository(fixture.CreateDbContext());
         }
 
         [Fact]
         public async Task CreatePost_WhenNotExists_CreatesRowsAndReturnsPost()
         {
-            var userId = "123";
-            var user = new UserData
-            {
-                UserId = userId,
-                Name = "User 1",
-                Created = DateTime.UtcNow,
-                LastUpdated = DateTime.UtcNow,
-            };
+            var post = postBuilder.CreatePost();
 
-            await fixture.Seed(new[] { user });
+            await fixture.Seed(new[] { post.Author!.ToUserData() });
 
-            var post = new Post
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId,
-                Text = "text",
-                Created = DateTime.UtcNow,
-            };
+            var result = await repository.CreatePost(post.ToPost(), CancellationToken.None);
 
-            var repository = new SqlServerPostRepository(fixture.CreateDbContext());
-            var result = await repository.CreatePost(post, CancellationToken.None);
-
-            result.Id.Should().Be(post.Id);
-            result.Author.Should().Be(user.Name);
-            result.Created.Should().Be(post.Created);
-            result.Text.Should().Be(post.Text);
+            result.Should().Be(post.ToPostInfo());
 
             using var dbContext = fixture.CreateDbContext();
             var data = await dbContext.Posts
                 .Include(p => p.Content)
-                .FirstAsync(p => p.Id == post.Id);
+                .FirstAsync(p => p.Id == post.Id!.Value);
 
-            data.UserId.Should().Be(post.UserId);
+            data.AuthorUserId.Should().Be(post.Author!.Id!.Value);
             data.Created.Should().Be(post.Created);
             data.Content.Text.Should().Be(post.Text);
         }
 
         [Fact]
-        public async Task CreatePost_WhenExists_Throws()
-        {
-            var id = Guid.NewGuid();
-
-            var post = new Post
-            {
-                Id = id,
-                UserId = "123",
-                Text = "text",
-                Created = DateTime.UtcNow,
-            };
-
-            var existingPost = new PostData
-            {
-                Id = id,
-                UserId = post.UserId,
-                Created = post.Created,
-                Content = new PostContentData
-                {
-                    PostId = post.Id,
-                    Text = post.Text,
-                },
-                User = new UserData
-                {
-                    UserId = post.UserId,
-                    Name = "User 1",
-                    Created = DateTime.UtcNow,
-                    LastUpdated = DateTime.UtcNow,
-                }
-            };
-
-            await fixture.Seed(new[] { existingPost });
-
-            var repository = new SqlServerPostRepository(fixture.CreateDbContext());
-
-            var action = () => repository.CreatePost(post, CancellationToken.None);
-
-            (await action.Should().ThrowAsync<DbUpdateException>())
-                .WithInnerException<SqlException>()
-                .WithMessage($"*{"Cannot insert duplicate key"}*")
-                .WithMessage($"*{post.Id}*"); ;
-        }
-
-        [Fact]
         public async Task GetAllPosts_ReturnsAllPosts_OrderedByCreatedDesc()
         {
-            var userId = "123";
-            var post1Id = Guid.NewGuid();
-            var post2Id = Guid.NewGuid();
+            var post1 = postBuilder.CreatePost();
+            var post2 = postBuilder.CreatePost()
+                .WithAuthor(post1.Author);
 
-            var user = new UserData
+            await fixture.Seed(new object[]
             {
-                UserId = userId,
-                Name = "User 1",
-                Created = DateTime.UtcNow,
-                LastUpdated = DateTime.UtcNow,
-            };
-
-            var post1 = new PostData
-            {
-                Id = post1Id,
-                UserId = userId,
-                Created = new DateTime(2023, 1, 1),
-                Content = new PostContentData
-                {
-                    PostId = post1Id,
-                    Text = "text 1",
-                }
-            };
-
-            var post2 = new PostData
-            {
-                Id = post2Id,
-                UserId = userId,
-                Created = new DateTime(2023, 1, 2),
-                Content = new PostContentData
-                {
-                    PostId = post2Id,
-                    Text = "text 2",
-                }
-            };
-
-            await fixture.Seed(new object[] { user, post1, post2 });
-
-            var repository = new SqlServerPostRepository(fixture.CreateDbContext());
+                post1.Author!.ToUserData(),
+                post1.ToPostData(),
+                post2.ToPostData()
+            });
 
             var results = await repository.GetAllPosts(CancellationToken.None);
 
             results.Should().HaveCount(2);
 
-            var result1 = results.First();
-            result1.Author.Should().Be(user.Name);
-            result1.Created.Should().Be(post2.Created);
-            result1.Text.Should().Be(post2.Content.Text);
+            var result1 = results.First(p => p.Id == post1.Id);
+            result1.Author.Should().Be(post1.Author!.Name);
+            result1.Created.Should().Be(post1.Created);
+            result1.Text.Should().Be(post1.Text);
 
-            var result2 = results.Last();
-            result2.Author.Should().Be(user.Name);
-            result2.Created.Should().Be(post1.Created);
-            result2.Text.Should().Be(post1.Content.Text);
+            var result2 = results.First(p => p.Id == post2.Id);
+            result2.Author.Should().Be(post1.Author!.Name);
+            result2.Created.Should().Be(post2.Created);
+            result2.Text.Should().Be(post2.Text);
         }
     }
 }

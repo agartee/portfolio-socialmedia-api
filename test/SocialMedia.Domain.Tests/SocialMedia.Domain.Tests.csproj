@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SocialMedia.Domain\SocialMedia.Domain.csproj" />
+    <ProjectReference Include="..\..\utils\SocialMedia.TestUtilities\SocialMedia.TestUtilities.csproj" />
   </ItemGroup>
 
 </Project>

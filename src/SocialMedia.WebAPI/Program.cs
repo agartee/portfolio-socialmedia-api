@@ -2,6 +2,7 @@ using CommandLine;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using SocialMedia.Domain.Commands;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
@@ -53,6 +54,36 @@ builder.Services.AddCors(options =>
     }
 });
 
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Authorization token; will be passed as \"Bearer {token}\".",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+
+    //options.OperationFilter<CorrectSchemaFilter>();
+});
+
 var domainAssemblies = new[] { typeof(GetHelpText).Assembly };
 var requestTypes = domainAssemblies.SelectMany(assembly => assembly.ExportedTypes
     .Where(t => typeof(IBaseRequest).IsAssignableFrom(t.GetTypeInfo())))
@@ -79,6 +110,12 @@ builder.Services.AddAuth0ManagementServices(builder.Configuration);
 builder.Services.AddSqlServerPersistenceServices();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseCors(allowedOrigins);
 app.UseAuthentication();
