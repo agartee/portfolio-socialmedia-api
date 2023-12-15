@@ -5,13 +5,16 @@ namespace SocialMedia.WebAPI.Configuration
 {
     public static class SwaggerServiceCollectionExtensions
     {
+        private const string SecurityDefinitionName = "Bearer";
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
             {
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                options.AddSecurityDefinition(SecurityDefinitionName, new OpenApiSecurityScheme
                 {
-                    Description = "Authorization token; will be passed as \"Bearer {token}\".",
+                    Description = @"Authorization token; will be passed as ""Bearer {token}"".
+                                    When pasting a value in this field, be sure to
+                                    <strong>exclude</strong> the ""Bearer \"" prefix.",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
@@ -35,7 +38,7 @@ namespace SocialMedia.WebAPI.Configuration
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    Id = SecurityDefinitionName
                 }
             };
         }

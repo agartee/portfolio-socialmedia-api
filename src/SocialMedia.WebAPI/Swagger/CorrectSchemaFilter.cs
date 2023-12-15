@@ -30,25 +30,33 @@ namespace SocialMedia.WebAPI.Swagger
             }
         }
 
-        private bool IsIdType(Type typeToConvert)
+        private bool IsIdType(Type contextType)
         {
-            return supportedTypes.Keys.Any(t => typeof(Id<>).MakeGenericType(t).IsAssignableFrom(typeToConvert));
+            return supportedTypes.Keys.Any(t => typeof(Id<>).MakeGenericType(t).IsAssignableFrom(contextType));
         }
 
         private string? GetBackingTypeDescription(Type contextType)
         {
-            var baseType = contextType.BaseType;
-            if (baseType == null)
-                throw new UnreachableException();
-
+            var baseType = GetGenericIdBackingType(contextType);
             var backingType = baseType.GetGenericArguments().Single();
+            supportedTypes.TryGetValue(backingType, out var openApiSchemaTypeName);
 
-            supportedTypes.TryGetValue(backingType, out var openApiSchemaType);
+            return openApiSchemaTypeName;
+        }
 
-            if (openApiSchemaType == null)
-                throw new NotSupportedException($"{nameof(CorrectSchemaFilter)} does not support {contextType}.");
+        private static Type GetGenericIdBackingType(Type type)
+        {
+            var currentType = type;
+            while (currentType != null && currentType != typeof(object))
+            {
+                if (currentType.IsGenericType && type.GetGenericTypeDefinition() == typeof(Id<>))
+                {
+                    return currentType.GetGenericArguments()[0];
+                }
+                currentType = currentType.BaseType;
+            }
 
-            return openApiSchemaType;
+            throw new UnreachableException();
         }
     }
 }
