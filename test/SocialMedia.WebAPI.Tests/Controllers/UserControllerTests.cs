@@ -31,15 +31,13 @@ namespace SocialMedia.WebAPI.Tests.Controllers
                 }, "TestAuthentication"))
             };
 
-            var command = new GetCurrentUser();
-
-            var result = await controller.Get(command, CancellationToken.None);
+            var result = await controller.Get(CancellationToken.None);
 
             result.Should().BeOfType<OkObjectResult>();
             result.As<OkObjectResult>().Value.Should().Be(user);
 
             mediator.Verify(m => m.Send(
-                It.Is<GetCurrentUser>(r => r == command),
+                It.IsAny<GetCurrentUser>(),
                 It.IsAny<CancellationToken>()));
         }
 

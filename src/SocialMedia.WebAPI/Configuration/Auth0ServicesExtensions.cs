@@ -7,7 +7,7 @@ namespace SocialMedia.WebAPI.Configuration
 {
     public static class Auth0ServicesExtensions
     {
-        public static IServiceCollection AddAuth0ManagementServices(this IServiceCollection services,
+        public static IServiceCollection AddAuth0Management(this IServiceCollection services,
             ConfigurationManager config)
         {
             services.AddSingleton(new Auth0ManagementAPIConfiguration

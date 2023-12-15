@@ -2,7 +2,7 @@ using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
 using System.Security.Claims;
 
-namespace SocialMedia.WebAPI.Services
+namespace SocialMedia.WebAPI.Security
 {
     public class HttpUserContext : IUserContext
     {
@@ -25,8 +25,7 @@ namespace SocialMedia.WebAPI.Services
                 : throw new InvalidOperationException($"Unable to determine user name.");
         }
 
-        public UserId? UserId { get; init; }
+        public UserId UserId { get; init; }
         public ClaimsPrincipal User { get; init; }
-
     }
 }

@@ -18,9 +18,9 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpGet]
         [Authorize]
         [Route("/user-profile")]
-        public async Task<IActionResult> Get(GetCurrentUser request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
-            var result = await mediator.Send(request, cancellationToken);
+            var result = await mediator.Send(new GetCurrentUser(), cancellationToken);
 
             return Ok(result);
         }

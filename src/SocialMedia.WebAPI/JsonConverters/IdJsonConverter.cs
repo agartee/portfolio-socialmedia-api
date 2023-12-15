@@ -3,9 +3,9 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SocialMedia.WebAPI.Services
+namespace SocialMedia.WebAPI.JsonConverters
 {
-    public class IdConverter : JsonConverter<object>
+    public class IdJsonConverter : JsonConverter<object>
     {
         private static readonly IEnumerable<Type> SupportedTypes = new List<Type>
         {
@@ -46,6 +46,5 @@ namespace SocialMedia.WebAPI.Services
             var valueType = value.GetType().GetProperty("Value")!.GetValue(value);
             JsonSerializer.Serialize(writer, valueType, options);
         }
-
     }
 }

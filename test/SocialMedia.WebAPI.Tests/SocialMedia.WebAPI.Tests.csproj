@@ -28,4 +28,8 @@
     <ProjectReference Include="..\..\utils\SocialMedia.TestUtilities\SocialMedia.TestUtilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
