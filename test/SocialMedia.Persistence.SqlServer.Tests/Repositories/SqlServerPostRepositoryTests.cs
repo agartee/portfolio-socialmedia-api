@@ -2,9 +2,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Persistence.SqlServer.Repositories;
 using SocialMedia.Persistence.SqlServer.Tests.Fixtures;
-using SocialMedia.Persistence.SqlServer.Tests.TestUtilities;
 using SocialMedia.TestUtilities.Builders;
-using static SocialMedia.Persistence.SqlServer.Tests.TestUtilities.PostExtensions;
 
 namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
 {
@@ -14,7 +12,6 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
         private readonly SqlServerFixture fixture;
         private readonly SqlServerPostRepository repository;
         private readonly PostBuilder postBuilder = new();
-        private readonly UserBuilder userBuilder = new();
 
         public SqlServerPostRepositoryTests(SqlServerFixture fixture)
         {

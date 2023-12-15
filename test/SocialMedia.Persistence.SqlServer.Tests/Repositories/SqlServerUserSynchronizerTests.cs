@@ -2,7 +2,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Persistence.SqlServer.Repositories;
 using SocialMedia.Persistence.SqlServer.Tests.Fixtures;
-using SocialMedia.Persistence.SqlServer.Tests.TestUtilities;
 using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Persistence.SqlServer.Tests.Repositories

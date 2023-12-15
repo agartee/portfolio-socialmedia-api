@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SocialMedia.Domain\SocialMedia.Domain.csproj" />
+    <ProjectReference Include="..\..\src\SocialMedia.Persistence.SqlServer\SocialMedia.Persistence.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>

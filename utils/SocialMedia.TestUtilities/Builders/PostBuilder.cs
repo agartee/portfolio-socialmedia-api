@@ -1,4 +1,5 @@
 using SocialMedia.Domain.Models;
+using SocialMedia.Persistence.SqlServer.Models;
 using SocialMedia.TestUtilities.Exceptions;
 
 namespace SocialMedia.TestUtilities.Builders
@@ -82,6 +83,30 @@ namespace SocialMedia.TestUtilities.Builders
                 Text = Text ?? throw new NullMappingException<PostConfiguration, Post>(nameof(Text)),
                 Created = Created ?? throw new NullMappingException<PostConfiguration, Post>(nameof(Created))
             };
+        }
+
+        public PostData ToPostData(MappingBehavior mappingBehavior = MappingBehavior.Default)
+        {
+            return new PostData
+            {
+                Id = Id?.Value ?? throw new NullMappingException<PostConfiguration, PostData>(nameof(Id)),
+                AuthorUserId = Author?.Id?.Value ?? throw new NullMappingException<PostConfiguration, PostData>(nameof(Author.Id)),
+                Created = Created ?? throw new NullMappingException<PostConfiguration, PostData>(nameof(Created)),
+                Content = new PostContentData
+                {
+                    PostId = Id?.Value ?? throw new NullMappingException<PostConfiguration, PostData>(nameof(PostData.Id)),
+                    Text = Text ?? throw new NullMappingException<PostConfiguration, PostData>(nameof(PostData.Id)),
+                },
+                User = mappingBehavior.HasFlag(MappingBehavior.IncludeUser) ?
+                    Author.ToUserData() : null
+            };
+        }
+
+        [Flags]
+        public enum MappingBehavior
+        {
+            Default = 0,
+            IncludeUser = 1
         }
     }
 }

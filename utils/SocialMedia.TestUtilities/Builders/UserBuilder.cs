@@ -1,4 +1,5 @@
 using SocialMedia.Domain.Models;
+using SocialMedia.Persistence.SqlServer.Models;
 using SocialMedia.TestUtilities.Exceptions;
 
 namespace SocialMedia.TestUtilities.Builders
@@ -52,6 +53,17 @@ namespace SocialMedia.TestUtilities.Builders
             {
                 Id = Id ?? throw new NullMappingException<UserConfiguration, User>(nameof(Id)),
                 Name = Name ?? throw new NullMappingException<UserConfiguration, User>(nameof(Name)),
+            };
+        }
+
+        public UserData ToUserData()
+        {
+            return new UserData
+            {
+                Id = Id?.Value ?? throw new NullMappingException<UserConfiguration, UserData>(nameof(UserData.Id)),
+                Name = Name ?? throw new NullMappingException<UserConfiguration, UserData>(nameof(UserData.Name)),
+                Created = DateTime.UtcNow,
+                LastUpdated = DateTime.UtcNow
             };
         }
     }
