@@ -1,6 +1,6 @@
 namespace SocialMedia.Domain.Models
 {
-    public record Id<T> where T : notnull
+    public abstract record Id<T> where T : notnull
     {
         protected Id(T value)
         {

@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using SocialMedia.WebAPI.Swagger;
 
 namespace SocialMedia.WebAPI.Configuration
 {
@@ -21,7 +22,7 @@ namespace SocialMedia.WebAPI.Configuration
                 options.AddSecurityRequirement(
                     new OpenApiSecurityRequirement { { CreateRequirementKey(), Array.Empty<string>() } });
 
-                //options.OperationFilter<CorrectSchemaFilter>();
+                options.SchemaFilter<CorrectSchemaFilter>();
             });
 
             return services;
