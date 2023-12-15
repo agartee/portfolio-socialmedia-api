@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Domain.Commands;
-using SocialMedia.WebAPI.Binders;
 
 namespace SocialMedia.WebAPI.Controllers
 {
@@ -19,7 +18,7 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpGet]
         [Authorize]
         [Route("/user-profile")]
-        public async Task<IActionResult> Get([ModelBinder(typeof(UserIdFromClaimModelBinder))] GetUser request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(GetCurrentUser request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);
 
@@ -29,8 +28,7 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpPatch]
         [Authorize]
         [Route("/user-profile")]
-        public async Task<IActionResult> Update([ModelBinder(typeof(UserIdFromClaimModelBinder))] UpdateUser request,
-            CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(UpdateCurrentUser request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);
 
@@ -40,8 +38,7 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpPut]
         [Authorize]
         [Route("/user-profile")]
-        public async Task<IActionResult> Synchronize([ModelBinder(typeof(UserIdFromClaimModelBinder))] SynchronizeUser request,
-            CancellationToken cancellationToken)
+        public async Task<IActionResult> Synchronize(SynchronizeCurrentUser request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);
 

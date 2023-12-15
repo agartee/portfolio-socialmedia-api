@@ -19,7 +19,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             var user = userBuilder.CreateUser().ToUser();
 
             var mediator = new Mock<IMediator>();
-            mediator.Setup(m => m.Send(It.IsAny<GetUser>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(m => m.Send(It.IsAny<GetCurrentUser>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
             var controller = new WebAPI.Controllers.UserController(mediator.Object);
@@ -31,10 +31,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
                 }, "TestAuthentication"))
             };
 
-            var command = new GetUser
-            {
-                UserId = user.Id
-            };
+            var command = new GetCurrentUser();
 
             var result = await controller.Get(command, CancellationToken.None);
 
@@ -42,7 +39,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             result.As<OkObjectResult>().Value.Should().Be(user);
 
             mediator.Verify(m => m.Send(
-                It.Is<GetUser>(r => r == command),
+                It.Is<GetCurrentUser>(r => r == command),
                 It.IsAny<CancellationToken>()));
         }
 
@@ -52,7 +49,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             var user = userBuilder.CreateUser().ToUser();
 
             var mediator = new Mock<IMediator>();
-            mediator.Setup(m => m.Send(It.IsAny<UpdateUser>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(m => m.Send(It.IsAny<UpdateCurrentUser>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
             var controller = new WebAPI.Controllers.UserController(mediator.Object);
@@ -64,11 +61,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
                 }, "TestAuthentication"))
             };
 
-            var command = new UpdateUser
-            {
-                UserId = user.Id,
-                Name = user.Name
-            };
+            var command = new UpdateCurrentUser { Name = user.Name };
 
             var result = await controller.Update(command, CancellationToken.None);
 
@@ -76,7 +69,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             result.As<OkObjectResult>().Value.Should().Be(user);
 
             mediator.Verify(m => m.Send(
-                It.Is<UpdateUser>(r => r == command),
+                It.Is<UpdateCurrentUser>(r => r == command),
                 It.IsAny<CancellationToken>()));
         }
 
@@ -86,7 +79,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             var user = userBuilder.CreateUser().ToUser();
 
             var mediator = new Mock<IMediator>();
-            mediator.Setup(m => m.Send(It.IsAny<SynchronizeUser>(), It.IsAny<CancellationToken>()))
+            mediator.Setup(m => m.Send(It.IsAny<SynchronizeCurrentUser>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
             var controller = new WebAPI.Controllers.UserController(mediator.Object);
@@ -98,11 +91,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
                 }, "TestAuthentication"))
             };
 
-            var command = new SynchronizeUser
-            {
-                UserId = user.Id,
-                Name = user.Name
-            };
+            var command = new SynchronizeCurrentUser { Name = user.Name };
 
             var result = await controller.Synchronize(command, CancellationToken.None);
 
@@ -110,7 +99,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             result.As<OkObjectResult>().Value.Should().Be(user);
 
             mediator.Verify(m => m.Send(
-                It.Is<SynchronizeUser>(r => r == command),
+                It.Is<SynchronizeCurrentUser>(r => r == command),
                 It.IsAny<CancellationToken>()));
         }
     }

@@ -7,16 +7,19 @@ using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
-    public class UpdateUserTests
+    public class UpdateCurrentUserTests
     {
-        private readonly UpdateUserHandler handler;
+        private readonly UpdateCurrentUserHandler handler;
         private readonly Mock<IUserRepository> userRepository;
+        private readonly Mock<IUserContext> userContext;
         private readonly UserBuilder userBuilder = new();
 
-        public UpdateUserTests()
+        public UpdateCurrentUserTests()
         {
             userRepository = new Mock<IUserRepository>();
-            handler = new UpdateUserHandler(userRepository.Object);
+            userContext = new Mock<IUserContext>();
+
+            handler = new UpdateCurrentUserHandler(userRepository.Object, userContext.Object);
         }
 
         [Fact]
@@ -24,10 +27,11 @@ namespace SocialMedia.Domain.Tests.Commands
         {
             var user = userBuilder.CreateUser().ToUser();
 
+            userContext.Setup(x => x.UserId).Returns(user.Id);
             userRepository.Setup(r => r.UpdateUser(It.IsAny<User>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
-            var request = new UpdateUser { UserId = user.Id, Name = user.Name };
+            var request = new UpdateCurrentUser { Name = user.Name };
             var cancellationToken = CancellationToken.None;
 
             var result = await handler.Handle(request, cancellationToken);

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Domain.Commands;
 using SocialMedia.Domain.Models;
-using SocialMedia.WebAPI.Binders;
 
 namespace SocialMedia.WebAPI.Controllers
 {
@@ -19,7 +18,7 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpPut]
         [Authorize]
         [Route("/post")]
-        public async Task<IActionResult> Create([ModelBinder(typeof(UserIdFromClaimModelBinder))] CreatePost request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create([FromBody] CreatePost request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);
 

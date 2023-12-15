@@ -7,16 +7,19 @@ using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
-    public class SynchronizeUserTests
+    public class SynchronizeCurrentUserTests
     {
-        private readonly SynchronizeUserHandler handler;
+        private readonly SynchronizeCurrentUserHandler handler;
         private readonly Mock<IUserSynchronizer> userSynchronizer;
+        private readonly Mock<IUserContext> userContext;
         private readonly UserBuilder userBuilder = new();
 
-        public SynchronizeUserTests()
+        public SynchronizeCurrentUserTests()
         {
             userSynchronizer = new Mock<IUserSynchronizer>();
-            handler = new SynchronizeUserHandler(userSynchronizer.Object);
+            userContext = new Mock<IUserContext>();
+
+            handler = new SynchronizeCurrentUserHandler(userSynchronizer.Object, userContext.Object);
         }
 
         [Fact]
@@ -24,10 +27,11 @@ namespace SocialMedia.Domain.Tests.Commands
         {
             var user = userBuilder.CreateUser().ToUser();
 
+            userContext.Setup(x => x.UserId).Returns(user.Id);
             userSynchronizer.Setup(s => s.SyncUser(It.IsAny<User>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
-            var request = new SynchronizeUser { UserId = user.Id, Name = user.Name };
+            var request = new SynchronizeCurrentUser { Name = user.Name };
             var cancellationToken = CancellationToken.None;
 
             var result = await handler.Handle(request, cancellationToken);

@@ -33,7 +33,7 @@ namespace SocialMedia.WebAPI.Tests.Controllers
             controller.ControllerContext = new ControllerContext();
             controller.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
-            var command = new CreatePost { UserId = userId, Text = post.Text };
+            var command = new CreatePost { Text = post.Text };
 
             var result = await controller.Create(command, CancellationToken.None);
 

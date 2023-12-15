@@ -9,6 +9,7 @@ using SocialMedia.Domain.Services;
 using SocialMedia.Persistence.SqlServer;
 using SocialMedia.WebAPI.Configuration;
 using SocialMedia.WebAPI.Formatters;
+using SocialMedia.WebAPI.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(configure: options =>
 {
     options.InputFormatters.Add(new PlainTextInputFormatter());
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new IdConverter());
 });
 
 builder.Services.AddAuthentication(options =>
@@ -100,6 +105,9 @@ builder.Services.AddMediatR(config =>
 builder.Services.AddTransient<ICliRequestBuilder>(services =>
     new CliRequestBuilder(requestTypes));
 builder.Services.AddSingleton(new HelpTextConfiguration(cliRequestTypes));
+
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddTransient<IUserContext, HttpUserContext>();
 
 var dbConnectionStringName = new Parser(settings => { settings.CaseSensitive = false; })
     .GetConnectionStringName(args);

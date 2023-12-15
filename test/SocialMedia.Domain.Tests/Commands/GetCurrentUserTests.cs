@@ -7,16 +7,19 @@ using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
-    public class GetUserTests
+    public class GetCurrentUserTests
     {
-        private readonly GetUserHandler handler;
+        private readonly GetCurrentUserHandler handler;
         private readonly Mock<IUserRepository> userRepository;
+        private readonly Mock<IUserContext> userContext;
         private readonly UserBuilder userBuilder = new();
 
-        public GetUserTests()
+        public GetCurrentUserTests()
         {
             userRepository = new Mock<IUserRepository>();
-            handler = new GetUserHandler(userRepository.Object);
+            userContext = new Mock<IUserContext>();
+
+            handler = new GetCurrentUserHandler(userRepository.Object, userContext.Object);
         }
 
         [Fact]
@@ -24,10 +27,11 @@ namespace SocialMedia.Domain.Tests.Commands
         {
             var user = userBuilder.CreateUser().ToUser();
 
+            userContext.Setup(x => x.UserId).Returns(user.Id);
             userRepository.Setup(r => r.GetUser(It.IsAny<UserId>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
-            var request = new GetUser { UserId = user.Id };
+            var request = new GetCurrentUser();
             var cancellationToken = CancellationToken.None;
 
             var result = await handler.Handle(request, cancellationToken);
@@ -35,7 +39,7 @@ namespace SocialMedia.Domain.Tests.Commands
             result.Should().Be(user);
 
             userRepository.Verify(m => m.GetUser(
-                It.Is<UserId>(s => s == request.UserId!),
+                It.Is<UserId>(s => s == user.Id),
                 cancellationToken));
         }
     }

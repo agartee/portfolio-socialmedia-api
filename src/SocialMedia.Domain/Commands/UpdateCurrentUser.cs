@@ -4,26 +4,27 @@ using SocialMedia.Domain.Services;
 
 namespace SocialMedia.Domain.Commands
 {
-    public record UpdateUser : IRequest<User>
+    public record UpdateCurrentUser : IRequest<User>
     {
-        public required UserId UserId { get; init; }
         public required string Name { get; init; }
     }
 
-    public class UpdateUserHandler : IRequestHandler<UpdateUser, User>
+    public class UpdateCurrentUserHandler : IRequestHandler<UpdateCurrentUser, User>
     {
         private readonly IUserRepository userRepository;
+        private readonly IUserContext userContext;
 
-        public UpdateUserHandler(IUserRepository userRepository)
+        public UpdateCurrentUserHandler(IUserRepository userRepository, IUserContext userContext)
         {
             this.userRepository = userRepository;
+            this.userContext = userContext;
         }
 
-        public async Task<User> Handle(UpdateUser request, CancellationToken cancellationToken)
+        public async Task<User> Handle(UpdateCurrentUser request, CancellationToken cancellationToken)
         {
             var user = new User
             {
-                Id = request.UserId,
+                Id = userContext.UserId,
                 Name = request.Name
             };
 

@@ -11,12 +11,15 @@ namespace SocialMedia.Domain.Tests.Commands
     {
         private readonly CreatePostHandler handler;
         private readonly Mock<IPostRepository> postRepository;
+        private readonly Mock<IUserContext> userContext;
         private readonly PostBuilder postBuilder = new();
 
         public CreatePostTests()
         {
             postRepository = new Mock<IPostRepository>();
-            handler = new CreatePostHandler(postRepository.Object);
+            userContext = new Mock<IUserContext>();
+
+            handler = new CreatePostHandler(postRepository.Object, userContext.Object);
         }
 
         [Fact]
@@ -24,10 +27,11 @@ namespace SocialMedia.Domain.Tests.Commands
         {
             var post = postBuilder.CreatePost();
 
+            userContext.Setup(x => x.UserId).Returns(post.Author!.Id!);
             postRepository.Setup(r => r.CreatePost(It.IsAny<Post>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(post.ToPostInfo());
 
-            var request = new CreatePost { UserId = post.Author!.Id!, Text = post.Text! };
+            var request = new CreatePost { Text = post.Text! };
             var cancellationToken = CancellationToken.None;
 
             var result = await handler.Handle(request, cancellationToken);
