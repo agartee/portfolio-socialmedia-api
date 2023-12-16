@@ -1,7 +1,6 @@
 using Microsoft.OpenApi.Models;
 using SocialMedia.Domain.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Diagnostics;
 
 namespace SocialMedia.WebAPI.Swagger
 {
@@ -37,8 +36,7 @@ namespace SocialMedia.WebAPI.Swagger
 
         private string? GetBackingTypeDescription(Type contextType)
         {
-            var baseType = GetGenericIdBackingType(contextType);
-            var backingType = baseType.GetGenericArguments().Single();
+            var backingType = GetGenericIdBackingType(contextType);
             supportedTypes.TryGetValue(backingType, out var openApiSchemaTypeName);
 
             return openApiSchemaTypeName;
@@ -46,17 +44,10 @@ namespace SocialMedia.WebAPI.Swagger
 
         private static Type GetGenericIdBackingType(Type type)
         {
-            var currentType = type;
-            while (currentType != null && currentType != typeof(object))
-            {
-                if (currentType.IsGenericType && type.GetGenericTypeDefinition() == typeof(Id<>))
-                {
-                    return currentType.GetGenericArguments()[0];
-                }
-                currentType = currentType.BaseType;
-            }
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Id<>))
+                return type.GetGenericArguments()[0];
 
-            throw new UnreachableException();
+            return GetGenericIdBackingType(type.BaseType!);
         }
     }
 }
