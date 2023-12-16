@@ -9,7 +9,7 @@ namespace SocialMedia.WebAPI.Tests.Security
 {
     public class HttpUserContextTests
     {
-        private readonly Mock<IHttpContextAccessor> httpContextAccessor = new Mock<IHttpContextAccessor>();
+        private readonly Mock<IHttpContextAccessor> httpContextAccessor = new();
         private readonly UserBuilder userBuilder = new();
 
         [Fact]

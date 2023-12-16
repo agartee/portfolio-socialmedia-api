@@ -7,7 +7,7 @@ namespace SocialMedia.WebAPI.Swagger
 {
     public class CorrectSchemaFilter : ISchemaFilter
     {
-        private static readonly Dictionary<Type, string> supportedTypes = new Dictionary<Type, string>
+        private static readonly Dictionary<Type, string> supportedTypes = new()
         {
             [typeof(short)] = "number",
             [typeof(int)] = "number",

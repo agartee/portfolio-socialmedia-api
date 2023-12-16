@@ -11,20 +11,25 @@ namespace SocialMedia.WebAPI.Tests.Controllers
 {
     public class CliControllerTests
     {
+        private readonly CliController controller;
+        private readonly Mock<ICliRequestBuilder> requestBuilder = new();
+        private readonly Mock<IMediator> mediator = new();
+
+        public CliControllerTests()
+        {
+            controller = new CliController(requestBuilder.Object, mediator.Object);
+        }
+
         [Fact]
         public async Task Run_WhenRequestCompletesSuccessfully_ReturnsResultFromRequestHandler()
         {
             const string expectedResult = "ok!";
 
-            var requestBuilder = new Mock<ICliRequestBuilder>();
             requestBuilder.Setup(rb => rb.BuildRequest(It.IsAny<string>()))
                 .Returns(new TestCommand());
 
-            var mediator = new Mock<IMediator>();
             mediator.Setup(m => m.Send(It.IsAny<IBaseRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedResult);
-
-            var controller = new CliController(requestBuilder.Object, mediator.Object);
 
             var result = await controller.Run("some command", CancellationToken.None);
 
@@ -35,22 +40,15 @@ namespace SocialMedia.WebAPI.Tests.Controllers
         [Fact]
         public async Task Run_WhenCommandTextFailsToParse_ReturnsBadRequest()
         {
-            var requestBuilder = new Mock<ICliRequestBuilder>();
             requestBuilder.Setup(rb => rb.BuildRequest(It.IsAny<string>()))
                 .Throws(new CommandLineParsingException(
                     new Parser().ParseArguments(Enumerable.Empty<string>(), typeof(TestCommand))));
-
-            var mediator = new Mock<IMediator>();
-
-            var controller = new CliController(requestBuilder.Object, mediator.Object);
 
             var result = await controller.Run("some failing command", CancellationToken.None);
 
             result.Should().BeOfType<BadRequestObjectResult>();
         }
 
-        public class TestCommand : IRequest<string>
-        {
-        }
+        public class TestCommand : IRequest<string> { }
     }
 }

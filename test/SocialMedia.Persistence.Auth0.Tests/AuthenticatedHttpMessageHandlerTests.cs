@@ -13,7 +13,7 @@ namespace SocialMedia.Persistence.Auth0.Tests
 {
     public class AuthenticatedHttpMessageHandlerTests
     {
-        private readonly Auth0ManagementAPIConfiguration authConfig = new Auth0ManagementAPIConfiguration
+        private readonly Auth0ManagementAPIConfiguration authConfig = new()
         {
             Audience = "audience",
             ClientId = "client",

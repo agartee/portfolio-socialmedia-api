@@ -1,44 +1,39 @@
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SocialMedia.Domain.Commands;
 using SocialMedia.TestUtilities.Builders;
-using System.Security.Claims;
+using SocialMedia.WebAPI.Controllers;
 
 namespace SocialMedia.WebAPI.Tests.Controllers
 {
     public class UserControllerTests
     {
+        private readonly UserController controller;
+        private readonly Mock<IMediator> mediator = new();
         private readonly UserBuilder userBuilder = new();
+
+        public UserControllerTests()
+        {
+            controller = new UserController(mediator.Object);
+        }
 
         [Fact]
         public async Task Get_SubmitsCommandAndReturnsUser()
         {
             var user = userBuilder.CreateUser().ToUser();
 
-            var mediator = new Mock<IMediator>();
             mediator.Setup(m => m.Send(It.IsAny<GetCurrentUser>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
-            var controller = new WebAPI.Controllers.UserController(mediator.Object);
-            controller.ControllerContext = new ControllerContext();
-            controller.ControllerContext.HttpContext = new DefaultHttpContext
-            {
-                User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.Value),
-                }, "TestAuthentication"))
-            };
-
-            var result = await controller.Get(CancellationToken.None);
+            var cancellationToken = CancellationToken.None;
+            var result = await controller.Get(cancellationToken);
 
             result.Should().BeOfType<OkObjectResult>();
             result.As<OkObjectResult>().Value.Should().Be(user);
 
-            mediator.Verify(m => m.Send(
-                It.IsAny<GetCurrentUser>(),
-                It.IsAny<CancellationToken>()));
+            mediator.Verify(m => m.Send(It.IsAny<GetCurrentUser>(), cancellationToken));
         }
 
         [Fact]
@@ -46,29 +41,18 @@ namespace SocialMedia.WebAPI.Tests.Controllers
         {
             var user = userBuilder.CreateUser().ToUser();
 
-            var mediator = new Mock<IMediator>();
             mediator.Setup(m => m.Send(It.IsAny<UpdateCurrentUser>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
-            var controller = new WebAPI.Controllers.UserController(mediator.Object);
-            controller.ControllerContext = new ControllerContext();
-            controller.ControllerContext.HttpContext = new DefaultHttpContext
-            {
-                User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.Value),
-                }, "TestAuthentication"))
-            };
-
             var command = new UpdateCurrentUser { Name = user.Name };
+            var cancellationToken = CancellationToken.None;
 
-            var result = await controller.Update(command, CancellationToken.None);
+            var result = await controller.Update(command, cancellationToken);
 
             result.Should().BeOfType<OkObjectResult>();
             result.As<OkObjectResult>().Value.Should().Be(user);
 
-            mediator.Verify(m => m.Send(
-                It.Is<UpdateCurrentUser>(r => r == command),
-                It.IsAny<CancellationToken>()));
+            mediator.Verify(m => m.Send(command, cancellationToken));
         }
 
         [Fact]
@@ -76,29 +60,18 @@ namespace SocialMedia.WebAPI.Tests.Controllers
         {
             var user = userBuilder.CreateUser().ToUser();
 
-            var mediator = new Mock<IMediator>();
             mediator.Setup(m => m.Send(It.IsAny<SynchronizeCurrentUser>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
-            var controller = new WebAPI.Controllers.UserController(mediator.Object);
-            controller.ControllerContext = new ControllerContext();
-            controller.ControllerContext.HttpContext = new DefaultHttpContext
-            {
-                User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.Value),
-                }, "TestAuthentication"))
-            };
-
             var command = new SynchronizeCurrentUser { Name = user.Name };
+            var cancellationToken = CancellationToken.None;
 
             var result = await controller.Synchronize(command, CancellationToken.None);
 
             result.Should().BeOfType<OkObjectResult>();
             result.As<OkObjectResult>().Value.Should().Be(user);
 
-            mediator.Verify(m => m.Send(
-                It.Is<SynchronizeCurrentUser>(r => r == command),
-                It.IsAny<CancellationToken>()));
+            mediator.Verify(m => m.Send(command, cancellationToken));
         }
     }
 }
