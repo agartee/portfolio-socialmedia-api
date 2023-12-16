@@ -7,14 +7,14 @@ using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
-    public class CreatePostTests
+    public class CreatePostHandlerTests
     {
         private readonly CreatePostHandler handler;
         private readonly Mock<IPostRepository> postRepository;
         private readonly Mock<IUserContext> userContext;
         private readonly PostBuilder postBuilder = new();
 
-        public CreatePostTests()
+        public CreatePostHandlerTests()
         {
             postRepository = new Mock<IPostRepository>();
             userContext = new Mock<IUserContext>();

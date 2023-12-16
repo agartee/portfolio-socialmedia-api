@@ -6,13 +6,13 @@ using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
-    public class GetFeedTests
+    public class GetFeedHandlerTests
     {
         private readonly GetFeedHandler handler;
         private readonly Mock<IPostRepository> postRepository;
         private readonly PostBuilder postBuilder = new();
 
-        public GetFeedTests()
+        public GetFeedHandlerTests()
         {
             postRepository = new Mock<IPostRepository>();
             handler = new GetFeedHandler(postRepository.Object);

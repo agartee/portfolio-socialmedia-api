@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SocialMedia.Domain.Exceptions;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
 using SocialMedia.Persistence.SqlServer.Extensions;
@@ -34,7 +35,10 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
                 .Include(post => post.Content)
                 .Include(post => post.User)
                 .Where(p => p.Id == id.Value)
-                .SingleAsync();
+                .SingleOrDefaultAsync();
+
+            if (postsData == null)
+                throw new EntityNotFoundException(nameof(PostInfo), id);
 
             return postsData.ToPostInfo();
         }

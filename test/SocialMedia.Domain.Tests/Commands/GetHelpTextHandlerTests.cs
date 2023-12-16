@@ -5,7 +5,7 @@ using SocialMedia.Domain.Models;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
-    public class GetHelpTextTests
+    public class GetHelpTextHandlerTests
     {
         [Fact]
         public async Task Handle_WhenParsedResultHasVerbAttribute_ReturnsHelpTextContainingVerbHelpText()

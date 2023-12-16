@@ -9,7 +9,7 @@ namespace SocialMedia.WebAPI.Security
         public HttpUserContext(IHttpContextAccessor httpContextAccessor)
         {
             if (httpContextAccessor.HttpContext == null)
-                throw new InvalidOperationException($"{nameof(httpContextAccessor.HttpContext)} cannot be null.");
+                throw new InvalidOperationException($"{nameof(IHttpContextAccessor.HttpContext)} cannot be null.");
 
             User = httpContextAccessor.HttpContext.User;
             UserId = GetUserIdFromClaim(User);
@@ -18,7 +18,7 @@ namespace SocialMedia.WebAPI.Security
         private static UserId GetUserIdFromClaim(ClaimsPrincipal user)
         {
             var idClaim = user.Claims
-                .First(c => c.Type == ClaimTypes.NameIdentifier);
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
             return idClaim != null
                 ? new UserId(idClaim.Value)

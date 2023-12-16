@@ -46,4 +46,20 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Extensions
                 .WithMessage($"*Missing {nameof(PostData.User)} value*");
         }
     }
+
+    public class UserExtensionsTests
+    {
+        private readonly UserBuilder userBuilder = new();
+
+        [Fact]
+        public void ToUser_ReturnsExpectedUserInfo()
+        {
+            var user = userBuilder.CreateUser();
+            var userData = user.ToUserData();
+
+            var result = userData.ToUser();
+
+            result.Should().Be(user.ToUser());
+        }
+    }
 }

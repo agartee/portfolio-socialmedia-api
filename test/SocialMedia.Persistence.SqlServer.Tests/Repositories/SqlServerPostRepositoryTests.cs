@@ -1,8 +1,11 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using SocialMedia.Domain.Exceptions;
+using SocialMedia.Domain.Models;
 using SocialMedia.Persistence.SqlServer.Repositories;
 using SocialMedia.Persistence.SqlServer.Tests.Fixtures;
 using SocialMedia.TestUtilities.Builders;
+using static SocialMedia.TestUtilities.Builders.PostConfiguration;
 
 namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
 {
@@ -40,6 +43,30 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             data.AuthorUserId.Should().Be(post.Author!.Id!.Value);
             data.Created.Should().Be(post.Created);
             data.Content.Text.Should().Be(post.Text);
+        }
+
+        [Fact]
+        public async Task DemandPost_WhenExists_ReturnsPost()
+        {
+            var post = postBuilder.CreatePost();
+
+            await fixture.Seed(new[] { post.ToPostData(MappingBehavior.IncludeUser) });
+
+            var result = await repository.DemandPost(post.Id!, CancellationToken.None);
+
+            result.Should().Be(post.ToPostInfo());
+        }
+
+        [Fact]
+        public async Task DemandPost_WhenNotExists_Throws()
+        {
+            var postId = PostId.NewId();
+
+            var action = () => repository.DemandPost(postId, CancellationToken.None);
+
+            await action.Should().ThrowAsync<EntityNotFoundException>()
+                .WithMessage($"*{nameof(PostInfo)}*")
+                .WithMessage($"*{postId}*");
         }
 
         [Fact]

@@ -1,13 +1,10 @@
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SocialMedia.Domain.Commands;
-using SocialMedia.Domain.Models;
 using SocialMedia.TestUtilities.Builders;
 using SocialMedia.WebAPI.Controllers;
-using System.Security.Claims;
 
 namespace SocialMedia.WebAPI.Tests.Controllers
 {
@@ -18,31 +15,43 @@ namespace SocialMedia.WebAPI.Tests.Controllers
         [Fact]
         public async Task Create_SubmitsCommandAndReturnsResult()
         {
-            var userId = new UserId("123");
             var post = postBuilder.CreatePost().ToPostInfo();
 
             var mediator = new Mock<IMediator>();
             mediator.Setup(m => m.Send(It.IsAny<CreatePost>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(post);
 
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
-                new Claim(ClaimTypes.NameIdentifier, userId.Value),
-            }, "TestAuthentication"));
-
             var controller = new PostController(mediator.Object);
-            controller.ControllerContext = new ControllerContext();
-            controller.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
 
             var command = new CreatePost { Text = post.Text };
-
-            var result = await controller.Create(command, CancellationToken.None);
+            var cancellationToken = CancellationToken.None;
+            var result = await controller.Create(command, cancellationToken);
 
             result.Should().BeOfType<OkObjectResult>();
             result.As<OkObjectResult>().Value.Should().Be(post);
 
-            mediator.Verify(m => m.Send(
-                It.Is<CreatePost>(r => r == command),
-                It.IsAny<CancellationToken>()));
+            mediator.Verify(m => m.Send(command, cancellationToken));
+        }
+
+        [Fact]
+        public async Task Demand_SubmitsCommandAndReturnsResult()
+        {
+            var post = postBuilder.CreatePost().ToPostInfo();
+
+            var mediator = new Mock<IMediator>();
+            mediator.Setup(m => m.Send(It.IsAny<DemandPost>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(post);
+
+            var controller = new PostController(mediator.Object);
+
+            var command = new DemandPost { Id = post.Id! };
+            var cancellationToken = CancellationToken.None;
+            var result = await controller.Demand(post.Id!, cancellationToken);
+
+            result.Should().BeOfType<OkObjectResult>();
+            result.As<OkObjectResult>().Value.Should().Be(post);
+
+            mediator.Verify(m => m.Send(command, cancellationToken));
         }
     }
 }

@@ -57,6 +57,17 @@ namespace MyApp.WebAPI.Tests.Converters
         }
 
         [Fact]
+        public void Read_WithInvalidId_Throws()
+        {
+            var json = "123";
+
+            var action = () => JsonSerializer.Deserialize<InvalidId>(json, options);
+
+            action.Should().Throw<InvalidOperationException>()
+                .WithMessage($"*{nameof(InvalidId)}*");
+        }
+
+        [Fact]
         public void Write_WithPrimitiveId_ReturnsFlattenedJson()
         {
             var id = new PrimitiveId(123);
@@ -85,6 +96,12 @@ namespace MyApp.WebAPI.Tests.Converters
         private record GuidId : Id<Guid>
         {
             public GuidId(Guid value) : base(value) { }
+        }
+
+        private record InvalidId : Id<int>
+        {
+            // why invalid? no single-parameter constructor
+            public InvalidId() : base(100) { }
         }
     }
 }

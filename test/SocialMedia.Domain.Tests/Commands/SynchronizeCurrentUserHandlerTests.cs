@@ -7,39 +7,39 @@ using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Domain.Tests.Commands
 {
-    public class GetCurrentUserTests
+    public class SynchronizeCurrentUserHandlerTests
     {
-        private readonly GetCurrentUserHandler handler;
-        private readonly Mock<IUserRepository> userRepository;
+        private readonly SynchronizeCurrentUserHandler handler;
+        private readonly Mock<IUserSynchronizer> userSynchronizer;
         private readonly Mock<IUserContext> userContext;
         private readonly UserBuilder userBuilder = new();
 
-        public GetCurrentUserTests()
+        public SynchronizeCurrentUserHandlerTests()
         {
-            userRepository = new Mock<IUserRepository>();
+            userSynchronizer = new Mock<IUserSynchronizer>();
             userContext = new Mock<IUserContext>();
 
-            handler = new GetCurrentUserHandler(userRepository.Object, userContext.Object);
+            handler = new SynchronizeCurrentUserHandler(userSynchronizer.Object, userContext.Object);
         }
 
         [Fact]
-        public async Task Handle_CallsRepositoryAndReturnsUser()
+        public async Task Handle_CallsSynchronizerAndReturnsUser()
         {
             var user = userBuilder.CreateUser().ToUser();
 
             userContext.Setup(x => x.UserId).Returns(user.Id);
-            userRepository.Setup(r => r.GetUser(It.IsAny<UserId>(), It.IsAny<CancellationToken>()))
+            userSynchronizer.Setup(s => s.SyncUser(It.IsAny<User>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(user);
 
-            var request = new GetCurrentUser();
+            var request = new SynchronizeCurrentUser { Name = user.Name };
             var cancellationToken = CancellationToken.None;
 
             var result = await handler.Handle(request, cancellationToken);
 
             result.Should().Be(user);
 
-            userRepository.Verify(m => m.GetUser(
-                It.Is<UserId>(s => s == user.Id),
+            userSynchronizer.Verify(s => s.SyncUser(
+                It.Is<User>(s => s == user),
                 cancellationToken));
         }
     }

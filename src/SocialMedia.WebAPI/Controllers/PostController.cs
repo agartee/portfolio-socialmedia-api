@@ -28,9 +28,9 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpGet]
         [Authorize]
         [Route("/post/{id}")]
-        public async Task<IActionResult> Create([FromRoute] PostId id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Demand([FromRoute] PostId id, CancellationToken cancellationToken)
         {
-            var result = await mediator.Send(new GetPost { Id = id }, cancellationToken);
+            var result = await mediator.Send(new DemandPost { Id = id }, cancellationToken);
 
             return Ok(result);
         }
