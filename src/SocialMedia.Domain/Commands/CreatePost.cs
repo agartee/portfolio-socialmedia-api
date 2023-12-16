@@ -6,11 +6,8 @@ using SocialMedia.Domain.Services;
 namespace SocialMedia.Domain.Commands
 {
     [Verb("create post", HelpText = "Create a new post.")]
-    public class CreatePost : IRequest<PostInfo>
+    public record CreatePost : IRequest<PostInfo>
     {
-        [Option(Required = false, HelpText = "User's ID")]
-        public required string UserId { get; init; }
-
         [Option(Required = false, HelpText = "Text content of the post")]
         public required string Text { get; init; }
     }
@@ -18,18 +15,20 @@ namespace SocialMedia.Domain.Commands
     public class CreatePostHandler : IRequestHandler<CreatePost, PostInfo>
     {
         private readonly IPostRepository postRepository;
+        private readonly IUserContext userContext;
 
-        public CreatePostHandler(IPostRepository postRepository)
+        public CreatePostHandler(IPostRepository postRepository, IUserContext userContext)
         {
             this.postRepository = postRepository;
+            this.userContext = userContext;
         }
 
         public async Task<PostInfo> Handle(CreatePost request, CancellationToken cancellationToken)
         {
             var post = new Post
             {
-                Id = Guid.NewGuid(),
-                UserId = request.UserId,
+                Id = PostId.NewId(),
+                AuthorUserId = userContext.UserId,
                 Text = request.Text,
                 Created = DateTime.UtcNow
             };

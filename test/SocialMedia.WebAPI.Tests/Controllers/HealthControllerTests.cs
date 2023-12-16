@@ -6,10 +6,11 @@ namespace SocialMedia.WebAPI.Tests.Controllers
 {
     public class HealthControllerTests
     {
+        private readonly HealthController controller = new();
+
         [Fact]
         public void Get_ReturnsUp()
         {
-            var controller = new HealthController();
             var result = controller.Index();
 
             result.Should().BeOfType<OkObjectResult>();

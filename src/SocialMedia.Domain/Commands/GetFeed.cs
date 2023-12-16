@@ -6,7 +6,7 @@ using SocialMedia.Domain.Services;
 namespace SocialMedia.Domain.Commands
 {
     [Verb("get feed", HelpText = "Get the latest feed.")]
-    public class GetFeed : IRequest<IEnumerable<PostInfo>>
+    public record GetFeed : IRequest<IEnumerable<PostInfo>>
     {
     }
 

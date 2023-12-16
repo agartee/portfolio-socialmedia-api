@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Domain.Commands;
-using SocialMedia.WebAPI.Binders;
+using SocialMedia.Domain.Models;
 
 namespace SocialMedia.WebAPI.Controllers
 {
@@ -18,9 +18,19 @@ namespace SocialMedia.WebAPI.Controllers
         [HttpPut]
         [Authorize]
         [Route("/post")]
-        public async Task<IActionResult> Create([ModelBinder(typeof(UserIdFromClaimModelBinder))] CreatePost request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create([FromBody] CreatePost request, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(request, cancellationToken);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("/post/{id}")]
+        public async Task<IActionResult> Demand([FromRoute] PostId id, CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(new DemandPost { Id = id }, cancellationToken);
 
             return Ok(result);
         }

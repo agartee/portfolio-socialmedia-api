@@ -19,14 +19,14 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                 schema: "SocialMedia",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.UserId);
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -35,18 +35,18 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    AuthorUserId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Post", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Post_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Post_User_AuthorUserId",
+                        column: x => x.AuthorUserId,
                         principalSchema: "SocialMedia",
                         principalTable: "User",
-                        principalColumn: "UserId");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -69,10 +69,10 @@ namespace SocialMedia.Persistence.SqlServer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_UserId",
+                name: "IX_Post_AuthorUserId",
                 schema: "SocialMedia",
                 table: "Post",
-                column: "UserId");
+                column: "AuthorUserId");
         }
 
         /// <inheritdoc />

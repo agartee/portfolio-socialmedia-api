@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using SocialMedia.Domain.Exceptions;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
 using SocialMedia.Persistence.SqlServer.Extensions;
-using SocialMedia.Persistence.SqlServer.Models;
 
 namespace SocialMedia.Persistence.SqlServer.Repositories
 {
@@ -17,28 +17,30 @@ namespace SocialMedia.Persistence.SqlServer.Repositories
 
         public async Task<PostInfo> CreatePost(Post post, CancellationToken cancellationToken)
         {
-            var postData = new PostData
-            {
-                Id = post.Id,
-                UserId = post.UserId,
-                Created = post.Created,
-                Content = new PostContentData
-                {
-                    PostId = post.Id,
-                    Text = post.Text
-                }
-            };
-
-            dbContext.Posts.Add(postData);
+            dbContext.Posts.Add(post.ToPostData());
 
             await dbContext.SaveChangesAsync();
 
-            var resultData = await dbContext.Posts
+            var postData = await dbContext.Posts
                 .Include(p => p.Content)
                 .Include(p => p.User)
-                .SingleAsync(p => p.Id == post.Id);
+                .SingleAsync(p => p.Id == post.Id.Value);
 
             return postData.ToPostInfo();
+        }
+
+        public async Task<PostInfo> DemandPost(PostId id, CancellationToken cancellationToken)
+        {
+            var postsData = await dbContext.Posts
+                .Include(post => post.Content)
+                .Include(post => post.User)
+                .Where(p => p.Id == id.Value)
+                .SingleOrDefaultAsync();
+
+            if (postsData == null)
+                throw new EntityNotFoundException(nameof(PostInfo), id);
+
+            return postsData.ToPostInfo();
         }
 
         public async Task<IEnumerable<PostInfo>> GetAllPosts(CancellationToken cancellationToken)

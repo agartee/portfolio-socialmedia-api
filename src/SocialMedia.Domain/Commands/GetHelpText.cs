@@ -5,7 +5,7 @@ using SocialMedia.Domain.Models;
 
 namespace SocialMedia.Domain.Commands
 {
-    public class GetHelpText : IRequest<string>
+    public record GetHelpText : IRequest<string>
     {
         public GetHelpText(ParserResult<object>? parserResult = null)
         {

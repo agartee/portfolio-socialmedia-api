@@ -9,7 +9,7 @@ namespace SocialMedia.Persistence.SqlServer.Models
         public const string TABLE_NAME = "User";
 
         [Key, MaxLength(100)]
-        public required string UserId { get; set; }
+        public required string Id { get; set; }
 
         [MaxLength(100)]
         public required string Name { get; set; }

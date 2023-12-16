@@ -1,9 +1,8 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using SocialMedia.Domain.Models;
-using SocialMedia.Persistence.SqlServer.Models;
 using SocialMedia.Persistence.SqlServer.Repositories;
 using SocialMedia.Persistence.SqlServer.Tests.Fixtures;
+using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
 {
@@ -11,30 +10,27 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
     public class SqlServerUserSynchronizerTests
     {
         private readonly SqlServerFixture fixture;
+        private readonly SqlServerUserSynchronizer synchronizer;
+        private readonly UserBuilder userBuilder = new();
 
         public SqlServerUserSynchronizerTests(SqlServerFixture fixture)
         {
             fixture.ClearData();
             this.fixture = fixture;
+
+            synchronizer = new SqlServerUserSynchronizer(fixture.CreateDbContext());
         }
 
         [Fact]
-        public async Task UpdateUser_WhenNotExists_CreatesRow()
+        public async Task SyncUser_WhenNotExists_CreatesRow()
         {
-            var userId = "123";
+            var user = userBuilder.CreateUser();
 
-            var user = new User
-            {
-                UserId = userId,
-                Name = "name"
-            };
-
-            var synchronizer = new SqlServerUserSynchronizer(fixture.CreateDbContext());
-            await synchronizer.SyncUser(user, CancellationToken.None);
+            await synchronizer.SyncUser(user.ToUser(), CancellationToken.None);
 
             using var dbContext = fixture.CreateDbContext();
             var data = await dbContext.Users
-                .FirstAsync(p => p.UserId == userId);
+                .FirstAsync(p => p.Id == user.Id!.Value);
 
             data.Name.Should().Be(user.Name);
         }
@@ -42,30 +38,17 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
         [Fact]
         public async Task UpdateExtendedUser_WhenExists_UpdatesRow()
         {
-            var userId = "123";
+            var user = userBuilder.CreateUser();
 
-            var user = new UserData
-            {
-                UserId = userId,
-                Name = "original name",
-                Created = DateTime.UtcNow,
-                LastUpdated = DateTime.UtcNow,
-            };
+            await fixture.Seed(new[] { user.ToUserData() });
 
-            await fixture.Seed(new[] { user });
+            var updatedUser = userBuilder.CreateUser().WithId(user.Id);
 
-            var updatedUser = new User
-            {
-                UserId = userId,
-                Name = "updated name"
-            };
-
-            var synchronizer = new SqlServerUserSynchronizer(fixture.CreateDbContext());
-            await synchronizer.SyncUser(updatedUser, CancellationToken.None);
+            await synchronizer.SyncUser(updatedUser.ToUser(), CancellationToken.None);
 
             using var dbContext = fixture.CreateDbContext();
             var data = await dbContext.Users
-                .FirstAsync(p => p.UserId == userId);
+                .FirstAsync(p => p.Id == user.Id!.Value);
 
             data.Name.Should().Be(updatedUser.Name);
         }

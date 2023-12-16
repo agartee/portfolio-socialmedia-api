@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SocialMedia.Persistence.SqlServer\SocialMedia.Persistence.SqlServer.csproj" />
+    <ProjectReference Include="..\..\utils\SocialMedia.TestUtilities\SocialMedia.TestUtilities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,8 +11,11 @@ $testProjects = Get-ChildItem -Path $rootDir\test -Filter *.csproj -Recurse -Fil
 $coverageDir = "$rootDir\.test-coverage"
 $binDir = "$rootDir\.bin"
 $status = 0
-
 $exclusions = @{}
+
+function BuildCommand {
+  
+}
 
 foreach ($exclusion in $config.test.exclusions) {
   $exclusions[$exclusion.project] = @($exclusion.exclude)
