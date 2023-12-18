@@ -3,7 +3,7 @@ using SocialMedia.Domain.Models;
 using SocialMedia.WebAPI.JsonConverters;
 using System.Text.Json;
 
-namespace MyApp.WebAPI.Tests.Converters
+namespace SocialMedia.WebAPI.Tests.JsonConverters
 {
     public class IdConverterTests
     {
