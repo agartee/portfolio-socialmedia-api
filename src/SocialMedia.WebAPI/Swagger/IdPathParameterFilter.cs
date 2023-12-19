@@ -37,7 +37,7 @@ namespace SocialMedia.WebAPI.Swagger
             }
         }
 
-        private bool IsIdType(Type contextType)
+        private static bool IsIdType(Type contextType)
         {
             return Id.SupportedTypes.Any(
                 t => typeof(Id<>).MakeGenericType(t).IsAssignableFrom(contextType.GetTypeInfo())
