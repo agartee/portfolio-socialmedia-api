@@ -6,20 +6,6 @@ namespace SocialMedia.WebAPI.ModelBinders
 {
     public class IdModelBinderProvider : IModelBinderProvider
     {
-        private static readonly IEnumerable<Type> SupportedTypes = new List<Type>
-        {
-            typeof(short),
-            typeof(int),
-            typeof(long),
-            typeof(ulong),
-            typeof(decimal),
-            typeof(float),
-            typeof(double),
-            typeof(char),
-            typeof(Guid),
-            typeof(string)
-        };
-
         public IModelBinder? GetBinder(ModelBinderProviderContext context)
         {
             if (context == null)
@@ -33,7 +19,7 @@ namespace SocialMedia.WebAPI.ModelBinders
 
         private static bool CanConvert(Type objectType)
         {
-            return SupportedTypes.Any(
+            return Id.SupportedTypes.Any(
                 t => typeof(Id<>).MakeGenericType(t).IsAssignableFrom(objectType.GetTypeInfo())
             );
         }

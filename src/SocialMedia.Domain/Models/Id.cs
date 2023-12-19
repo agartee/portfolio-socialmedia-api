@@ -4,6 +4,9 @@ namespace SocialMedia.Domain.Models
     {
         protected Id(T value)
         {
+            if (!Id.SupportedTypes.Contains(typeof(T)))
+                throw new InvalidOperationException("Invalid backing type");
+
             Value = value;
         }
 
@@ -13,5 +16,22 @@ namespace SocialMedia.Domain.Models
         {
             return $"{Value}";
         }
+    }
+
+    public static class Id
+    {
+        public static readonly IEnumerable<Type> SupportedTypes = new List<Type>
+        {
+            typeof(short),
+            typeof(int),
+            typeof(long),
+            typeof(ulong),
+            typeof(decimal),
+            typeof(float),
+            typeof(double),
+            typeof(char),
+            typeof(Guid),
+            typeof(string)
+        };
     }
 }

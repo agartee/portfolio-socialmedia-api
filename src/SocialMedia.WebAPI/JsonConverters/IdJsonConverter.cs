@@ -7,23 +7,9 @@ namespace SocialMedia.WebAPI.JsonConverters
 {
     public class IdJsonConverter : JsonConverter<object>
     {
-        private static readonly IEnumerable<Type> SupportedTypes = new List<Type>
-        {
-            typeof(short),
-            typeof(int),
-            typeof(long),
-            typeof(ulong),
-            typeof(decimal),
-            typeof(float),
-            typeof(double),
-            typeof(char),
-            typeof(Guid),
-            typeof(string)
-        };
-
         public override bool CanConvert(Type typeToConvert)
         {
-            return SupportedTypes.Any(t => typeof(Id<>).MakeGenericType(t).IsAssignableFrom(typeToConvert));
+            return Id.SupportedTypes.Any(t => typeof(Id<>).MakeGenericType(t).IsAssignableFrom(typeToConvert));
         }
 
         public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

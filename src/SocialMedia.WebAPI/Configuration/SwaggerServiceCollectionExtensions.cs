@@ -1,5 +1,8 @@
 using Microsoft.OpenApi.Models;
+using SocialMedia.Domain.Models;
 using SocialMedia.WebAPI.Swagger;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace SocialMedia.WebAPI.Configuration
 {
@@ -25,7 +28,18 @@ namespace SocialMedia.WebAPI.Configuration
                 options.AddSecurityRequirement(
                     new OpenApiSecurityRequirement { { CreateRequirementKey(), Array.Empty<string>() } });
 
-                options.SchemaFilter<CorrectSchemaFilter>();
+                var apiXmlDocumentPath = Path.Combine(
+                    AppContext.BaseDirectory,
+                    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+
+                var domainXmlDocumentPath = Path.Combine(
+                    AppContext.BaseDirectory,
+                    $"{typeof(PostId).Assembly.GetName().Name}.xml");
+
+                options.IncludeXmlComments(apiXmlDocumentPath);
+
+                options.OperationFilter<IdPathParameterFilter>(XDocument.Load(apiXmlDocumentPath));
+                options.OperationFilter<RequestQueryParameterFilter>(XDocument.Load(domainXmlDocumentPath));
             });
 
             return services;
