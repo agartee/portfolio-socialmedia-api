@@ -54,6 +54,18 @@ Configuration settings that are required by the application at runtime are gener
 }
 ```
 
+### Setting User Secrets in Linux
+
+User secrets can be added via the terminal:
+
+```bash
+dotnet user-secrets set "connectionStrings:test_database" "Server=host.docker.internal;Database=SocialMediaTests;User=sa;Password=@Password!;TrustServerCertificate=True;MultipleActiveResultSets=true;"
+```
+
+User secrets are stored in `~/.microsoft/usersecrets/agartee-socialmedia/secrets.json`.
+
+> Note: When running the application or tests from WSL and when the SQL Server database is hosted in a Docker container, you should use `host.docker.internal` as the server in your database connection string.
+
 ## Available PowerShell Scripts
 
 These scripts are aimed to normalize script patterns across projects and platforms (based on [Scripts to Rule Them All](https://github.com/github/scripts-to-rule-them-all)).
