@@ -17,9 +17,14 @@ variables:
   CONNECTIONSTRINGS__TEST_DATABASE: Server=localhost;Database=SocialMedia;User=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true;
 
 steps:
-- bootstrap: |
-  sh scripts/bootstrap.sh
-- build: |
-  sh scripts/build.sh
-- test: |
-  sh scripts/test.sh
+- script: |
+    sh scripts/bootstrap.sh
+  displayName: 'Bootstrap'
+
+- script: |
+    sh scripts/build.sh
+  displayName: 'Build'
+
+- script: |
+    sh scripts/test.sh
+  displayName: 'Test'
