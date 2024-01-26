@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest' # Or 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 services:
   mssql: 
@@ -17,9 +17,9 @@ variables:
   CONNECTIONSTRINGS__TEST_DATABASE: Server=localhost;Database=SocialMedia;User=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true;
 
 steps:
-- bootstrap:
+- bootstrap: |
   sh scripts/bootstrap.sh
-- build:
+- build: |
   sh scripts/build.sh
-- test:
+- test: |
   sh scripts/test.sh
