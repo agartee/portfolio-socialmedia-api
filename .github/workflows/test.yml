@@ -26,7 +26,7 @@ jobs:
           - 1433:1433
 
     env:
-      CONNECTIONSTRINGS__TEST_DATABASE: Server=localhost;Database=SocialMedia;User=sa;Password=${{ secrets.SQL_SA_PASSWORD }};TrustServerCertificate=True;MultipleActiveResultSets=true
+      CONNECTIONSTRINGS__TEST_DATABASE: Server=localhost;Database=SocialMedia;User=sa;Password=${{ secrets.SQL_SA_PASSWORD }};TrustServerCertificate=True;MultipleActiveResultSets=true;
 
     steps:
       - uses: actions/checkout@v3

@@ -38,7 +38,7 @@ Configuration settings that are required by the application at runtime are gener
   },
   "authentication": {
     "authority": "<ACCOUNT>.auth0.com",
-    "audience": "socialmedia"
+    "audience": "<AUTH0-API-IDENTIFIER>"
   },
   "userManagement": {
     "authentication": {
