@@ -18,13 +18,13 @@ variables:
 
 steps:
 - script: |
-    sh scripts/bootstrap.sh
+    scripts/bootstrap.sh
   displayName: 'Bootstrap'
 
 - script: |
-    sh scripts/build.sh
+    scripts/build.sh
   displayName: 'Build'
 
 - script: |
-    sh scripts/test.sh
+    scripts/test.sh
   displayName: 'Test'
