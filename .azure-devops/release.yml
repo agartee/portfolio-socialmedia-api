@@ -12,7 +12,7 @@ stages:
     jobs:
     - deployment: DeployToDev
       displayName: 'Deploy WebApp to Dev Environment'
-      environment: 'dev-environment-name'
+      environment: 'Dev'
       strategy:
         runOnce:
           deploy:
@@ -29,7 +29,7 @@ stages:
     jobs:
     - deployment: DeployToQA
       displayName: 'Deploy WebApp to QA Environment'
-      environment: 'qa-environment-name'
+      environment: 'QA'
       strategy:
         runOnce:
           deploy:
