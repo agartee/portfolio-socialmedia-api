@@ -28,3 +28,9 @@ steps:
 - script: |
     scripts/test.sh
   displayName: 'Test'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '.publish/'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'

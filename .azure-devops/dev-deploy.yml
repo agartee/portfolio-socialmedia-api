@@ -1,0 +1,20 @@
+trigger:
+  tags:
+    include:
+    - v*.*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: |
+    scripts/bootstrap.sh -ci
+  displayName: 'Bootstrap'
+
+- script: |
+    scripts/build.sh
+  displayName: 'Build'
+
+- script: |
+    scripts/publish.sh
+  displayName: 'Publish'
