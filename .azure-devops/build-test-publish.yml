@@ -1,7 +1,7 @@
 trigger:
 - main
 
-name: $(Build.SourceVersion)-$(Date:yyyyMMdd)$(Rev:.r)
+name: $(Date:yyyyMMdd)$(Rev:.r)-$(Build.SourceVersion)
 
 pool:
   vmImage: 'ubuntu-latest'
