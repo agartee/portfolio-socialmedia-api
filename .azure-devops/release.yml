@@ -1,7 +1,7 @@
 resources:
   pipelines:
     - pipeline: buildTestPublish
-      source: build-test-publish
+      source: 'Portfolio - Social Media Build+Test+Publish'
       trigger:
         branches:
           - main
@@ -19,9 +19,9 @@ stages:
             steps:
             - task: AzureWebApp@1
               inputs:
-                azureSubscription: 'YourAzureSubscription'
-                appName: 'YourDevWebAppName'
-                package: '$(Pipeline.Workspace)/buildTestPublish/WebApp' # adjust the path based on your artifact name and location
+                azureSubscription: 'Gartee Pay-As-You-Go'
+                appName: 'agartee-socialmedia-api'
+                package: '$(Pipeline.Workspace)/WebApp'  # adjust the path based on your artifact name and location
 
   - stage: QA
     displayName: 'Deploy to QA'
@@ -36,6 +36,6 @@ stages:
             steps:
             - task: AzureWebApp@1
               inputs:
-                azureSubscription: 'YourAzureSubscription'
-                appName: 'YourQAWebAppName'
-                package: '$(Pipeline.Workspace)/buildTestPublish/WebApp' # adjust the path based on your artifact name and location
+                azureSubscription: 'Gartee Pay-As-You-Go'
+                appName: 'agartee-socialmedia-api' # same for testing
+                package: '$(Pipeline.Workspace)/WebApp'  # adjust the path based on your artifact name and location
