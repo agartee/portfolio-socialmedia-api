@@ -33,8 +33,5 @@ steps:
     scripts/publish.sh  --configuration Release
   displayName: 'Publish'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '.publish/'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+- publish: $(System.DefaultWorkingDirectory)/.publish
+  artifact: WebApp
