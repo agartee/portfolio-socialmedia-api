@@ -1,0 +1,30 @@
+pr:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+services:
+  mssql: 
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - 1433:1433
+    env:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Passw0rd!
+
+variables:
+  CONNECTIONSTRINGS__TEST_DATABASE: Server=localhost;Database=SocialMedia;User=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true;
+
+steps:
+- script: |
+    scripts/bootstrap.sh -ci
+  displayName: 'Bootstrap'
+
+- script: |
+    scripts/build.sh --configuration Release
+  displayName: 'Build'
+
+- script: |
+    scripts/test.sh --configuration Release
+  displayName: 'Test'
