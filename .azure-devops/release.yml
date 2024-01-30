@@ -19,9 +19,9 @@ stages:
             steps:
             - task: AzureWebApp@1
               inputs:
-                azureSubscription: 'Gartee Pay-As-You-Go'
+                azureSubscription: 'agartee-socialmedia-api'
                 appName: 'agartee-socialmedia-api'
-                package: '$(Pipeline.Workspace)/WebApp'  # adjust the path based on your artifact name and location
+                package: '$(Pipeline.Workspace)/WebApp'
 
   - stage: QA
     displayName: 'Deploy to QA'
@@ -36,6 +36,6 @@ stages:
             steps:
             - task: AzureWebApp@1
               inputs:
-                azureSubscription: 'Gartee Pay-As-You-Go'
+                azureSubscription: 'agartee-socialmedia-api'
                 appName: 'agartee-socialmedia-api' # same for testing
-                package: '$(Pipeline.Workspace)/WebApp'  # adjust the path based on your artifact name and location
+                package: '$(Pipeline.Workspace)/WebApp'
