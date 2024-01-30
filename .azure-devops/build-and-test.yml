@@ -22,17 +22,17 @@ steps:
   displayName: 'Bootstrap'
 
 - script: |
-    scripts/build.sh
+    scripts/build.sh -configuration Release
   displayName: 'Build'
 
 - script: |
-    scripts/test.sh
+    scripts/test.sh -configuration Release
   displayName: 'Test'
 
 - script: |
-    scripts/publish.sh
+    scripts/publish.sh  -configuration Release
   displayName: 'Publish'
-  
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '.publish/'
