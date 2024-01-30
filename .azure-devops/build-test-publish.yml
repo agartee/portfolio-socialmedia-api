@@ -1,6 +1,8 @@
 trigger:
 - main
 
+name: $(Build.SourceVersion)-$(Date:yyyyMMdd)$(Rev:.r)
+
 pool:
   vmImage: 'ubuntu-latest'
 

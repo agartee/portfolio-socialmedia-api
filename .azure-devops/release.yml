@@ -1,0 +1,41 @@
+resources:
+  pipelines:
+    - pipeline: buildTestPublish
+      source: build-test-publish
+      trigger:
+        branches:
+          - main
+
+stages:
+  - stage: Dev
+    displayName: 'Deploy to Development'
+    jobs:
+    - deployment: DeployToDev
+      displayName: 'Deploy WebApp to Dev Environment'
+      environment: 'dev-environment-name'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: AzureWebApp@1
+              inputs:
+                azureSubscription: 'YourAzureSubscription'
+                appName: 'YourDevWebAppName'
+                package: '$(Pipeline.Workspace)/buildTestPublish/WebApp' # adjust the path based on your artifact name and location
+
+  - stage: QA
+    displayName: 'Deploy to QA'
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'))
+    jobs:
+    - deployment: DeployToQA
+      displayName: 'Deploy WebApp to QA Environment'
+      environment: 'qa-environment-name'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: AzureWebApp@1
+              inputs:
+                azureSubscription: 'YourAzureSubscription'
+                appName: 'YourQAWebAppName'
+                package: '$(Pipeline.Workspace)/buildTestPublish/WebApp' # adjust the path based on your artifact name and location
