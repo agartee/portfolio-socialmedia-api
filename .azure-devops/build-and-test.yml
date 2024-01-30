@@ -29,6 +29,10 @@ steps:
     scripts/test.sh
   displayName: 'Test'
 
+- script: |
+    scripts/publish.sh
+  displayName: 'Publish'
+  
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '.publish/'
