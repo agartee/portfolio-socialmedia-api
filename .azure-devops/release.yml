@@ -24,6 +24,6 @@ stages:
             artifact: WebApp
           - task: AzureWebApp@1
             inputs:
-              azureSubscription: 'Social Media (Dev)' # The name of your Azure service connection
-              appName: 'agartee-socialmedia-api' # Replace with the name of your Azure Web App
+              azureSubscription: 'Social Media (Dev)'
+              appName: 'agartee-socialmedia-api'
               package: '$(Pipeline.Workspace)/buildTestPublish/WebApp'
