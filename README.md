@@ -18,8 +18,8 @@ Configuration settings that are required by the application at runtime are gener
 | Setting | Description |
 | --- | --- |
 | `connectionStrings:database` | Connection string to the database when running the application |
-| `connectionStrings:test_database` | Connection string to the application database used for integration testing |
-| `connectionStrings:docker_database` | Connection string to the database when running the application in a Docker container |
+| `connectionStrings:testDatabase` | Connection string to the application database used for integration testing |
+| `connectionStrings:dockerDatabase` | Connection string to the database when running the application in a Docker container |
 | `authentication:authority` | Auth0 authority for your account |
 | `authentication:audience` | API identifier in Auth0 |
 | `userManagement:authentication:audience` | API identifier in Auth0 for the Management API |
@@ -33,8 +33,8 @@ Configuration settings that are required by the application at runtime are gener
 {
   "connectionStrings": {
     "database": "Server=localhost;Database=SocialMedia;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true",
-    "docker_database": "Server=host.docker.internal;Database=SocialMedia;User=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true",
-    "test_database": "Server=localhost;Database=SocialMediaTests;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"
+    "dockerDatabase": "Server=host.docker.internal;Database=SocialMedia;User=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true",
+    "testDatabase": "Server=localhost;Database=SocialMediaTests;Trusted_Connection=true;TrustServerCertificate=True;MultipleActiveResultSets=true"
   },
   "authentication": {
     "authority": "<ACCOUNT>.auth0.com",
@@ -59,7 +59,7 @@ Configuration settings that are required by the application at runtime are gener
 User secrets can be added via the terminal:
 
 ```bash
-dotnet user-secrets set "connectionStrings:test_database" "Server=host.docker.internal;Database=SocialMediaTests;User=sa;Password=@Password!;TrustServerCertificate=True;MultipleActiveResultSets=true;"
+dotnet user-secrets set "connectionStrings:testDatabase" "Server=host.docker.internal;Database=SocialMediaTests;User=sa;Password=@Password!;TrustServerCertificate=True;MultipleActiveResultSets=true;"
 ```
 
 User secrets are stored in `~/.microsoft/usersecrets/agartee-socialmedia/secrets.json`.
@@ -118,4 +118,3 @@ dotnet ef migrations add $migrationName --startup-project ./src/SocialMedia.WebA
 ```
 
 This will create the new migration class in the `SocialMedia.Persistence.SqlServer` project's `Migrations` folder.
-

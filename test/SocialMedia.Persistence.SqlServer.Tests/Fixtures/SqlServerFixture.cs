@@ -27,7 +27,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Fixtures
         public SocialMediaDbContext CreateDbContext()
         {
             return new SocialMediaDbContext(new DbContextOptionsBuilder<SocialMediaDbContext>()
-                .UseSqlServer(config.GetConnectionString("test_database")).Options);
+                .UseSqlServer(config.GetConnectionString("testDatabase")).Options);
         }
 
         public async Task Seed(object[] entities, [CallerMemberName] string? caller = null)

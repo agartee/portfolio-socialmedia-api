@@ -16,7 +16,7 @@ services:
       SA_PASSWORD: Passw0rd!
 
 variables:
-  CONNECTIONSTRINGS__TEST_DATABASE: Server=localhost;Database=SocialMedia;User=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true;
+  connectionStrings__TestDatabase: Server=localhost;Database=SocialMedia;User=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true;
 
 steps:
 - script: |
