@@ -1,12 +1,7 @@
-trigger:
-  branches:
-    include:
-    - main
-
 resources:
   pipelines:
   - pipeline: buildTestPublish
-    source: 'Portfolio - Social Media Build+Test+Publish'
+    source: 'Social Media (Build+Test+Publish)'
     trigger:
       branches:
         include:
