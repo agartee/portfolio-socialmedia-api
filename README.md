@@ -118,3 +118,4 @@ dotnet ef migrations add $migrationName --startup-project ./src/SocialMedia.WebA
 ```
 
 This will create the new migration class in the `SocialMedia.Persistence.SqlServer` project's `Migrations` folder.
+
