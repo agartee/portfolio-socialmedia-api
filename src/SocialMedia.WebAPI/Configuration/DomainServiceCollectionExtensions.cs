@@ -10,6 +10,7 @@ using System.Reflection;
 
 namespace SocialMedia.WebAPI.Configuration
 {
+
     public static class DomainServiceCollectionExtensions
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services, IConfiguration configuration, string[] args)

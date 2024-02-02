@@ -20,6 +20,7 @@ builder.Services.AddCors(builder.Configuration);
 builder.Services.AddDomainServices(builder.Configuration, args);
 builder.Services.AddSecirity(builder.Configuration);
 builder.Services.AddSwagger();
+builder.Services.AddVersionInfo();
 
 var app = builder.Build();
 
