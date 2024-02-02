@@ -54,7 +54,7 @@ while (( "$#" )); do
 done
 
 if [ -f "$path" ]; then
-    jq --arg key "$key" --arg value "$value" '.[$key] = $value' "$path" > tmp.$$.json && mv tmp.$$.json "$path"
+    jq --arg key "$key" --arg value "$value" '(.[$key]) = $value' "$path" > tmp.$$.json && mv tmp.$$.json "$path"
 else
-    jq -n --arg key "$key" --arg value "$value" '{$key: $value}' > "$path"
+    jq -n --arg key "$key" --arg value "$value" '{($key): $value}' > "$path"
 fi
