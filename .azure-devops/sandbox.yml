@@ -32,3 +32,7 @@ steps:
     echo "##vso[task.setvariable variable=tagName]$tagName"
     echo "Set tagName variable to: $tagName"
   displayName: 'Set and Display tagName variable 2'
+
+- bash: |
+    echo "Using tagName: $(tagName)"
+  displayName: 'Use tagName variable'
