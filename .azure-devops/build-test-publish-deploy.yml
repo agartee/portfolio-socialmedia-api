@@ -25,15 +25,15 @@ steps:
 
 - script: |
     scripts/build.sh --configuration Release
-  displayName: 'Build'
+  displayName: '.NET Build'
 
 - script: |
     scripts/test.sh --configuration Release
-  displayName: 'Test'
+  displayName: '.NET Test'
 
 - script: |
     scripts/publish.sh  --configuration Release
-  displayName: 'Publish'
+  displayName: '.NET Publish'
 
 - publish: $(System.DefaultWorkingDirectory)/.publish
   artifact: WebApp
