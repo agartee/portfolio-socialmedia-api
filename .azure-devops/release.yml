@@ -4,7 +4,7 @@ trigger:
     - v*.*
 
 variables:
-  tagName: -${{ variables['Build.SourceBranchName'] }}
+  tagName: ${{ variables['Build.SourceBranchName'] }}
 
 name: $(tagName):$(Rev:r)
 
