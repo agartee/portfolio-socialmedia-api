@@ -60,11 +60,11 @@ done
 if [ "$appEnv" = "local" ]; then
   bash $rootDir/scripts/support/build-local.sh \
     --configuration "$configuration" \
-    --version "$version" \
+    --version "$version"
 fi
 
 if [ "$appEnv" = "docker" ]; then
   bash $rootDir/scripts/support/build-docker.sh \
     --configuration "$configuration" \
-    --version "$version" \
+    --version "$version"
 fi

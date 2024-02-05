@@ -52,4 +52,4 @@ dotnet clean "$solutionFile" --configuration "$configuration"
 
 dotnet build "$solutionFile" \
   --configuration "$configuration" \
-  /p:Version="$version" \
+  /p:Version="$version"
