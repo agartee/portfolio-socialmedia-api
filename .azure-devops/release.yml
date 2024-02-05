@@ -46,3 +46,25 @@ stages:
               azureSubscription: 'Social Media API (Dev)'
               appName: 'agartee-socialmedia-api'
               package: $(Pipeline.Workspace)/WebApp
+
+- stage: DeployToProd
+  displayName: 'Deploy to Prod'
+  dependsOn: DeployToQA
+  condition: succeeded()
+  jobs:
+  - deployment: DeployToProd
+    displayName: 'Deploy WebApp to Azure Production WebApp'
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: WebApp
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'Social Media API (Dev)'
+              appName: 'agartee-socialmedia-api'
+              package: $(Pipeline.Workspace)/WebApp
