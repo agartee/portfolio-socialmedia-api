@@ -7,7 +7,7 @@ name: $(Build.SourceBranchName):$(Rev:r)
 
 stages:
 - stage: BuildAndPublish
-  displayName: 'Build and Publish Artifact'
+  displayName: 'Build and Publish'
   jobs:
   - job: BuildPublishJob
     pool:
@@ -26,7 +26,7 @@ stages:
       displayName: 'Publish Artifact'
 
 - stage: DeployToQA
-  displayName: 'Deploy to QA Environment'
+  displayName: 'Deploy to QA'
   dependsOn: BuildAndPublish
   condition: succeeded()
   jobs:
