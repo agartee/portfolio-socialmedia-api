@@ -44,4 +44,4 @@ steps:
     azureSubscription: 'Social Media API (Dev)'
     appName: 'agartee-socialmedia-api'
     package: $(System.DefaultWorkingDirectory)/.publish
-  displayName: 'Deploy'
+  displayName: 'Deploy Azure WebApp'
