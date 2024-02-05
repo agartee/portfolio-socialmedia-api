@@ -37,9 +37,11 @@ steps:
 
 - publish: $(System.DefaultWorkingDirectory)/.publish
   artifact: WebApp
+  displayName: 'Publish Artifact'
 
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'Social Media API (Dev)'
     appName: 'agartee-socialmedia-api'
     package: $(System.DefaultWorkingDirectory)/.publish
+  displayName: 'Deploy'
