@@ -7,18 +7,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: |
-    scripts/bootstrap.sh -ci
-  displayName: 'Bootstrap'
-
-- script: |
-    scripts/build.sh
-  displayName: 'Build'
-
-- script: |
-    scripts/publish.sh
-  displayName: 'Publish'
-
 - bash: |
     echo "Build.SourceBranch: $(Build.SourceBranch)"
     echo "Build.SourceBranchName: $(Build.SourceBranchName)"

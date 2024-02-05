@@ -2,7 +2,6 @@ using SocialMedia.WebAPI.Configuration;
 using SocialMedia.WebAPI.Formatters;
 using SocialMedia.WebAPI.JsonConverters;
 using SocialMedia.WebAPI.ModelBinders;
-using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 

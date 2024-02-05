@@ -1,53 +1,29 @@
-trigger: none
+trigger:
+  tags:
+    include:
+    - v*.*
 
-pr: none
+name: $(Date:yyyyMMdd)$(Rev:.r)-$(Build.SourceVersion)
 
-resources:
-  pipelines:
-  - pipeline: buildTestPublish
-    source: 'Social Media (Build+Test+Publish)'
-    trigger:
-      branches:
-        include:
-        - main
+pool:
+  vmImage: 'ubuntu-latest'
 
-stages:
-- stage: DeployToDev
-  displayName: 'Deploy to Development Environment'
-  jobs:
-  - deployment: DeployWebApp
-    displayName: 'Deploy WebApp to Azure Web App'
-    pool:
-      vmImage: 'ubuntu-latest'
-    environment: 'Dev'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: buildTestPublish
-            artifact: WebApp
-          - task: AzureWebApp@1
-            inputs:
-              azureSubscription: 'Social Media (Dev)'
-              appName: 'agartee-socialmedia-api'
-              package: '$(Pipeline.Workspace)/buildTestPublish/WebApp'
+steps:
+- script: |
+    scripts/build.sh --configuration Release
+  displayName: '.NET Build'
 
-- stage: DeployToQA
-  displayName: 'Deploy to QA Environment'
-  jobs:
-  - deployment: DeployWebApp
-    displayName: 'Deploy WebApp to Azure Web App'
-    pool:
-      vmImage: 'ubuntu-latest'
-    environment: 'QA'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: buildTestPublish
-            artifact: WebApp
-          - task: AzureWebApp@1
-            inputs:
-              azureSubscription: 'Social Media (Dev)'
-              appName: 'agartee-socialmedia-api'
-              package: '$(Pipeline.Workspace)/buildTestPublish/WebApp'
+- script: |
+    scripts/publish.sh  --configuration Release
+  displayName: '.NET Publish'
+
+- publish: $(System.DefaultWorkingDirectory)/.publish
+  artifact: WebApp
+  displayName: 'Publish Artifact'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Social Media API (Dev)'
+    appName: 'agartee-socialmedia-api'
+    package: $(System.DefaultWorkingDirectory)/.publish
+  displayName: 'Deploy Azure WebApp'

@@ -1,0 +1,53 @@
+trigger: none
+
+pr: none
+
+resources:
+  pipelines:
+  - pipeline: buildTestPublish
+    source: 'Social Media (Build+Test+Publish)'
+    trigger:
+      branches:
+        include:
+        - main
+
+stages:
+- stage: DeployToDev
+  displayName: 'Deploy to Development Environment'
+  jobs:
+  - deployment: DeployWebApp
+    displayName: 'Deploy WebApp to Azure Web App'
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'Dev'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: buildTestPublish
+            artifact: WebApp
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'Social Media (Dev)'
+              appName: 'agartee-socialmedia-api'
+              package: '$(Pipeline.Workspace)/buildTestPublish/WebApp'
+
+- stage: DeployToQA
+  displayName: 'Deploy to QA Environment'
+  jobs:
+  - deployment: DeployWebApp
+    displayName: 'Deploy WebApp to Azure Web App'
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'QA'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: buildTestPublish
+            artifact: WebApp
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'Social Media (Dev)'
+              appName: 'agartee-socialmedia-api'
+              package: '$(Pipeline.Workspace)/buildTestPublish/WebApp'
