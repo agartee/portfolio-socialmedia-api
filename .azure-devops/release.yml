@@ -17,6 +17,7 @@ stages:
         echo "setting version variable from tag (removing "v" prefix)."
         tagName=$(Build.SourceBranchName)
         version=${tagName#v}
+        echo "##vso[task.setvariable variable=version]$version"
         echo "version: $version"
       displayName: 'Set version variable'
 
