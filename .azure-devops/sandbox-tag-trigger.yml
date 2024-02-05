@@ -16,7 +16,7 @@ steps:
   displayName: 'Set and Display tagName variable 1'
 
 - bash: |
-    tagName=${BUILD_SOURCEBRANCH#refs/tags/}
+    tagName=${BUILD_SOURCEBRANCH#refs/tags/v}
     echo "##vso[task.setvariable variable=tagName]$tagName"
     echo "Set tagName variable to: $tagName"
   displayName: 'Set and Display tagName variable 2'
