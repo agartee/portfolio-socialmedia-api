@@ -22,8 +22,9 @@ steps:
   displayName: 'Set and Display tagName variable 2'
 
 - bash: |
-    version=${$(Build.SourceBranchName)#v}
-    echo "Set tagName variable to: $version"
+    tagName=$(Build.SourceBranchName)
+    version=${tagName#v}
+    echo "Set version variable to: $version"
   displayName: 'Set version variable from tag name (removing "v" prefix)'
 
 - bash: |
