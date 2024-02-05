@@ -22,5 +22,11 @@ steps:
   displayName: 'Set and Display tagName variable 2'
 
 - bash: |
+    tagName=$(Build.SourceBranchName)
+    tagName=${tagName#v}
+    echo "Set tagName variable to: $tagName"
+  displayName: 'Set and Display tagName variable 3'
+
+- bash: |
     echo "Using tagName: $(tagName)"
   displayName: 'Use tagName variable'
