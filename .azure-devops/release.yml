@@ -13,8 +13,15 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+    - bash: |
+        echo "setting version variable from tag (removing "v" prefix)."
+        tagName=$(Build.SourceBranchName)
+        version=${tagName#v}
+        echo "version: $version"
+      displayName: 'Set version variable'
+
     - script: |
-        scripts/build.sh --configuration Release
+        scripts/build.sh --configuration Release --version $version
       displayName: '.NET Build'
 
     - script: |
