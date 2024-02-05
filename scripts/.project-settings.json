@@ -1,7 +1,7 @@
 {
   "solutionFile": "SocialMedia.sln",
   "userSecretsId": "agartee-socialmedia",
-  "webAppProjectFile": "src/Samples.WebApp/Samples.WebApp.csproj",
+  "webAppProjectFile": "src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj",
   "docker": {
     "imageName": "socialmedia-api",
     "containerName": "socialmedia-api",
