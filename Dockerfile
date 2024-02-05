@@ -1,17 +1,25 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 ARG EXPOSE_PORTS="80 443"
+
 EXPOSE $EXPOSE_PORTS
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG CONFIG="Release"
+ARG VERSION="1.0.0"
 WORKDIR /src
 COPY /src .
 WORKDIR "/src/SocialMedia.WebAPI"
 RUN dotnet restore "SocialMedia.WebAPI.csproj"
-RUN dotnet build "SocialMedia.WebAPI.csproj" --configuration $CONFIG --output /app/build
+
+RUN dotnet build "SocialMedia.WebAPI.csproj" \
+  --configuration "$CONFIG" \
+  /p:Version="$VERSION" \
+  --output /app/build
 
 FROM build AS publish
-RUN dotnet publish "SocialMedia.WebAPI.csproj" --configuration $CONFIG --output /app/publish /p:UseAppHost=false
+RUN dotnet publish "SocialMedia.WebAPI.csproj" \
+  --configuration $CONFIG \
+  --output /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

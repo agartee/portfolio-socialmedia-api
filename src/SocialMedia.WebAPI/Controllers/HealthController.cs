@@ -6,11 +6,11 @@ namespace SocialMedia.WebAPI.Controllers
     [ApiController]
     public class HealthController : ControllerBase
     {
-        private readonly VersionInfo appInfo;
+        private readonly VersionInfo version;
 
         public HealthController(VersionInfo appInfo)
         {
-            this.appInfo = appInfo;
+            this.version = appInfo;
         }
 
         [HttpGet]
@@ -19,9 +19,9 @@ namespace SocialMedia.WebAPI.Controllers
         {
             return Ok(new
             {
-                Availability = "Up!",
-                appInfo.Version,
-                appInfo.Build
+                Availability = "Up",
+                version.AssemblyVersion,
+                version.ProductVersion
             });
         }
     }

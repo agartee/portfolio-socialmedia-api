@@ -3,6 +3,7 @@
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 appEnv="local"
 configuration="Debug"
+version="1.0.0"
 
 case "$(uname -s)" in
 	Linux)
@@ -36,6 +37,15 @@ while (( "$#" )); do
         exit 1
       fi
       ;;
+    -v|--version)
+      if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+        version=$2
+        shift 2
+      else
+        echo "${RED}Error: Argument for $1 is missing${NO_COLOR}" >&2
+        exit 1
+      fi
+      ;;
     -*|--*=)
       echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2
       exit 1
@@ -48,9 +58,13 @@ while (( "$#" )); do
 done
 
 if [ "$appEnv" = "local" ]; then
-  bash $rootDir/scripts/support/build-local.sh --configuration "$configuration"
+  bash $rootDir/scripts/support/build-local.sh \
+    --configuration "$configuration" \
+    --version "$version" \
 fi
 
 if [ "$appEnv" = "docker" ]; then
-  bash $rootDir/scripts/support/build-docker.sh --configuration "$configuration"
+  bash $rootDir/scripts/support/build-docker.sh \
+    --configuration "$configuration" \
+    --version "$version" \
 fi

@@ -4,6 +4,7 @@ rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 config=$(cat "$rootDir/scripts/.project-settings.json")
 solutionFile="$rootDir/$(echo "$config" | jq -r '.solutionFile')"
 configuration="Debug"
+version="1.0.0"
 
 case "$(uname -s)" in
 	Linux)
@@ -23,7 +24,16 @@ while (( "$#" )); do
         configuration=$2
         shift 2
       else
-        echo "Error: Argument for $1 is missing. Provide configuration name (e.g. Release, Debug)." >&2
+        echo "Error: Argument for $1 is missing. Provide configuration name (e.g., Release, Debug)." >&2
+        exit 1
+      fi
+      ;;
+    -v|--version)
+      if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+        version=$2
+        shift 2
+      else
+        echo "${RED}Error: Argument for $1 is missing${NO_COLOR}" >&2
         exit 1
       fi
       ;;
@@ -38,4 +48,8 @@ while (( "$#" )); do
   esac
 done
 
-dotnet build "$solutionFile" --configuration $configuration
+dotnet clean "$solutionFile" --configuration "$configuration"
+
+dotnet build "$solutionFile" \
+  --configuration "$configuration" \
+  /p:Version="$version" \

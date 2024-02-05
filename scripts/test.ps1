@@ -1,5 +1,5 @@
 Param(
-  [Parameter(Mandatory = $false, HelpMessage = "Configuration name (e.g. Release, Debug)")]
+  [Parameter(Mandatory = $false, HelpMessage = "Configuration name (e.g., Release, Debug)")]
   [string]$configuration = "Debug",
   [Parameter(Mandatory = $false, HelpMessage = "Do not perform build on projects before running tests")]
   [switch]$noBuild

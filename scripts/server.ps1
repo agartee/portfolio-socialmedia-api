@@ -5,7 +5,7 @@ param(
   [Parameter(ParameterSetName = "docker", HelpMessage = "Build docker image using Docker build image and publish local image.")]
   [switch]$docker,
   [Alias("c")]
-  [Parameter(Mandatory = $false, HelpMessage = "Configuration name (e.g. Release, Debug)")]
+  [Parameter(Mandatory = $false, HelpMessage = "Configuration name (e.g., Release, Debug)")]
   [string]$configuration = "Debug"
 )
 

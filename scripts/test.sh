@@ -47,7 +47,7 @@ while (( "$#" )); do
         configuration=$2
         shift 2
       else
-        echo "Error: Argument for $1 is missing. Provide configuration name (e.g. Release, Debug)." >&2
+        echo "Error: Argument for $1 is missing. Provide configuration name (e.g., Release, Debug)." >&2
         exit 1
       fi
       ;;

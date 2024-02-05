@@ -9,10 +9,28 @@ namespace SocialMedia.WebAPI.Configuration
     public static class SwaggerServiceCollectionExtensions
     {
         private const string SecurityDefinitionName = "Bearer";
-        public static IServiceCollection AddSwagger(this IServiceCollection services)
+        public static IServiceCollection AddSwagger(this IServiceCollection services, VersionInfo version)
         {
             services.AddSwaggerGen(options =>
             {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Social Media API",
+                    Version = version.ProductVersion,
+                    Description = "An API used to faciliatate interactions with the Social Media Portfolio application.",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Example Contact",
+                        Url = new Uri("https://example.com/contact")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Example License",
+                        Url = new Uri("https://example.com/license")
+                    }
+                });
+
                 options.AddSecurityDefinition(SecurityDefinitionName, new OpenApiSecurityScheme
                 {
                     Description = @"Authorization token; will be passed as ""Bearer {token}"".
