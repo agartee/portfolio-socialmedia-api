@@ -3,27 +3,46 @@ trigger:
     include:
     - v*.*
 
-name: $(Date:yyyyMMdd)$(Rev:.r)-$(Build.SourceVersion)
+name: $(Build.SourceBranchName):$(Rev:r)
 
-pool:
-  vmImage: 'ubuntu-latest'
+stages:
+- stage: BuildAndPublish
+  displayName: 'Build and Publish Artifact'
+  jobs:
+  - job: BuildPublishJob
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: |
+        scripts/build.sh --configuration Release
+      displayName: '.NET Build'
 
-steps:
-- script: |
-    scripts/build.sh --configuration Release
-  displayName: '.NET Build'
+    - script: |
+        scripts/publish.sh --configuration Release
+      displayName: '.NET Publish'
 
-- script: |
-    scripts/publish.sh  --configuration Release
-  displayName: '.NET Publish'
+    - publish: $(System.DefaultWorkingDirectory)/.publish
+      artifact: WebApp
+      displayName: 'Publish Artifact'
 
-- publish: $(System.DefaultWorkingDirectory)/.publish
-  artifact: WebApp
-  displayName: 'Publish Artifact'
-
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'Social Media API (Dev)'
-    appName: 'agartee-socialmedia-api'
-    package: $(System.DefaultWorkingDirectory)/.publish
-  displayName: 'Deploy Azure WebApp'
+- stage: DeployToQA
+  displayName: 'Deploy to QA Environment'
+  dependsOn: BuildAndPublish
+  condition: succeeded()
+  jobs:
+  - deployment: DeployToQA
+    displayName: 'Deploy WebApp to Azure QA WebApp'
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'QA'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: WebApp
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'Social Media API (Dev)'
+              appName: 'agartee-socialmedia-api'
+              package: $(Pipeline.Workspace)/WebApp
