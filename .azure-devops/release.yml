@@ -6,7 +6,7 @@ trigger:
 variables:
   tagName: ${{ variables['Build.SourceBranchName'] }}
 
-name: $(tagName):$(Rev:r)
+name: $(tagName)-$(Rev:r)
 
 stages:
 - stage: BuildAndPublish
