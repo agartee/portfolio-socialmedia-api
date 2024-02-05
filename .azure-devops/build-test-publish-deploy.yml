@@ -42,4 +42,4 @@ steps:
   inputs:
     azureSubscription: 'Social Media API (Dev)'
     appName: 'agartee-socialmedia-api'
-    package: 'WebApp'
+    package: $(System.DefaultWorkingDirectory)/.publish
