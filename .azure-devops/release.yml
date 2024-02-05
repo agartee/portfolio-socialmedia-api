@@ -21,7 +21,7 @@ stages:
       displayName: 'Set version variable'
 
     - script: |
-        scripts/build.sh --configuration Release --version $version
+        scripts/build.sh --configuration Release --version $(version)
       displayName: '.NET Build'
 
     - script: |
