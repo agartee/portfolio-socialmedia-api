@@ -54,6 +54,7 @@ stages:
               azureSubscription: 'Social Media API (Dev)'
               appName: 'agartee-socialmedia-api'
               package: $(Pipeline.Workspace)/WebApp
+            displayName: 'Deploy Azure WebApp'
 
 - stage: DeployToProd
   displayName: 'Deploy to Prod'
@@ -76,3 +77,4 @@ stages:
               azureSubscription: 'Social Media API (Dev)'
               appName: 'agartee-socialmedia-api'
               package: $(Pipeline.Workspace)/WebApp
+            displayName: 'Deploy Azure WebApp'
