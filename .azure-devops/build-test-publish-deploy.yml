@@ -33,7 +33,7 @@ steps:
   displayName: '.NET Build'
 
 - script: |
-    scripts/test.sh --configuration Release
+    scripts/test.sh --configuration Release --no-build
   displayName: '.NET Test'
 
 - script: |
