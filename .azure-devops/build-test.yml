@@ -22,7 +22,7 @@ steps:
   displayName: 'Bootstrap'
 
 - script: |
-    scripts/build.sh --configuration Release
+    scripts/build.sh --configuration Release --nobuild
   displayName: '.NET Build'
 
 - script: |
