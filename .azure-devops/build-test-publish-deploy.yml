@@ -9,7 +9,7 @@ trigger:
 name: $(Date:yyyyMMdd)$(Rev:.r)-$(Build.SourceVersion)
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 services:
   mssql: 
