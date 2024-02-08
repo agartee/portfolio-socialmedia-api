@@ -1,3 +1,21 @@
+[CmdletBinding()]
+Param(
+  # Show help.
+  [Parameter(Mandatory = $false)]
+  [Alias("h")]
+  [switch]$help
+)
+
+if ($help) {
+  Write-Output @"
+
+Cleans up temporary directories and files from the project.
+
+Usage: clean.ps1
+"@ 
+  exit
+}
+
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
 
 $binDir = "$rootDir\.bin"

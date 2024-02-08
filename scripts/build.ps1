@@ -3,16 +3,43 @@ param(
   [Parameter(ParameterSetName = "local", HelpMessage = "Build application with local .NET CLI.")]
   [Alias("l")]
   [switch]$local,
+
   [Parameter(ParameterSetName = "docker", HelpMessage = "Build docker image using Docker build image and publish local image.")]
   [Alias("d")]
   [switch]$docker,
+
   [Parameter(Mandatory = $false, HelpMessage = "Configuration name (e.g., Release, Debug)")]
   [Alias("c")]
   [string]$configuration = "Debug",
+
   [Parameter(Mandatory = $false, HelpMessage = "Assembly version (e.g., 1.2.3.4)")]
   [Alias("v")]
-  [string]$version = "1.0.0"
+  [string]$version = "1.0.0",
+
+  [Parameter(Mandatory = $false)]
+  [Alias("h")]
+  [switch]$help
 )
+
+if ($help) {
+  Write-Output @"
+
+Initiates a build of the project.
+
+Usage: build.ps1 [[-local] | [docker]] [-configuration <value>] [-version <value>]
+
+Options:
+-local|-l           Builds the application locally. This is the default script 
+                    behavior.
+-docker|-d          Builds the application in a Docker image.
+-configuration|-c   Specifies the configuration name for the build. Common 
+                    values are "Release" or "Debug". If not specified, the 
+                    default is "Debug".
+-version|-v         Specifies the version for the build outputs. If not 
+                    specified, the default is "1.0.0".
+"@ 
+  exit
+}
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
 

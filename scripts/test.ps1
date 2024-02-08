@@ -1,9 +1,32 @@
 Param(
   [Parameter(Mandatory = $false, HelpMessage = "Configuration name (e.g., Release, Debug)")]
   [string]$configuration = "Debug",
+
   [Parameter(Mandatory = $false, HelpMessage = "Do not perform build on projects before running tests")]
-  [switch]$noBuild
+  [switch]$noBuild,
+
+  [Parameter(Mandatory = $false)]
+  [Alias("h")]
+  [switch]$help
 )
+
+if ($help) {
+  Write-Output @"
+
+Runs tests based on the provided parameters and optional configuration.
+
+Usage: test.ps1 [-configuration <value>] [-noBuild]
+
+Options:
+-configuration|-c       Specifies the configuration name for running the tests.
+                        Common values are "Release" or "Debug". If not 
+                        specified, the default is "Debug".
+-noBuild                When set, the script will not perform a build on the 
+                        projects before running the tests. Use this to run tests
+                        on the previously built assemblies.
+"@ 
+  exit
+}
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
 $config = Get-Content -Raw -Path "$rootDir\scripts\.project-settings.json" | ConvertFrom-Json
@@ -12,10 +35,6 @@ $coverageDir = "$rootDir\.test-coverage"
 $binDir = "$rootDir\.bin"
 $status = 0
 $exclusions = @{}
-
-function BuildCommand {
-  
-}
 
 foreach ($exclusion in $config.test.exclusions) {
   $exclusions[$exclusion.project] = @($exclusion.exclude)

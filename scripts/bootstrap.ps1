@@ -3,9 +3,30 @@ param(
   [Parameter(ParameterSetName = "local", HelpMessage = "Bootstrap for local development.")]
   [Alias("l")]
   [switch]$local,
+
   [Parameter(ParameterSetName = "ci", HelpMessage = "Bootstrap for continuous integration server.")]
-  [switch]$ci
+  [switch]$ci,
+
+  [Parameter(Mandatory = $false)]
+  [Alias("h")]
+  [switch]$help
 )
+
+if ($help) {
+  Write-Output @"
+
+Checks for applications dependencies needed to contribute to this application 
+and initializes a .env file if none exists.
+
+Usage: bootstrap.ps1 [[-local] | [-ci]]
+
+Options:
+-ci         Bootstraps for a continuous integration server.
+-local|-l   Bootstraps for local development. This is the default script 
+            behavior.
+"@ 
+  exit
+}
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
 
