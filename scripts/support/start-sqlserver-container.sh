@@ -6,6 +6,13 @@ if [ -z "$1" ]; then
 fi
 
 containerName="$1"
+
+runningContainer=$(docker ps --filter "name=sqlserver" --format "{{.Names}}")
+
+if [ "$runningContainer" == "$containerName" ]; then
+    echo "The '$containerName' container is already running."
+    exit 0
+
 imageName="mcr.microsoft.com/mssql/server"
 
 rootDir=$(dirname $(dirname $(realpath $0)))

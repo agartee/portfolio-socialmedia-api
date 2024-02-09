@@ -3,6 +3,12 @@ param(
     [string]$containerName
 )
 
+$runningContainer = docker ps --filter "name=$($containerName)" --format "{{.Names}}"
+if ($runningContainer -eq $containerName) {
+    Write-Output "The 'sqlserver' container is already running."
+    exit
+}
+
 $imageName = "mcr.microsoft.com/mssql/server"
 
 $rootDir = (get-item $PSScriptRoot).Parent.Parent.FullName
