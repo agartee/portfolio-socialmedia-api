@@ -15,8 +15,6 @@ namespace SocialMedia.Persistence.SqlServer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.HasDefaultSchema(SCHEMA_NAME);
 
             modelBuilder.Entity<PostData>()

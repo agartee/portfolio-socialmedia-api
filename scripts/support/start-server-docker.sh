@@ -8,7 +8,7 @@ containerName=$(echo "$config" | jq -r '.docker.containerName')
 tagName=$(echo "$config" | jq -r '.docker.tagName')
 userSecretsId=$(echo "$config" | jq -r '.userSecretsId')
 databaseConnectionStringName=$(echo "$config" | jq -r --arg scriptName "$scriptName" '.scripts[$scriptName].databaseConnectionStringName')
-
+webAppName=$(echo "$config" | jq -r '.webApp.name')
 configuration="Debug"
 
 case "$(uname -s)" in
@@ -73,7 +73,7 @@ docker container run \
     --entrypoint dotnet \
     --detach \
     "$imageName:$tagName" \
-    /app/SocialMedia.WebAPI.dll --d $databaseConnectionStringName
+    /app/$webAppName.dll --d $databaseConnectionStringName
 
 if [ $? -eq 0 ]; then
   "$rootDir/scripts/support/wait-for-healthy-container.sh" $containerName

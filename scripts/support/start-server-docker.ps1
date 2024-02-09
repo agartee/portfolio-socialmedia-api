@@ -12,6 +12,7 @@ $containerName = $config.docker.containerName
 $tagName = $config.docker.tagName
 $userSecretsId = $config.userSecretsId
 $databaseConnectionStringName = $config.scripts.$scriptName.databaseConnectionStringName
+$webAppName = $config.webApp.name;
 
 docker container rm "$containerName" --force 2>&1 | Out-Null
 
@@ -38,7 +39,7 @@ docker container run `
   --entrypoint dotnet `
   --detach `
   "$($imageName):$($tagName)" `
-  /app/SocialMedia.WebAPI.dll --d $databaseConnectionStringName
+  /app/$($webAppName).dll --d $($databaseConnectionStringName)
 
 if ($LASTEXITCODE -eq 0) {
   & "$rootDir\scripts\support\wait-for-healthy-container.ps1" -c $containerName

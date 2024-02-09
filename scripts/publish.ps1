@@ -25,7 +25,7 @@ Options:
 
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
 $config = Get-Content -Raw -Path "$rootDir\scripts\.project-settings.json" | ConvertFrom-Json
-$projectFile = Join-Path -Path "$rootDir" -ChildPath $config.webAppProjectFile
+$projectFile = Join-Path -Path "$rootDir" -ChildPath $config.webApp.projectFile
 $publishDir = "$rootDir\.publish"
 
 if (Test-Path -Path "$publishDir") {
