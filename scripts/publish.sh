@@ -1,5 +1,19 @@
 #!/bin/bash
 
+show_help() {
+  cat << EOF
+
+Initiates a publish of the project to the ".publish/" directory.
+
+Usage: publish.ps1 [-configuration <value>]
+
+Options:
+-configuration|-c   Specifies the configuration name for the build. Common 
+                    values are "Release" or "Debug". If not specified, the 
+                    default is "Debug".
+EOF
+}
+
 rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 config=$(cat "$rootDir/scripts/.project-settings.json")
 projectFile="$rootDir/$(echo "$config" | jq -r '.webAppProjectFile')"
@@ -21,7 +35,7 @@ esac
 
 while (( "$#" )); do
   case "$1" in
-    -c|--configuration)
+    -c|-configuration)
       if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
         configuration=$2
         shift 2
@@ -29,6 +43,10 @@ while (( "$#" )); do
         echo "${RED}Error: Argument for $1 is missing${NO_COLOR}" >&2
         exit 1
       fi
+      ;;
+    -h|-help)
+      show_help
+      exit 0
       ;;
     -*|--*=)
       echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2

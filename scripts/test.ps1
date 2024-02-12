@@ -24,7 +24,7 @@ Options:
 -noBuild                When set, the script will not perform a build on the 
                         projects before running the tests. Use this to run tests
                         on the previously built assemblies.
-"@ 
+"@
   exit
 }
 

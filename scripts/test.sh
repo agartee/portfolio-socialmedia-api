@@ -1,5 +1,22 @@
 #!/bin/bash
 
+show_help() {
+  cat << EOF
+
+Runs tests based on the provided parameters and optional configuration.
+
+Usage: test.ps1 [-configuration <value>] [-noBuild]
+
+Options:
+-configuration|-c       Specifies the configuration name for running the tests.
+                        Common values are "Release" or "Debug". If not 
+                        specified, the default is "Debug".
+-noBuild                When set, the script will not perform a build on the 
+                        projects before running the tests. Use this to run tests
+                        on the previously built assemblies.
+EOF
+}
+
 rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 config=$(jq '.' "$rootDir/scripts/.project-settings.json")
 testProjects=$(find "$rootDir/test" -name "*.csproj")
@@ -42,7 +59,7 @@ done
 
 while (( "$#" )); do
   case "$1" in
-    --configuration|-c)
+    -configuration|-c)
       if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
         configuration=$2
         shift 2
@@ -51,9 +68,13 @@ while (( "$#" )); do
         exit 1
       fi
       ;;
-    --nobuild)
+    -nobuild)
       noBuild=true
       shift
+      ;;
+    -h|-help)
+      show_help
+      exit 0
       ;;
     -*|--*=)
       echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2

@@ -2,6 +2,7 @@
 
 show_help() {
   cat << EOF
+
 Initiates a build of the project.
 
 Usage: build.ps1 [[-local] | [docker]] [-configuration <value>] [-version <value>]
@@ -38,15 +39,15 @@ esac
 
 while (( "$#" )); do
   case "$1" in
-    -l|--local)
+    -l|-local)
       appEnv="local"
       shift
       ;;
-    -d|--docker)
+    -d|-docker)
       appEnv="docker"
       shift
       ;;
-    -c|--configuration)
+    -c|-configuration)
       if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
         configuration=$2
         shift 2
@@ -55,7 +56,7 @@ while (( "$#" )); do
         exit 1
       fi
       ;;
-    -v|--version)
+    -v|-version)
       if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
         version=$2
         shift 2
@@ -64,7 +65,7 @@ while (( "$#" )); do
         exit 1
       fi
       ;;
-    -h|--help)
+    -h|-help)
       show_help
       exit 0
       ;;

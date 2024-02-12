@@ -1,5 +1,14 @@
 #!/bin/bash
 
+show_help() {
+  cat << EOF
+
+Cleans up temporary directories and files from the project.
+
+Usage: clean.ps1
+EOF
+}
+
 rootDir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
 case "$(uname -s)" in
@@ -12,6 +21,23 @@ case "$(uname -s)" in
 		NO_COLOR="\033[m"
 		;;
 esac
+
+while (( "$#" )); do
+  case "$1" in
+    -h|-help)
+      show_help
+      exit 0
+      ;;
+    -*|--*=)
+      echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
+  esac
+done
 
 binDir="$rootDir/.bin"
 if [ -d "$binDir" ]; then
