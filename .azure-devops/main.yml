@@ -29,15 +29,15 @@ steps:
   displayName: 'Bootstrap'
 
 - script: |
-    scripts/build.sh --configuration Release --version 0.0.0-dev
+    scripts/build.sh -configuration Release -version 0.0.0-dev
   displayName: '.NET Build'
 
 - script: |
-    scripts/test.sh --configuration Release --nobuild
+    scripts/test.sh -configuration Release -nobuild
   displayName: '.NET Test'
 
 - script: |
-    scripts/publish.sh  --configuration Release
+    scripts/publish.sh  -configuration Release
   displayName: '.NET Publish'
 
 - publish: $(System.DefaultWorkingDirectory)/.publish
