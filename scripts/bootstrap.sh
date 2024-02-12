@@ -31,6 +31,10 @@ esac
 
 while (( "$#" )); do
   case "$1" in
+    -h|-help)
+      show_help
+      exit 0
+      ;;
     -l|-local)
       appEnv="local"
       shift
@@ -38,10 +42,6 @@ while (( "$#" )); do
     -ci)
       appEnv="ci"
       shift
-      ;;
-    -h|-help)
-      show_help
-      exit 0
       ;;
     -*|--*=)
       echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2

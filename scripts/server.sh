@@ -35,6 +35,10 @@ esac
 
 while (( "$#" )); do
   case "$1" in
+    -h|-help)
+      show_help
+      exit 0
+      ;;
     -l|-local)
       appEnv="local"
       shift
@@ -51,10 +55,6 @@ while (( "$#" )); do
         echo "${RED}Error: Argument for $1 is missing${NO_COLOR}" >&2
         exit 1
       fi
-      ;;
-    -h|-help)
-      show_help
-      exit 0
       ;;
     -*|--*=)
       echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2

@@ -35,6 +35,10 @@ esac
 
 while (( "$#" )); do
   case "$1" in
+    -h|-help)
+      show_help
+      exit 0
+      ;;
     -c|-configuration)
       if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
         configuration=$2
@@ -43,10 +47,6 @@ while (( "$#" )); do
         echo "${RED}Error: Argument for $1 is missing${NO_COLOR}" >&2
         exit 1
       fi
-      ;;
-    -h|-help)
-      show_help
-      exit 0
       ;;
     -*|--*=)
       echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2

@@ -59,6 +59,10 @@ done
 
 while (( "$#" )); do
   case "$1" in
+    -h|-help)
+      show_help
+      exit 0
+      ;;
     -configuration|-c)
       if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
         configuration=$2
@@ -71,10 +75,6 @@ while (( "$#" )); do
     -nobuild)
       noBuild=true
       shift
-      ;;
-    -h|-help)
-      show_help
-      exit 0
       ;;
     -*|--*=)
       echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2
