@@ -1,5 +1,23 @@
 #!/bin/bash
 
+show_help() {
+  cat << EOF
+Initiates a build of the project.
+
+Usage: build.ps1 [[-local] | [docker]] [-configuration <value>] [-version <value>]
+
+Options:
+-local|-l           Builds the application locally. This is the default script 
+                    behavior.
+-docker|-d          Builds the application in a Docker image.
+-configuration|-c   Specifies the configuration name for the build. Common 
+                    values are "Release" or "Debug". If not specified, the 
+                    default is "Debug".
+-version|-v         Specifies the version for the build outputs. If not 
+                    specified, the default is "1.0.0".
+EOF
+}
+
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 appEnv="local"
 configuration="Debug"
@@ -45,6 +63,10 @@ while (( "$#" )); do
         echo "${RED}Error: Argument for $1 is missing${NO_COLOR}" >&2
         exit 1
       fi
+      ;;
+    -h|--help)
+      show_help
+      exit 0
       ;;
     -*|--*=)
       echo "${RED}Error: Unsupported flag $1${NO_COLOR}" >&2
