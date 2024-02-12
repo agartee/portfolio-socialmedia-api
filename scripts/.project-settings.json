@@ -1,12 +1,11 @@
 {
   "solutionFile": "SocialMedia.sln",
   "userSecretsId": "agartee-socialmedia",
-  "webAppProjectFile": "src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj",
   "webApp": {
     "name": "SocialMedia.WebAPI",
     "projectFile": "src/SocialMedia.WebAPI/SocialMedia.WebAPI.csproj"
   },
-  "dataAccess": {
+  "dbMigrations": {
     "projectFile": "src/SocialMedia.Persistence.SqlServer/SocialMedia.Persistence.SqlServer.csproj"
   },
   "docker": {

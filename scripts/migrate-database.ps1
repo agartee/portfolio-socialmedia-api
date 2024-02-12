@@ -8,7 +8,7 @@ param(
 $rootDir = (get-item $PSScriptRoot).Parent.FullName
 $config = Get-Content -Raw -Path "$rootDir\scripts\.project-settings.json" | ConvertFrom-Json
 $startupProjectFile = Join-Path -Path "$rootDir" -ChildPath $config.webApp.projectFile
-$projectFile = Join-Path -Path "$rootDir" -ChildPath $config.dataAccess.projectFile
+$projectFile = Join-Path -Path "$rootDir" -ChildPath $config.dbMigrations.projectFile
 
 # note: --context is onmy required when multiple DbContext are in the project
 dotnet ef database update `

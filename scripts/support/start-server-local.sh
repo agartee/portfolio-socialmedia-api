@@ -2,7 +2,7 @@
 
 rootDir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 config=$(cat "$rootDir/scripts/.project-settings.json")
-projectFile="$rootDir/$(echo "$config" | jq -r '.webAppProjectFile')"
+projectFile="$rootDir/$(echo "$config" | jq -r '.webApp.projectFile')"
 configuration="Debug"
 
 while (( "$#" )); do
