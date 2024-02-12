@@ -1,6 +1,5 @@
 [CmdletBinding()]
 Param(
-  # Show help.
   [Parameter(Mandatory = $false)]
   [Alias("h")]
   [switch]$help
