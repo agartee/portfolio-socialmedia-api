@@ -16,9 +16,9 @@ param(
 if ($help) {
   Write-Output @"
 
-Runs the Entity Framework migrations for the application database.
+Deploys the application database from a SQL Server project.
 
-Usage: migrate-database.ps1 [-configuration <value>]
+Usage: deploy-database.ps1 [-configuration <value>]
 
 Options:
 -configuration|-c         Specifies the configuration name for the build. 
@@ -27,10 +27,6 @@ Options:
 -connectionStringName|-n  Specifies the connection string name from the
                           .NET project's user secrets. If not specified, 
                           the default is "database".
--migrationName|-m         Specifies the name of the migration to deploy to
-                          the target database. If not specified, the latest
-                          migration will be used. To rollback all migrations,
-                          pass "0".
 "@ 
   exit
 }
@@ -46,7 +42,7 @@ if (-not (Test-Path -Path $webAppProjectFile -PathType Leaf)) {
   }
 
 if (-not (Test-Path -Path $databaseProjectFile -PathType Leaf)) {
-  Write-Error "Database application project file not found at path: $databaseProjectFile"
+  Write-Error "Database project file not found at path: $databaseProjectFile"
   exit 1
 }
 
@@ -106,6 +102,6 @@ $msBuild = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.
 $projectDir = Split-Path -Parent $databaseProjectFile;
 $projectName = [System.IO.Path]::GetFileNameWithoutExtension($databaseProjectFile)
 
-Write-Host $connectionString
-
-& sqlpackage /a:publish /TargetConnectionString:$connectionString /SourceFile:"$($projectDir)\bin\$($configuration)\$($projectName).dacpac"
+& sqlpackage /a:publish `
+  /TargetConnectionString:$connectionString `
+  /SourceFile:"$($projectDir)\bin\$($configuration)\$($projectName).dacpac"
