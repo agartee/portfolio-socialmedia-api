@@ -8,6 +8,9 @@
   "dbMigrations": {
     "projectFile": "src/SocialMedia.Persistence.SqlServer/SocialMedia.Persistence.SqlServer.csproj"
   },
+  "database": {
+    "projectFile": "src/SocialMedia.Database/SocialMedia.Database.sqlproj"
+  },
   "docker": {
     "imageName": "socialmedia-api",
     "containerName": "socialmedia-api",

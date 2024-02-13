@@ -18,10 +18,9 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Fixtures
                 .AddEnvironmentVariables()
                 .Build();
 
-            var configurationDbContext = CreateDbContext();
-
-            configurationDbContext.Database.EnsureDeleted();
-            configurationDbContext.Database.EnsureCreated();
+            //var configurationDbContext = CreateDbContext();
+            //configurationDbContext.Database.EnsureDeleted();
+            //configurationDbContext.Database.EnsureCreated();
         }
 
         public SocialMediaDbContext CreateDbContext()

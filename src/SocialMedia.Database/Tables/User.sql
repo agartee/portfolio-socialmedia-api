@@ -1,0 +1,7 @@
+CREATE TABLE [SocialMedia].[User]
+(
+	[Id] NVARCHAR(100) NOT NULL PRIMARY KEY, 
+    [Name] NVARCHAR(100) NOT NULL, 
+    [Created] DATETIME2 NOT NULL, 
+    [LastUpdated] DATETIME2 NOT NULL
+)

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="d42d1b6f-294b-4b59-bf20-102f80d9c7f7" ChangeDateTime="02/13/2024 12:09:43">
+    <Property Name="ElementName" Value="[dbo].[PostContent].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PostContent]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PostId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ccccb703-79d4-464b-b4c1-5f13e1e692d9" ChangeDateTime="02/13/2024 12:15:43">
+    <Property Name="ElementName" Value="[dbo].[FK_Post_ToTable]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[Post]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_Post_User_AuthorUserId]" />
+  </Operation>
+</Operations>
