@@ -58,6 +58,7 @@ bash $rootDir/scripts/support/check-dpkg.sh
 bash $rootDir/scripts/support/check-jq.sh
 bash $rootDir/scripts/support/check-dotnet.sh
 bash $rootDir/scripts/support/check-ccr.sh
+bash $rootDir/scripts/support/check-sqlpackage.sh
 
 if [ "$appEnv" = "local" ]; then
   bash $rootDir/scripts/support/check-docker.sh
