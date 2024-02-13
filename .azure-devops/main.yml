@@ -33,6 +33,10 @@ steps:
   displayName: '.NET Build'
 
 - script: |
+    scripts/deploy-database.sh -configuration Release -connectionStringName TestDatabase
+  displayName: 'Deploy SQL Server database'
+
+- script: |
     scripts/test.sh -configuration Release -nobuild
   displayName: '.NET Test'
 

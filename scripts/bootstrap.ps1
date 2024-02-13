@@ -33,6 +33,7 @@ $rootDir = (get-item $PSScriptRoot).Parent.FullName
 . "$rootDir\scripts\support\check-dotnet.ps1"
 . "$rootDir\scripts\support\check-sqlpackage.ps1"
 . "$rootDir\scripts\support\check-ccr.ps1"
+. "$rootDir\scripts\support\check-sqlpackage.ps1"
 
 if ($PSCmdlet.ParameterSetName -eq "default" -or $local) {
   . "$rootDir\scripts\support\check-docker.ps1"
