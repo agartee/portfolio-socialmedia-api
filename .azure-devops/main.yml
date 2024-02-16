@@ -20,10 +20,18 @@ stages:
       inputs:
         solution: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/SocialMedia.Database.sqlproj
         configuration: Release
-    - powershell: |
-        mkdir $(System.DefaultWorkingDirectory)/.publish-sql
-        Copy-Item $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/bin/Debug/*.dacpac `
-          -Destination $(System.DefaultWorkingDirectory)/.publish-sql
+    
+    # - powershell: |
+    #     mkdir $(System.DefaultWorkingDirectory)/.publish-sql
+    #     Copy-Item $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/bin/Release/*.dacpac `
+    #       -Destination $(System.DefaultWorkingDirectory)/.publish-sql
+    
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/bin/Release
+        Contents: '*.dacpac'
+        TargetFolder: .publish-sql
+
     - publish: $(System.DefaultWorkingDirectory)/.publish-sql
       artifact: Dacpac
       displayName: 'Publish Artifact'
