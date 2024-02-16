@@ -19,6 +19,14 @@ stages:
     - task: MSBuild@1
       inputs:
         solution: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/SocialMedia.Database.sqlproj
+        configuration: Release
+    - powershell: |
+        mkdir $(System.DefaultWorkingDirectory)/.publish-sql
+        Copy-Item $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/bin/Debug/*.dacpac `
+          -Destination $(System.DefaultWorkingDirectory)/.publish-sql
+    - publish: $(System.DefaultWorkingDirectory)/.publish-sql
+      artifact: Dacpac
+      displayName: 'Publish Artifact'
     
 - stage: BuildTestDeployWebApp
   displayName: 'Build, Test, DevDeploy'
