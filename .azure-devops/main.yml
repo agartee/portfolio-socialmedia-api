@@ -21,11 +21,6 @@ stages:
         solution: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/SocialMedia.Database.sqlproj
         configuration: Release
     
-    # - powershell: |
-    #     mkdir $(System.DefaultWorkingDirectory)/.publish-sql
-    #     Copy-Item $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/bin/Release/*.dacpac `
-    #       -Destination $(System.DefaultWorkingDirectory)/.publish-sql
-    
     - task: CopyFiles@2
       inputs:
         SourceFolder: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/bin/Release
@@ -63,6 +58,25 @@ stages:
     - script: |
         scripts/build.sh -configuration Release -version 0.0.0-dev
       displayName: '.NET Build'
+
+    - download: current
+      artifact: Dacpac
+      
+    - script: |
+        #!/bin/bash
+        dacpac_path="$(Pipeline.Workspace)/Dacpac"
+        echo "Deploying DACPAC files from $dacpac_path"
+        for dacpac_file in $(find $dacpac_path -name '*.dacpac'); do
+          echo "Deploying $dacpac_file..."
+          sqlpackage /a:publish \
+            /TargetConnectionString:"$connectionStrings__TestDatabase" \
+            /SourceFile:"$dacpac_file"
+          if [ $? -ne 0 ]; then
+            echo "Deployment of $dacpac_file failed"
+            exit 1
+          fi
+        done
+      displayName: 'Deploying database(s)'
 
     - script: |
         scripts/test.sh -configuration Release -nobuild
