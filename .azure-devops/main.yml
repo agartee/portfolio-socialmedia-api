@@ -8,49 +8,62 @@ trigger:
 
 name: $(Date:yyyyMMdd)$(Rev:.r)-$(Build.SourceVersion)
 
-pool:
-  vmImage: 'ubuntu-latest'
+stages:
+- stage: BuildAndPublishDacpac
+  displayName: 'Publish SQL Dacpac'
+  jobs:
+  - job: BuildAndPublish
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: MSBuild@1
+      inputs:
+        solution: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/SocialMedia.Database.sqlproj
+      displayname: 'Build SQL Project'
+    
+- stage: BuildTestDeployWebApp
+  displayName: 'Build, Test, DevDeploy'
+  jobs:
+  - job: BuildPublishJob
+    pool:
+      vmImage: 'ubuntu-latest'
 
-services:
-  mssql: 
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    ports:
-      - 1433:1433
-    env:
-      ACCEPT_EULA: Y
-      SA_PASSWORD: Passw0rd!
+    services:
+      mssql: 
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+          - 1433:1433
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: Passw0rd!
 
-variables:
-  connectionStrings__TestDatabase: Server=localhost;Database=SocialMedia;User=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true;
+    variables:
+      connectionStrings__TestDatabase: Server=localhost;Database=SocialMedia;User=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=true;
 
-steps:
-- script: |
-    scripts/bootstrap.sh -ci
-  displayName: 'Bootstrap'
+    steps:
+    - script: |
+        scripts/bootstrap.sh -ci
+      displayName: 'Bootstrap'
 
-- script: |
-    scripts/build.sh -configuration Release -version 0.0.0-dev
-  displayName: '.NET Build'
+    - script: |
+        scripts/build.sh -configuration Release -version 0.0.0-dev
+      displayName: '.NET Build'
 
-- script: |
-    scripts/deploy-database.sh -configuration Release -connectionStringName TestDatabase
-  displayName: 'Deploy SQL Server database'
+    - script: |
+        scripts/test.sh -configuration Release -nobuild
+      displayName: '.NET Test'
 
-- script: |
-    scripts/test.sh -configuration Release -nobuild
-  displayName: '.NET Test'
+    - script: |
+        scripts/publish.sh  -configuration Release
+      displayName: '.NET Publish'
 
-- script: |
-    scripts/publish.sh  -configuration Release
-  displayName: '.NET Publish'
+    - publish: $(System.DefaultWorkingDirectory)/.publish
+      artifact: WebApp
+      displayName: 'Publish Artifact'
 
-- publish: $(System.DefaultWorkingDirectory)/.publish
-  artifact: WebApp
-  displayName: 'Publish Artifact'
-
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'Social Media API (Dev)'
-    appName: 'agartee-socialmedia-api'
-    package: $(System.DefaultWorkingDirectory)/.publish
-  displayName: 'Deploy Azure WebApp'
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: 'Social Media API (Dev)'
+        appName: 'agartee-socialmedia-api'
+        package: $(System.DefaultWorkingDirectory)/.publish
+      displayName: 'Deploy Azure WebApp'
