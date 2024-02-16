@@ -19,7 +19,6 @@ stages:
     - task: MSBuild@1
       inputs:
         solution: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/SocialMedia.Database.sqlproj
-      displayname: 'Build SQL Project'
     
 - stage: BuildTestDeployWebApp
   displayName: 'Build, Test, DevDeploy'
