@@ -79,7 +79,7 @@ stages:
     #     done
     #   displayName: 'Deploy DACPAC(s)'
 
-        - script: |
+    - script: |
         #!/bin/bash
         dacpac_path="$(Pipeline.Workspace)/Dacpac"
         echo "Deploying DACPAC files from $dacpac_path"
