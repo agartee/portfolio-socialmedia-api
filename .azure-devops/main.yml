@@ -21,15 +21,15 @@ stages:
         solution: $(System.DefaultWorkingDirectory)/SocialMedia.sln
         configuration: Database
     
-    # - task: CopyFiles@2
-    #   inputs:
-    #     SourceFolder: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/bin/Release
-    #     Contents: '*.dacpac'
-    #     TargetFolder: .publish-sql
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: $(System.DefaultWorkingDirectory)
+        Contents: '**\bin\Database\*.dacpac'
+        TargetFolder: .publish-sql
 
-    - script: |
-        scripts\publish-database.ps1
-      displayName: '.NET Publish'
+    # - script: |
+    #     scripts\publish-database.ps1
+    #   displayName: '.NET Publish'
 
     - publish: $(System.DefaultWorkingDirectory)\.publish-sql
       artifact: Dacpac
