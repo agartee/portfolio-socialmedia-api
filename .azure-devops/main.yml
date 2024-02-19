@@ -64,45 +64,13 @@ stages:
       artifact: Dacpac
       displayName: 'Dowload DACPAC artifact'
 
-    # - script: |
-    #     #!/bin/bash
-    #     dacpac_path="$(Pipeline.Workspace)/Dacpac"
-    #     echo "Deploying DACPAC files from $dacpac_path"
-    #     for dacpac_file in $(find $dacpac_path -name '*.dacpac'); do
-    #       echo "Deploying $dacpac_file..."
-    #       sqlpackage /a:publish \
-    #         /TargetConnectionString:"$(connectionStrings__TestDatabase)" \
-    #         /SourceFile:"$dacpac_file"
-    #       if [ $? -ne 0 ]; then
-    #         echo "Deployment of $dacpac_file failed"
-    #         exit 1
-    #       fi
-    #     done
-    #   displayName: 'Deploy DACPAC(s)'
-
     - script: |
         #!/bin/bash
-        dacpac_path="$(Pipeline.Workspace)/Dacpac"
-        echo "Deploying DACPAC files from $dacpac_path"
-        for dacpac_file in $(find $dacpac_path -name '*.dacpac'); do
-          echo "Deploying $dacpac_file..."
-          echo $dacpac_file
-          if [ $? -ne 0 ]; then
-            echo "Deployment of $dacpac_file failed"
-            exit 1
-          fi
-        done
-      displayName: 'Deploy DACPAC(s)'
-
-    # - script: |
-    #     #!/bin/bash
-    #     dacpac_path="$(Pipeline.Workspace)/Dacpac"
-    #     ls $dacpac_path
-    #     dacpac_file="$(Pipeline.Workspace)/Dacpac/SocialMedia.Database.dacpac"
-    #     sqlpackage /a:publish \
-    #       /TargetConnectionString:"$(connectionStrings__TestDatabase)" \
-    #       /SourceFile:"$dacpac_file"
-    #   displayName: 'Deploy DACPAC'
+        dacpac_file="$(Pipeline.Workspace)/Dacpac/SocialMedia.Database.dacpac"
+        sqlpackage /a:publish \
+          /TargetConnectionString:"$(connectionStrings__TestDatabase)" \
+          /SourceFile:"$dacpac_file"
+      displayName: 'Deploy DACPAC'
 
     - script: |
         scripts/test.sh -configuration Release -nobuild
