@@ -24,7 +24,7 @@ stages:
     - task: CopyFiles@2
       inputs:
         SourceFolder: $(System.DefaultWorkingDirectory)
-        Contents: '**\bin\Database\*.dacpac'
+        Contents: '**\*.dacpac'
         TargetFolder: .publish-sql
 
     # - script: |
