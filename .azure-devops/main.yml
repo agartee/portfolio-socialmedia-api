@@ -79,12 +79,12 @@ stages:
     #     done
     #   displayName: 'Deploy DACPAC(s)'
 
-    -script: |
-      #!/bin/bash
-      dacpac_path="$(Pipeline.Workspace)/Dacpac/SocialMedia.Database.dacpac"
-      sqlpackage /a:publish \
-        /TargetConnectionString:"$(connectionStrings__TestDatabase)" \
-        /SourceFile:"$dacpac_file"
+    - script: |
+        #!/bin/bash
+        dacpac_path="$(Pipeline.Workspace)/Dacpac/SocialMedia.Database.dacpac"
+        sqlpackage /a:publish \
+          /TargetConnectionString:"$(connectionStrings__TestDatabase)" \
+          /SourceFile:"$dacpac_file"
       displayName: 'Deploy DACPAC'
 
     - script: |
