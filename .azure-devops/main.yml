@@ -28,7 +28,7 @@ stages:
     #     TargetFolder: .publish-sql
 
     - script: |
-        $(System.DefaultWorkingDirectory)\scripts\publish-database.ps1
+        scripts\publish-database.ps1
       displayName: '.NET Publish'
 
     - publish: $(System.DefaultWorkingDirectory)\.publish-sql
