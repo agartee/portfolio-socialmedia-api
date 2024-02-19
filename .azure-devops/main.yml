@@ -85,7 +85,7 @@ stages:
         echo "Deploying DACPAC files from $dacpac_path"
         for dacpac_file in $(find $dacpac_path -name '*.dacpac'); do
           echo "Deploying $dacpac_file..."
-          echo dacpac_file
+          echo $dacpac_file
           if [ $? -ne 0 ]; then
             echo "Deployment of $dacpac_file failed"
             exit 1
