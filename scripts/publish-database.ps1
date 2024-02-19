@@ -21,6 +21,11 @@ if(-not (Test-Path -Path $publishDir)) {
     New-Item -ItemType Directory -Path $publishDir
 }
 
+Write-Host ""
+Write-Host "Copying files:"
+Get-ChildItem -Path "$($rootDir)" -Filter *.dacpac -Recurse `
+    | Where-Object { $_.DirectoryName -match "bin\\Database$" }
+
 Get-ChildItem -Path "$($rootDir)" -Filter *.dacpac -Recurse `
     | Where-Object { $_.DirectoryName -match "bin\\Database$" } `
     | Copy-Item -Destination $publishDir -Force
