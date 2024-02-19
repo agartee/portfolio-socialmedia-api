@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <UserSecretsId>agartee-socialmedia</UserSecretsId>
+    <Configurations>Debug;Release;Database</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

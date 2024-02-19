@@ -8,6 +8,8 @@
     <IsPackable>false</IsPackable>
 
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+    <Configurations>Debug;Release;Database</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

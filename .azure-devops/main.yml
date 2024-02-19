@@ -18,14 +18,18 @@ stages:
     steps:
     - task: MSBuild@1
       inputs:
-        solution: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/SocialMedia.Database.sqlproj
-        configuration: Release
+        solution: $(System.DefaultWorkingDirectory)/SocialMedia.sln
+        configuration: Database
     
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/bin/Release
-        Contents: '*.dacpac'
-        TargetFolder: .publish-sql
+    # - task: CopyFiles@2
+    #   inputs:
+    #     SourceFolder: $(System.DefaultWorkingDirectory)/src/SocialMedia.Database/bin/Release
+    #     Contents: '*.dacpac'
+    #     TargetFolder: .publish-sql
+
+    - script: |
+        $(System.DefaultWorkingDirectory)/scripts/publish-database.ps1
+      displayName: '.NET Publish'
 
     - publish: $(System.DefaultWorkingDirectory)/.publish-sql
       artifact: Dacpac
