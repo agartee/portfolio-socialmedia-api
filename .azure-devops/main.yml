@@ -82,7 +82,7 @@ stages:
     - script: |
         #!/bin/bash
         dacpac_path="$(Pipeline.Workspace)/Dacpac"
-        ls dacpac_path
+        ls $dacpac_path
         dacpac_file="$(Pipeline.Workspace)/Dacpac/SocialMedia.Database.dacpac"
         sqlpackage /a:publish \
           /TargetConnectionString:"$(connectionStrings__TestDatabase)" \
