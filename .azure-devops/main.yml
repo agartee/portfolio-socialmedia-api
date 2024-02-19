@@ -26,6 +26,7 @@ stages:
         SourceFolder: $(System.DefaultWorkingDirectory)
         Contents: '**\*.dacpac'
         TargetFolder: .publish-sql
+        flattenFolders: true
 
     - publish: $(System.DefaultWorkingDirectory)\.publish-sql
       artifact: Dacpac
