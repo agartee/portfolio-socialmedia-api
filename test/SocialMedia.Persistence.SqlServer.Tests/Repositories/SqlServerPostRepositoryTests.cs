@@ -76,10 +76,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             var post2 = postBuilder.CreatePost()
                 .WithAuthor(post1.Author);
 
-            var post1Data = post1.ToPostData();
-            var post2Data = post2.ToPostData();
-
-            await fixture.Seed(post1Data, post2Data);
+            await fixture.Seed(post1.ToPostData(), post2.ToPostData());
 
             var results = await repository.GetAllPosts(CancellationToken.None);
 
