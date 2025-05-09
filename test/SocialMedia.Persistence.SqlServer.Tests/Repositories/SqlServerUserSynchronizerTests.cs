@@ -2,11 +2,12 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Persistence.SqlServer.Repositories;
 using SocialMedia.Persistence.SqlServer.Tests.Fixtures;
+using SocialMedia.TestUtilities;
 using SocialMedia.TestUtilities.Builders;
 
 namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
 {
-    [Collection("SqlServerTestCollection")]
+    [Collection("SqlServerTestCollection"), UseMappingContextScope]
     public class SqlServerUserSynchronizerTests
     {
         private readonly SqlServerFixture fixture;

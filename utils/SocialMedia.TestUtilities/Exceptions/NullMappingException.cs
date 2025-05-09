@@ -1,15 +1,15 @@
-using SocialMedia.Domain.Exceptions;
-
 namespace SocialMedia.TestUtilities.Exceptions
 {
-    public class NullMappingException<TSource, TTarget> : ModelMappingException<TSource, TTarget>
-        where TSource : class
-        where TTarget : class
+    public class NullMappingException<TSource> : Exception
+    where TSource : class
     {
-        private const string MESSAGE = "{0} cannot be null.";
+        public string PropertyName { get; }
 
-        public NullMappingException(string valueName) : base(string.Format(MESSAGE, valueName))
+        public NullMappingException(string propertyName)
+            : base($"{typeof(TSource).Name}.{propertyName} must not be null during mapping.")
         {
+            PropertyName = propertyName;
         }
     }
+
 }

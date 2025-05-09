@@ -4,12 +4,12 @@ using SocialMedia.Domain.Exceptions;
 using SocialMedia.Domain.Models;
 using SocialMedia.Persistence.SqlServer.Repositories;
 using SocialMedia.Persistence.SqlServer.Tests.Fixtures;
+using SocialMedia.TestUtilities;
 using SocialMedia.TestUtilities.Builders;
-using static SocialMedia.TestUtilities.Builders.PostConfiguration;
 
 namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
 {
-    [Collection("SqlServerTestCollection")]
+    [Collection("SqlServerTestCollection"), UseMappingContextScope]
     public class SqlServerPostRepositoryTests
     {
         private readonly SqlServerFixture fixture;
@@ -50,7 +50,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
         {
             var post = postBuilder.CreatePost();
 
-            await fixture.Seed(new[] { post.ToPostData(MappingBehavior.IncludeUser) });
+            await fixture.Seed(new[] { post.ToPostData() });
 
             var result = await repository.DemandPost(post.Id!, CancellationToken.None);
 
@@ -76,12 +76,10 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Repositories
             var post2 = postBuilder.CreatePost()
                 .WithAuthor(post1.Author);
 
-            await fixture.Seed(new object[]
-            {
-                post1.Author!.ToUserData(),
-                post1.ToPostData(),
-                post2.ToPostData()
-            });
+            var post1Data = post1.ToPostData();
+            var post2Data = post2.ToPostData();
+
+            await fixture.Seed(post1Data, post2Data);
 
             var results = await repository.GetAllPosts(CancellationToken.None);
 

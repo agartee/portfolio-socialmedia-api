@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SocialMedia.Persistence.SqlServer.Models;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 namespace SocialMedia.Persistence.SqlServer.Tests.Fixtures
 {
@@ -18,9 +17,9 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Fixtures
                 .AddEnvironmentVariables()
                 .Build();
 
-            //var configurationDbContext = CreateDbContext();
-            //configurationDbContext.Database.EnsureDeleted();
-            //configurationDbContext.Database.EnsureCreated();
+            var configurationDbContext = CreateDbContext();
+            configurationDbContext.Database.EnsureDeleted();
+            configurationDbContext.Database.EnsureCreated();
         }
 
         public SocialMediaDbContext CreateDbContext()
@@ -29,7 +28,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Fixtures
                 .UseSqlServer(config.GetConnectionString("testDatabase")).Options);
         }
 
-        public async Task Seed(object[] entities, [CallerMemberName] string? caller = null)
+        public async Task Seed(params object[] entities)
         {
             var dbContext = CreateDbContext();
 
@@ -58,7 +57,7 @@ namespace SocialMedia.Persistence.SqlServer.Tests.Fixtures
 
         private static List<T> CreateList<T>(params T[] elements)
         {
-            return new List<T>(elements);
+            return [.. elements];
         }
     }
 

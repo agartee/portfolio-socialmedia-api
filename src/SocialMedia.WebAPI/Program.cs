@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using SocialMedia.WebAPI.Configuration;
 using SocialMedia.WebAPI.Formatters;
 using SocialMedia.WebAPI.JsonConverters;
@@ -19,6 +20,11 @@ builder.Services.AddAuth0Management(builder.Configuration);
 builder.Services.AddCors(builder.Configuration);
 builder.Services.AddDomainServices(builder.Configuration, args);
 builder.Services.AddSecirity(builder.Configuration);
+//builder.Services.Configure<ApiBehaviorOptions>(options =>
+//{
+//    options.SuppressModelStateInvalidFilter = true;
+//    options.SuppressMapClientErrors = true;
+//});
 
 var version = VersionInfo.NewVersionInfo<Program>();
 
