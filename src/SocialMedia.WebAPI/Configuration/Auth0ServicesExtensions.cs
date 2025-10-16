@@ -5,6 +5,7 @@ using SocialMedia.Persistence.Auth0.Configuration;
 
 namespace SocialMedia.WebAPI.Configuration
 {
+
     public static class Auth0ServicesExtensions
     {
         public static IServiceCollection AddAuth0Management(this IServiceCollection services,

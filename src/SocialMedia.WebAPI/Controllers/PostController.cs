@@ -15,15 +15,15 @@ namespace SocialMedia.WebAPI.Controllers
             this.mediator = mediator;
         }
 
-        [HttpPut]
-        [Authorize]
-        [Route("/post")]
-        public async Task<IActionResult> Create([FromBody] CreatePost request, CancellationToken cancellationToken)
-        {
-            var result = await mediator.Send(request, cancellationToken);
+        //[HttpPut]
+        //[Authorize]
+        //[Route("/post")]
+        //public async Task<IActionResult> Create([FromBody] CreatePost request, CancellationToken cancellationToken)
+        //{
+        //    var result = await mediator.Send(request, cancellationToken);
 
-            return Ok(result);
-        }
+        //    return Ok(result);
+        //}
 
         [HttpGet]
         [Authorize]

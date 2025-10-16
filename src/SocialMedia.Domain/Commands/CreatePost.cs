@@ -1,18 +1,17 @@
 using CommandLine;
-using MediatR;
 using SocialMedia.Domain.Models;
 using SocialMedia.Domain.Services;
 
 namespace SocialMedia.Domain.Commands
 {
     [Verb("create post", HelpText = "Create a new post.")]
-    public record CreatePost : IRequest<PostInfo>
+    public record CreatePost
     {
         [Option(Required = false, HelpText = "Text content of the post")]
         public required string Text { get; init; }
     }
 
-    public class CreatePostHandler : IRequestHandler<CreatePost, PostInfo>
+    public class CreatePostHandler
     {
         private readonly IPostRepository postRepository;
         private readonly IUserContext userContext;

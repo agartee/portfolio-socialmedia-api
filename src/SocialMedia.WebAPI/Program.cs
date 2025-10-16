@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using SocialMedia.WebAPI.Configuration;
+using SocialMedia.WebAPI.Endpoints;
 using SocialMedia.WebAPI.Formatters;
 using SocialMedia.WebAPI.JsonConverters;
 using SocialMedia.WebAPI.ModelBinders;
@@ -16,20 +16,22 @@ builder.Services.AddControllers(configure: options =>
     options.JsonSerializerOptions.Converters.Add(new IdJsonConverter());
 });
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddJsonOptions();
 builder.Services.AddAuth0Management(builder.Configuration);
 builder.Services.AddCors(builder.Configuration);
 builder.Services.AddDomainServices(builder.Configuration, args);
 builder.Services.AddSecirity(builder.Configuration);
-//builder.Services.Configure<ApiBehaviorOptions>(options =>
-//{
-//    options.SuppressModelStateInvalidFilter = true;
-//    options.SuppressMapClientErrors = true;
-//});
 
 var version = VersionInfo.NewVersionInfo<Program>();
 
 builder.Services.AddSingleton(version);
 builder.Services.AddSwagger(version);
+builder.Services.AddEndpointsApiExplorer();
+
+//builder.Services.AddHealthChecks()
+//    .AddCheck<Domain.HealthChecks.DatabaseHealthCheck>("Database")
+//    .AddCheck<Domain.HealthChecks.Auth0HealthCheck>("Auth0 Management API");
 
 var app = builder.Build();
 
@@ -43,6 +45,9 @@ app.UseCors(CorsPolicies.AllowedOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Minimal API endpoints
+app.MapCreatePost();
 
 //app.MigrateDatabase();
 

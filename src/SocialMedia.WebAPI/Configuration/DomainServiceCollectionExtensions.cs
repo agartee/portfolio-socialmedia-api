@@ -26,6 +26,8 @@ namespace SocialMedia.WebAPI.Configuration
             services.AddDbContexts(configuration, args);
             services.AddRepositories();
 
+            services.AddTransient<CreatePostHandler>();
+
             return services;
         }
 

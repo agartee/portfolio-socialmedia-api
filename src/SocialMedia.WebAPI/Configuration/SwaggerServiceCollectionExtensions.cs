@@ -56,8 +56,10 @@ namespace SocialMedia.WebAPI.Configuration
 
                 options.IncludeXmlComments(apiXmlDocumentPath);
 
-                options.OperationFilter<IdPathParameterFilter>(XDocument.Load(apiXmlDocumentPath));
-                options.OperationFilter<RequestQueryParameterFilter>(XDocument.Load(domainXmlDocumentPath));
+                // flatten example schema IDs
+                options.SchemaFilter<FlattenIdSchemaFilter>();
+                options.OperationFilter<FlattenIdParameterOperationFilter>();
+
             });
 
             return services;
