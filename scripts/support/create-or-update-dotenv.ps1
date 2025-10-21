@@ -102,13 +102,13 @@ function Write-DotEnv {
   $map         = $EnvVars.Map
   $existing    = $EnvVars.Lines
   $managedKeys = $EnvVars.ManagedKeys
-
-  function Needs-Quotes([string]$v) { return ($v -match '\s|=') }
-
   $managedSet = New-Object 'System.Collections.Generic.HashSet[string]'
-  foreach ($k in $managedKeys) { $null = $managedSet.Add($k) }
+  
+  foreach ($k in $managedKeys) { 
+    $null = $managedSet.Add($k) 
+  }
 
-  $output = New-Object System.Collections.Generic.List[string]
+  $output = New-Object 'System.Collections.Generic.List[string]'
   $seen   = New-Object 'System.Collections.Generic.HashSet[string]'
 
   foreach ($line in $existing) {
@@ -124,7 +124,7 @@ function Write-DotEnv {
     if ($managedSet.Contains($key)) {
       if (-not $seen.Contains($key)) {
         $value     = $map[$key]
-        $formatted = if (Needs-Quotes $value) { "$key=""$value""" } else { "$key=$value" }
+        $formatted = "$key=$value"
         $output.Add($formatted) | Out-Null
         $null = $seen.Add($key)
       }
@@ -136,7 +136,7 @@ function Write-DotEnv {
   foreach ($k in $managedKeys) {
     if (-not $seen.Contains($k)) {
       $value     = $map[$k]
-      $formatted = if (Needs-Quotes $value) { "$k=""$value""" } else { "$k=$value" }
+      $formatted = "$key=$value"
       $output.Add($formatted) | Out-Null
     }
   }
