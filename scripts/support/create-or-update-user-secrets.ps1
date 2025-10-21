@@ -35,9 +35,8 @@ function Get-UserSecretsIdFromCsproj {
     return $node.InnerText.Trim()
   }
 
-  throw "No <UserSecretsId> found in the first unconditioned <PropertyGroup> of $ProjectPath."
+  throw "No <UserSecretsId> found in expected <PropertyGroup> of $ProjectPath."
 }
-
 
 function Get-SecretsJsonPath {
   param([string]$UserSecretsId)
