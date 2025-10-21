@@ -20,6 +20,11 @@
     { "secret": "ConnectionStrings:database", "default": "Server=localhost;Database=socialmedia;User Id=sa;Password=Your_password123;TrustServerCertificate=True" },
     { "secret": "SomeService:ApiKey",         "default": "dev-api-key-placeholder" }
   ],
+  "dotEnv": [
+    { "secret": "ASPNETCORE_ENVIRONMENT", "default": "Development" },
+    { "secret": "LOG_LEVEL",              "default": "Information" },
+    { "secret": "PORT",                   "default": "5199" }
+  ],
   "scripts": {
     "start-server-docker": {
       "databaseConnectionStringName": "dockerDatabase"
