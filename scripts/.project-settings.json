@@ -16,6 +16,10 @@
     "containerName": "socialmedia-api",
     "tagName": "dev"
   },
+  "secrets": [
+    { "secret": "ConnectionStrings:database", "default": "Server=localhost;Database=socialmedia;User Id=sa;Password=Your_password123;TrustServerCertificate=True" },
+    { "secret": "SomeService:ApiKey",         "default": "dev-api-key-placeholder" }
+  ],
   "scripts": {
     "start-server-docker": {
       "databaseConnectionStringName": "dockerDatabase"

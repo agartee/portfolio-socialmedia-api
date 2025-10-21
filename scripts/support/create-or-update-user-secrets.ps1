@@ -1,9 +1,9 @@
-$csprojPath = "C:\Users\agart\Code\portfolio-socialmedia-api\src\SocialMedia.WebAPI\SocialMedia.WebAPI.csproj"
+$rootDir = (Get-Item $PSScriptRoot).Parent.Parent.FullName
+$config  = Get-Content -Raw -Path "$rootDir\scripts\.project-settings.json" | ConvertFrom-Json
+$csprojPath = Join-Path $rootDir $config.webApp.projectFile
 
-$requiredKeys = @(
-  "ConnectionStrings:database",
-  "SomeService:ApiKey"
-)
+$secretsSpec = @()
+if ($config.secrets) { $secretsSpec = @($config.secrets) }
 
 function Get-UserSecretsIdFromCsproj {
   param([Parameter(Mandatory)][string]$ProjectPath)
@@ -48,42 +48,27 @@ function Get-SecretsJsonPath {
   }
 
   $folder = Join-Path $base $UserSecretsId
-  $file   = Join-Path $folder "secrets.json"
-  return $file
+  Join-Path $folder "secrets.json"
 }
 
 function Read-SecretsJson {
-  param(
-    [string]
-    $SecretsPath
-  )
+  param([string]$SecretsPath)
 
-  if (-not (Test-Path -LiteralPath $SecretsPath)) {
-    return @{}
-  }
+  if (-not (Test-Path -LiteralPath $SecretsPath)) { return @{} }
 
   $raw = Get-Content -LiteralPath $SecretsPath -Raw
-  if ([string]::IsNullOrWhiteSpace($raw)) {
-    return @{}
-  }
+  if ([string]::IsNullOrWhiteSpace($raw)) { return @{} }
 
-  try {
-    $obj = ConvertFrom-Json $raw
-  } catch {
-    throw "Failed to parse JSON from '$SecretsPath': $($_.Exception.Message)"
-  }
+  try { $obj = ConvertFrom-Json $raw }
+  catch { throw "Failed to parse JSON from '$SecretsPath': $($_.Exception.Message)" }
 
   $table = @{}
   if ($null -ne $obj) {
     foreach ($p in $obj.PSObject.Properties) {
-      if ($null -eq $p.Value) {
-        $table[$p.Name] = ""
-      } else {
-        $table[$p.Name] = [string]$p.Value
-      }
+      $table[$p.Name] = if ($null -eq $p.Value) { "" } else { [string]$p.Value }
     }
   }
-  return $table
+  $table
 }
 
 function Write-SecretsJson {
@@ -111,22 +96,30 @@ function Write-SecretsJson {
 function Prompt-ForMissingSecrets {
   param(
     [hashtable]$Existing,
-    [string[]]$RequiredKeys
+    [object[]]$SecretsSpec 
   )
 
   $updated = $false
-  foreach ($key in $RequiredKeys) {
-    $hasValue =
-      ($Existing.ContainsKey($key)) -and
-      (-not [string]::IsNullOrWhiteSpace($Existing[$key]))
 
-    if ($hasValue) {
-      continue
+  foreach ($spec in $SecretsSpec) {
+    $key     = if ($spec.secret) { [string]$spec.secret } elseif ($spec.Secret) { [string]$spec.Secret } else { $null }
+    $default = if ($spec.default) { [string]$spec.default } elseif ($spec.Default) { [string]$spec.Default } else { $null }
+
+    if ([string]::IsNullOrWhiteSpace($key)) { continue } # skip malformed entries
+
+    $hasValue = ($Existing.ContainsKey($key)) -and (-not [string]::IsNullOrWhiteSpace($Existing[$key]))
+    if ($hasValue) { continue }
+
+    $suffix = if ($null -ne $default -and $default -ne "") { " [default: $default]" } else { "" }
+
+    $userInput = Read-Host -Prompt "Enter value for '$key'$suffix"
+
+    if ([string]::IsNullOrWhiteSpace($userInput) -and $null -ne $default) {
+      $Existing[$key] = $default
+    } else {
+      $Existing[$key] = [string]$userInput
     }
 
-    $value = Read-Host -Prompt "Enter value for '$key'"
-    if ($null -eq $value) { $value = "" }
-    $Existing[$key] = [string]$value
     $updated = $true
   }
 
@@ -135,9 +128,10 @@ function Prompt-ForMissingSecrets {
 
 try {
   $userSecretsId = Get-UserSecretsIdFromCsproj -ProjectPath $csprojPath
-  $secretsPath = Get-SecretsJsonPath -UserSecretsId $userSecretsId
-  $secrets = Read-SecretsJson -SecretsPath $secretsPath
-  $changed = Prompt-ForMissingSecrets -Existing $secrets -RequiredKeys $requiredKeys
+  $secretsPath   = Get-SecretsJsonPath -UserSecretsId $userSecretsId
+  $secrets       = Read-SecretsJson -SecretsPath $secretsPath
+
+  $changed = Prompt-ForMissingSecrets -Existing $secrets -SecretsSpec $secretsSpec
 
   if ($changed) {
     Write-SecretsJson -Secrets $secrets -SecretsPath $secretsPath
